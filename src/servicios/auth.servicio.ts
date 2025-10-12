@@ -5,6 +5,8 @@ import { generarToken } from "../utils/jwt";
 import { LoginDTO, RegistroDTO } from "../validadores/usuario.validador";
 
 export const registrarUsuario = async (datos: RegistroDTO) => {
+    logger.warn('Iniciando proceso de registro...');
+
     // Verificar si el email ya existe
     const usuarioExistente = await prisma.usuario.findUnique({
         where: { email: datos.email }
@@ -48,6 +50,8 @@ export const registrarUsuario = async (datos: RegistroDTO) => {
 };
 
 export const loginUsuario = async (datos: LoginDTO) => {
+    logger.warn('Iniciando proceso de autenticación...');
+
     // Buscar usuario
     const usuario = await prisma.usuario.findUnique({ where: { email: datos.email } });
     if (!usuario) { throw new Error('El usuario no existe'); }
