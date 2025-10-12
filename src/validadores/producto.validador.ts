@@ -16,5 +16,5 @@ export const actualizarProductoSchema = z.object({
     categoria: z.string().min(3).optional(),
 })
 
-export type CrearProductDTO = z.infer<typeof crearProductoSchema>;
-export type ActualizarProductDTO = z.infer<typeof actualizarProductoSchema>
+export type CrearProductoDTO = z.infer<typeof crearProductoSchema>;
+export type ActualizarProductoDTO = z.infer<typeof actualizarProductoSchema>
