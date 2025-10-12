@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import logger from './config/logger'
 
 dotenv.config();
 
@@ -13,10 +14,11 @@ app.use(express.json());
 
 // status
 app.get('/status', (req, res) => {
+  logger.info('Status OK');
   res.send('OK');
 });
 
 // iniciar
 app.listen(port, () => {
-  console.log(`Servidor corriendo en el puerto ${port}`);
+  logger.info(`Servidor corriendo en el puerto ${port}`);
 });
