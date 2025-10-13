@@ -52,13 +52,13 @@ export const getPorId = async (req: Request, res: Response) => {
         const producto = await getProductoPorId(id);
 
         return res.status(200).json(producto)
-    } catch (error:any) {
+    } catch (error: any) {
         logger.info("Error al obtener el producto");
 
         return res.status(400).json({
             mensaje: error.message || "Producto no encontrado."
         })
-        
+
     }
 }
 
@@ -91,13 +91,14 @@ export const actualizar = async (req: Request, res: Response) => {
 export const eliminar = async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
-        const producto = eliminarProducto(id);
-        return res.status(200).json({
+        await eliminarProducto(id);
+
+        res.status(200).json({
             mensaje: "Producto eliminado exitosamente",
-            datos: producto
+            id
         })
     } catch (error: any) {
-        logger.info(`No se pudo eliminar el producto: ${error}`)
+        logger.error(`No se pudo eliminar el producto: ${error}`)
 
         return res.status(404).json({
             mensaje: error.message || "No se pudo eliminar el producto"

@@ -44,12 +44,16 @@ export const actualizarProducto = async (id: string, datos: ActualizarProductoDT
 
 export const eliminarProducto = async (id: string) => {
     // revisar si producto existe (si no, getProductPorId devuelve error)
-    await getProductoPorId(id);
+      const producto = await prisma.producto.findUnique({ where: { id } });
 
-    const producto = await prisma.producto.delete({
+
+    if (!producto) throw new Error("Producto no encontrado");
+    
+    logger.info(`Producto eliminado: ${id}` );
+    
+    return await prisma.producto.delete({
         where: {id}
     });
 
-    logger.info("Producto eliminado: ", producto);
-    return producto;
 }
+
