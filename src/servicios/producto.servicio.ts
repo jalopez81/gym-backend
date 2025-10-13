@@ -12,13 +12,13 @@ export const crearProducto = async (datos: CrearProductoDTO) => {
 }
 
 export const getProductos = async () => {
-    const productos = prisma.producto.findMany({
+    return await prisma.producto.findMany({
         orderBy: { creado: 'desc' }
     });
 }
 
 export const getProductoPorId = async (id: string) => {
-    const producto = prisma.producto.findUnique({
+    const producto = await prisma.producto.findUnique({
         where: { id }
     });
 
@@ -46,7 +46,7 @@ export const eliminarProducto = async (id: string) => {
     // revisar si producto existe (si no, getProductPorId devuelve error)
     await getProductoPorId(id);
 
-    const producto = prisma.producto.delete({
+    const producto = await prisma.producto.delete({
         where: {id}
     });
 

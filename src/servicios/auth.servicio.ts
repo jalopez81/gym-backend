@@ -4,6 +4,19 @@ import { compararHash, generarHash } from "../utils/hash";
 import { generarToken } from "../utils/jwt";
 import { LoginDTO, RegistroDTO } from "../validadores/usuario.validador";
 
+
+export const listarUsuarios = async () => {
+    return await prisma.usuario.findMany({
+        orderBy: {nombre: 'asc'},
+        select: {
+            "email": true,
+            "nombre": true,
+            "rol": true, 
+            "creado": true
+        }
+    }); 
+}
+
 export const registrarUsuario = async (datos: RegistroDTO) => {
     logger.warn('Iniciando proceso de registro...');
 
@@ -57,7 +70,7 @@ export const loginUsuario = async (datos: LoginDTO) => {
     if (!usuario) { throw new Error('El usuario no existe'); }
 
     // Verificar contrasena
-    const passwordValido = compararHash(datos.password, usuario.password);
+    const passwordValido = await compararHash(datos.password, usuario.password);
     if (!passwordValido) { throw new Error('La contraseña es inválida.') }
 
     logger.info(`Usuario verificado exitosamente: ${usuario.email}`)
@@ -66,7 +79,8 @@ export const loginUsuario = async (datos: LoginDTO) => {
     const token = generarToken({
         id: usuario.id,
         email: usuario.email,
-        nombre: usuario.nombre
+        nombre: usuario.nombre,
+        rol: usuario.rol
     });
 
     return {

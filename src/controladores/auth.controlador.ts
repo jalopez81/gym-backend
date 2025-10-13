@@ -1,7 +1,20 @@
 import { Request, Response } from "express";
 import logger from "../config/logger";
 import { loginSchema, registroSchema } from "../validadores/usuario.validador"
-import { loginUsuario, registrarUsuario } from "../servicios/auth.servicio";
+import { listarUsuarios, loginUsuario, registrarUsuario } from "../servicios/auth.servicio";
+
+export const listar = async (req: Request, res: Response) => {
+    try {
+        const usuarios = await listarUsuarios()
+
+        return res.status(200).json({
+            mensaje: "Usuarios obtenidos exitosamente",
+            datos: usuarios
+        })
+    } catch (error:any) {
+        
+    }
+}
 
 export const registro = async (req: Request, res: Response) => {
     try {
@@ -10,21 +23,21 @@ export const registro = async (req: Request, res: Response) => {
 
         const resultado = await registrarUsuario(credencialesValidadas);
 
-        res.status(201).json({
+        return res.status(201).json({
             message: 'Usuario registrado exitosamente',
             datos: resultado
         })
 
     } catch (error: any) {
-        logger.error('Error de registro:', error)
+        logger.error(`Error de registro: ${error}`)
 
         if (error.name === 'ZodError') {
             return res.status(400).json({
                 message: 'Datos inválidos',
-                errores: error.errors
+                errores: error.issues
             })
         }
-        res.status(400).json({
+        return res.status(400).json({
             mensaje: error.message || 'Error al registrar usuario'
         });
     }
@@ -37,22 +50,22 @@ export const login = async (req: Request, res: Response) => {
 
         const resultado = await loginUsuario(credencialesValidadas);
 
-        res.status(200).json({
+        return res.status(200).json({
             message: 'Usuario autenticado exitosamente',
             datos: resultado
         })
 
     } catch (error: any) {
-        logger.error('Error de autenticación:', error)
+        logger.error(`Error de autenticación: ${error}`)
 
         if (error.name === 'ZodError') {
             return res.status(401).json({
                 message: 'Datos inválidos',
-                errores: error.errors
+                errores: error.issues
             })
         }
 
-        res.status(401).json({
+        return res.status(401).json({
             mensaje: error.message || 'Error al iniciar sesión'
         });
     }

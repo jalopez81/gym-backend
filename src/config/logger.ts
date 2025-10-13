@@ -12,7 +12,8 @@ const logger = winston.createLogger({
   transports: [
     // Logs en consola
     new winston.transports.Console({
-      format: winston.format.colorize({ all: true })
+      format: winston.format.colorize({ all: true }),
+      level: 'error' 
     }),
     // Logs en archivo (errores)
     new winston.transports.File({ 

@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import logger from './config/logger'
 
 import authRutas from './rutas/auth.rutas'
+import productoRutas from './rutas/producto.rutas'
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth', authRutas)
+app.use('/api/productos', productoRutas)
 
 // status
 app.get('/status', (req, res) => {

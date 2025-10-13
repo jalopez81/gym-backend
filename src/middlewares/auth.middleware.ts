@@ -36,10 +36,10 @@ export const autenticar = async (req: Request, res: Response, nextFunc: NextFunc
 
         nextFunc();
     } catch (error: any) {
-        logger.error("Error de autenticación:", error)
+        logger.error(`Error de autenticación: ${error}`)
 
 
-        res.status(401).json({
+        return res.status(401).json({
             mensaje: 'Token inválido o expirado'
         });
     }
@@ -56,9 +56,7 @@ export const autorizar = (...rolesPermitidos: string[]) => {
         }
 
         if (!rolesPermitidos.includes(req.usuario.rol)) {
-            return res.status(403).json({
-                mensaje: 'Usuario no tiene permiso para acceder a este recurso'
-            })
+            return res.status(403).send(`El ${req.usuario.rol} ${req.usuario.email} no tiene permiso para ${req.originalUrl}`)
         }
 
         nextFunc()
