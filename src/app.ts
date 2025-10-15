@@ -1,8 +1,8 @@
+import '../tracer.js';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import logger from './config/logger'
-
 import authRutas from './rutas/auth.rutas'
 import productoRutas from './rutas/producto.rutas'
 
