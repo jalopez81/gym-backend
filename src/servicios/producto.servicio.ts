@@ -11,11 +11,63 @@ export const crearProducto = async (datos: CrearProductoDTO) => {
     return producto;
 }
 
-export const getProductos = async () => {
-    return await prisma.producto.findMany({
-        orderBy: { creado: 'desc' }
-    });
+
+interface FiltrosProducto {
+    pagina?: number;
+    limite?: number;
+    busqueda?: string;
+    categoria?: string;
+    ordenarPor?: 'precio' | 'creado' | 'nombre';
+    orden?: 'asc' | 'desc';
 }
+
+export const getProductos = async (filtros: FiltrosProducto = {}) => {
+    const {
+        pagina = 1,
+        limite = 10,
+        busqueda,
+        categoria,
+        ordenarPor = 'creado',
+        orden = 'desc'
+    } = filtros;
+
+    const skip = (pagina - 1) * limite;
+
+    const where: any = {};
+
+    if (busqueda) {
+        where.nombre = {
+            contains: busqueda,
+            mode: 'insensitive' 
+        };
+    }
+
+    if (categoria) {
+        where.categoria = categoria;
+    }
+
+    const [productos, total] = await Promise.all([
+        prisma.producto.findMany({
+            where,
+            skip,
+            take: limite,
+            orderBy: {
+                [ordenarPor]: orden
+            }
+        }),
+        prisma.producto.count({ where })
+    ]);
+
+    return {
+        productos,
+        paginacion: {
+            total,
+            pagina,
+            limite,
+            totalPaginas: Math.ceil(total / limite)
+        }
+    };
+};
 
 export const getProductoPorId = async (id: string) => {
     const producto = await prisma.producto.findUnique({
@@ -34,7 +86,7 @@ export const actualizarProducto = async (id: string, datos: ActualizarProductoDT
     await getProductoPorId(id);
 
     const producto = await prisma.producto.update({
-        where: {id},
+        where: { id },
         data: datos
     });
 
@@ -44,15 +96,15 @@ export const actualizarProducto = async (id: string, datos: ActualizarProductoDT
 
 export const eliminarProducto = async (id: string) => {
     // revisar si producto existe (si no, getProductPorId devuelve error)
-      const producto = await prisma.producto.findUnique({ where: { id } });
+    const producto = await prisma.producto.findUnique({ where: { id } });
 
 
     if (!producto) throw new Error("Producto no encontrado");
-    
-    logger.info(`Producto eliminado: ${id}` );
-    
+
+    logger.info(`Producto eliminado: ${id}`);
+
     return await prisma.producto.delete({
-        where: {id}
+        where: { id }
     });
 
 }

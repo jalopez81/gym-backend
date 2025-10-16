@@ -32,19 +32,36 @@ export const crear = async (req: Request, res: Response) => {
 }
 
 export const listar = async (req: Request, res: Response) => {
-    try {
-        const productos = await getProductos();
+  try {
+    const {
+      pagina = '1',
+      limite = '10',
+      busqueda,
+      categoria,
+      ordenarPor = 'creado',
+      orden = 'desc'
+    } = req.query;
 
-        return res.status(200).json(productos)
-    } catch (error: any) {
-        logger.error(`Hubo un problema al obtener los productos: ${error}`);
+    const resultado = await getProductos({
+      pagina: parseInt(pagina as string),
+      limite: parseInt(limite as string),
+      busqueda: busqueda as string,
+      categoria: categoria as string,
+      ordenarPor: ordenarPor as 'precio' | 'creado' | 'nombre',
+      orden: orden as 'asc' | 'desc'
+    });
 
-        return res.status(404).json({
-            mensaje: error.message || "Hubo un problema al obtener los productos"
-        })
-
-    }
-}
+    res.status(200).json({
+      mensaje: 'Productos obtenidos exitosamente',
+      datos: resultado
+    });
+  } catch (error: any) {
+    logger.error('Error al listar productos:', error);
+    res.status(500).json({
+      mensaje: 'Error al obtener productos'
+    });
+  }
+};
 
 export const getPorId = async (req: Request, res: Response) => {
     try {
