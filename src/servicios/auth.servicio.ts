@@ -5,18 +5,6 @@ import { generarToken } from "../utils/jwt";
 import { LoginDTO, RegistroDTO } from "../validadores/usuario.validador";
 
 
-export const listarUsuarios = async () => {
-    return await prisma.usuario.findMany({
-        orderBy: {nombre: 'asc'},
-        select: {
-            "email": true,
-            "nombre": true,
-            "rol": true, 
-            "creado": true
-        }
-    }); 
-}
-
 export const registrarUsuario = async (datos: RegistroDTO) => {
     logger.warn('Iniciando proceso de registro...');
 
