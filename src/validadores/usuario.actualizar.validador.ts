@@ -1,8 +1,8 @@
 import z from "zod";
 
 export const actualizarPerfilSchema = z.object({
-    nombre: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
-    email: z.email("Email inválido")
+    nombre: z.string().min(3, 'El nombre debe tener al menos 3 caracteres').optional(),
+    email: z.email("Email inválido").optional()
 });
 
 export const cambiarPasswordSchema = z.object({

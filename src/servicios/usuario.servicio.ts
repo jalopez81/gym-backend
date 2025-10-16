@@ -17,7 +17,7 @@ export const getUsuarios = async () => {
     return usuarios;
 }
 
-export const getUsuarioPorId = async (id: string) => {
+export const obtenerUsuarioPorId = async (id: string) => {
     const usuario = await prisma.usuario.findUnique({
         where: { id }
     });

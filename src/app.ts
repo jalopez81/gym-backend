@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import logger from './config/logger'
 import authRutas from './rutas/auth.rutas'
 import productoRutas from './rutas/producto.rutas'
+import usuarioRutas from './rutas/usuario.rutas'
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRutas)
 app.use('/api/productos', productoRutas)
+app.use('/api/usuarios', usuarioRutas)
 
 // status
 app.get('/status', (req, res) => {
