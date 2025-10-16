@@ -2,6 +2,13 @@ import { NextFunction, Request, Response } from "express"
 import logger from "../config/logger";
 import { verificarToken } from "../utils/jwt";
 
+export const ROLES = {
+    ADMIN: 'admin',
+    CLIENTE: 'cliente',
+    ENTRENADOR: 'entrenador',
+    RECEPCIONISTA: 'recepcionista'
+}
+
 declare global {
     namespace Express {
         interface Request {
