@@ -6,6 +6,8 @@ import logger from './config/logger'
 import authRutas from './rutas/auth.rutas'
 import productoRutas from './rutas/producto.rutas'
 import usuarioRutas from './rutas/usuario.rutas'
+import entrenadorRutas from './rutas/usuario.rutas'
+import { manejarErrores, rutaNoEncontrada } from './middlewares/error.middleware';
 
 dotenv.config();
 
@@ -19,6 +21,11 @@ app.use(express.json());
 app.use('/api/auth', authRutas)
 app.use('/api/productos', productoRutas)
 app.use('/api/usuarios', usuarioRutas)
+app.use('/api/entrenadores', entrenadorRutas);
+
+// Manejo de errores
+app.use(rutaNoEncontrada);
+app.use(manejarErrores);
 
 // status
 app.get('/status', (req, res) => {

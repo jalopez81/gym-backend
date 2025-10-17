@@ -14,12 +14,15 @@ datasource db {
 }
 
 model Usuario {
-  id       String   @id @default(uuid())
-  email    String   @unique
-  nombre   String
-  password String
-  rol      String   @default("cliente")
-  creado   DateTime @default(now())
+  id                    String   @id @default(uuid())
+  email                 String   @unique
+  nombre                String
+  password              String
+  rol                   String   @default("cliente")
+  creado                DateTime @default(now())
+  
+  entrenador            Entrenador?
+  asignacionesEntrenador AsignacionEntrenador[] @relation("ClienteEntrenador")
 
   @@map("usuarios")
 }
@@ -34,4 +37,30 @@ model Producto {
   creado      DateTime @default(now())
 
   @@map("productos")
+}
+
+model Entrenador {
+  id              String   @id @default(uuid())
+  usuarioId       String   @unique
+  usuario         Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  especialidad    String
+  experiencia     Int      @default(0)
+  certificaciones String?
+  clientes        AsignacionEntrenador[]
+  creado          DateTime @default(now())
+
+  @@map("entrenadores")
+}
+
+model AsignacionEntrenador {
+  id             String   @id @default(uuid())
+  clienteId      String
+  cliente        Usuario  @relation("ClienteEntrenador", fields: [clienteId], references: [id], onDelete: Cascade)
+  entrenadorId   String
+  entrenador     Entrenador @relation(fields: [entrenadorId], references: [id], onDelete: Cascade)
+  fechaAsignacion DateTime @default(now())
+  activo         Boolean  @default(true)
+
+  @@unique([clienteId, entrenadorId])
+  @@map("asignaciones_entrenador")
 }
