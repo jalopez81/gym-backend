@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { obtenerUsuarioPorId, getUsuarios, actuarlizarPerfil, cambiarPassword } from "../servicios/usuario.servicio";
 import logger from "../config/logger";
 import { actualizarPerfilSchema, cambiarPasswordSchema } from "../validadores/usuario.actualizar.validador";
+import { ROLES } from "../middlewares/auth.middleware";
 
 export const listar = async (req: Request, res: Response) => {
     try {
@@ -25,6 +26,12 @@ export const obtenerPerfil = async (req: Request, res: Response) => {
             return res.status(401).json({
                 mensaje: 'No autenticado'
             });
+        }
+
+        if(id !== req.params.id && req.usuario?.rol !== ROLES.ADMIN){
+            return res.status(401).json({
+                mensaje: 'No está autorizado a ver este perfil'
+            })
         }
 
         const usuario = await obtenerUsuarioPorId(req.params.id)
