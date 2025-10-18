@@ -1,20 +1,7 @@
 import { Request, Response } from "express";
 import logger from "../config/logger";
 import { loginSchema, registroSchema } from "../validadores/usuario.validador"
-import { listarUsuarios, loginUsuario, registrarUsuario } from "../servicios/auth.servicio";
-
-export const listar = async (req: Request, res: Response) => {
-    try {
-        const usuarios = await listarUsuarios()
-
-        return res.status(200).json({
-            mensaje: "Usuarios obtenidos exitosamente",
-            datos: usuarios
-        })
-    } catch (error:any) {
-        
-    }
-}
+import { loginUsuario, registrarUsuario } from "../servicios/auth.servicio";
 
 export const registro = async (req: Request, res: Response) => {
     try {
