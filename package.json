@@ -7,7 +7,7 @@
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
     "build": "tsc",
     "start": "node dist/app.js",
-    "generarEjemplos": "ts-node src/scripts/generarEjemplos.ts"
+    "generarEjemplos": "ts-node ./scripts/generarEjemplos.ts"
 
   },
   "keywords": [],

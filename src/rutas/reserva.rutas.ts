@@ -1,0 +1,24 @@
+import { Router } from 'express';
+import {
+  crear,
+  obtenerMias,
+  listar,
+  obtenerPorSesion,
+  cancelar
+} from '../controladores/reserva.controlador';
+import { autenticar, autorizar } from '../middlewares/auth.middleware';
+
+const router = Router();
+
+// Rutas públicas
+router.get('/sesion/:sesionId', obtenerPorSesion);
+
+// Rutas protegidas
+router.post('/', autenticar, crear);
+router.get('/', autenticar, obtenerMias);
+router.delete('/:id', autenticar, cancelar);
+
+// Rutas solo admin
+router.get('/admin/todas', autenticar, autorizar('admin'), listar);
+
+export default router;

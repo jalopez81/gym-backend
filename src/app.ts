@@ -7,6 +7,10 @@ import authRutas from './rutas/auth.rutas'
 import productoRutas from './rutas/producto.rutas'
 import usuarioRutas from './rutas/usuario.rutas'
 import entrenadorRutas from './rutas/entrenador.rutas'
+import claseRutas from './rutas/clase.rutas';
+import sesionRutas from './rutas/sesion.rutas';
+import reservaRutas from './rutas/reserva.rutas';
+
 import { manejarErrores, rutaNoEncontrada } from './middlewares/error.middleware';
 
 dotenv.config();
@@ -22,6 +26,9 @@ app.use('/api/auth', authRutas)
 app.use('/api/productos', productoRutas)
 app.use('/api/usuarios', usuarioRutas)
 app.use('/api/entrenadores', entrenadorRutas);
+app.use('/api/clases', claseRutas);
+app.use('/api/sesiones', sesionRutas);
+app.use('/api/reservas', reservaRutas);
 
 // Manejo de errores
 app.use(rutaNoEncontrada);

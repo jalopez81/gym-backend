@@ -6,6 +6,7 @@ interface DatosEjemplo {
   usuariosCreados: number;
   productosCreados: number;
   entrenadoresCreados: number;
+  clasesCreadas?: number;
 }
 
 export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
@@ -176,6 +177,63 @@ export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
     }
 
     logger.info('Datos de ejemplo generados correctamente');
+
+    // Generar clases y sesiones
+    const entrenadores = await prisma.entrenador.findMany();
+    
+    if (entrenadores.length > 0) {
+      const clasesData = [
+        {
+          nombre: 'Yoga Matutino',
+          descripcion: 'Clase de yoga para principiantes',
+          duracion: 60,
+          capacidad: 15,
+          entrenadorId: entrenadores[0].id
+        },
+        {
+          nombre: 'CrossFit',
+          descripcion: 'Entrenamiento de alta intensidad',
+          duracion: 90,
+          capacidad: 20,
+          entrenadorId: entrenadores[0].id
+        },
+        {
+          nombre: 'Pilates',
+          descripcion: 'Fortalecimiento del core',
+          duracion: 50,
+          capacidad: 12,
+          entrenadorId: entrenadores[1]?.id || entrenadores[0].id
+        }
+      ];
+
+      for (const claseData of clasesData) {
+        const claseExistente = await prisma.clase.findFirst({
+          where: { nombre: claseData.nombre }
+        });
+
+        if (!claseExistente) {
+          const clase = await prisma.clase.create({
+            data: claseData
+          });
+
+          // Crear sesiones para cada clase
+          for (let i = 0; i < 3; i++) {
+            const fechaHora = new Date();
+            fechaHora.setDate(fechaHora.getDate() + i + 1);
+            fechaHora.setHours(9, 0, 0, 0);
+
+            await prisma.sesion.create({
+              data: {
+                claseId: clase.id,
+                fechaHora
+              }
+            });
+          }
+
+          resultado.clasesCreadas = (resultado.clasesCreadas || 0) + 1;
+        }
+      }
+    }
     return resultado;
   } catch (error) {
     logger.error('Error al generar datos de ejemplo:', error);

@@ -228,7 +228,7 @@ export const desasignarClienteDeEntrenador = async (
   entrenadorId: string,
   clienteId: string
 ) => {
-  await prisma.asignacionEntrenador.updateMany({
+  const result = await prisma.asignacionEntrenador.updateMany({
     where: {
       entrenadorId,
       clienteId,

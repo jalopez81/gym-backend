@@ -23,6 +23,7 @@ model Usuario {
   
   entrenador            Entrenador?
   asignacionesEntrenador AsignacionEntrenador[] @relation("ClienteEntrenador")
+  reservas              Reserva[]
 
   @@map("usuarios")
 }
@@ -48,6 +49,8 @@ model Entrenador {
   certificaciones String?
   clientes        AsignacionEntrenador[]
   creado          DateTime @default(now())
+  clases          Clase[]
+
 
   @@map("entrenadores")
 }
@@ -63,4 +66,42 @@ model AsignacionEntrenador {
 
   @@unique([clienteId, entrenadorId])
   @@map("asignaciones_entrenador")
+}
+
+model Clase {
+  id              String   @id @default(uuid())
+  nombre          String
+  descripcion     String?
+  duracion        Int      @default(60)
+  capacidad       Int
+  entrenadorId    String
+  entrenador      Entrenador @relation(fields: [entrenadorId], references: [id], onDelete: Cascade)
+  sesiones        Sesion[]
+  creado          DateTime @default(now())
+
+  @@map("clases")
+}
+
+model Sesion {
+  id          String   @id @default(uuid())
+  claseId     String
+  clase       Clase    @relation(fields: [claseId], references: [id], onDelete: Cascade)
+  fechaHora   DateTime
+  reservas    Reserva[]
+  creado      DateTime @default(now())
+
+  @@map("sesiones")
+}
+
+model Reserva {
+  id          String   @id @default(uuid())
+  clienteId   String
+  cliente     Usuario  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  sesionId    String
+  sesion      Sesion   @relation(fields: [sesionId], references: [id], onDelete: Cascade)
+  estado      String   @default("reservado")
+  creado      DateTime @default(now())
+
+  @@unique([clienteId, sesionId])
+  @@map("reservas")
 }
