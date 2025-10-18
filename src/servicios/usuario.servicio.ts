@@ -6,6 +6,7 @@ import { ActualizarPerfilDTO, CambiarPasswordDTO } from "../validadores/usuario.
 export const getUsuarios = async () => {
     const usuarios = await prisma.usuario.findMany({
         select: {
+            id: true,
             email: true,
             nombre: true,
             rol: true,
