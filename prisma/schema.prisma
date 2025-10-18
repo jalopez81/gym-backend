@@ -25,7 +25,8 @@ model Usuario {
   asignacionesEntrenador AsignacionEntrenador[] @relation("ClienteEntrenador")
   reservas              Reserva[]
   suscripciones         Suscripcion[]
-
+  asistencias           Asistencia[]
+  
 
   @@map("usuarios")
 }
@@ -92,6 +93,8 @@ model Sesion {
   reservas    Reserva[]
   creado      DateTime @default(now())
 
+  asistencias Asistencia[]
+
   @@map("sesiones")
 }
 
@@ -134,4 +137,18 @@ model Suscripcion {
 
   @@unique([usuarioId, estado])
   @@map("suscripciones")
+}
+
+model Asistencia {
+  id          String   @id @default(uuid())
+  sesionId    String
+  sesion      Sesion   @relation(fields: [sesionId], references: [id], onDelete: Cascade)
+  clienteId   String
+  cliente     Usuario  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  estado      String   @default("asistio")
+  horaEntrada DateTime?
+  creado      DateTime @default(now())
+
+  @@unique([sesionId, clienteId])
+  @@map("asistencias")
 }
