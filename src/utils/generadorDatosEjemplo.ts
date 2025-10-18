@@ -7,6 +7,7 @@ interface DatosEjemplo {
   productosCreados: number;
   entrenadoresCreados: number;
   clasesCreadas?: number;
+  planesCreados?: number;
 }
 
 export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
@@ -232,6 +233,44 @@ export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
 
           resultado.clasesCreadas = (resultado.clasesCreadas || 0) + 1;
         }
+      }
+    }
+
+    // Generar planes
+    const planesData = [
+      {
+        nombre: 'Básico',
+        descripcion: 'Acceso a todas las clases grupales',
+        precio: 19.99,
+        duracionDias: 30,
+        beneficios: 'Clases ilimitadas, Sin entrenador personal'
+      },
+      {
+        nombre: 'Premium',
+        descripcion: 'Acceso a todas las clases + 2 sesiones con entrenador',
+        precio: 49.99,
+        duracionDias: 30,
+        beneficios: 'Clases ilimitadas, 2 sesiones con entrenador, Acceso 24/7'
+      },
+      {
+        nombre: 'Gold',
+        descripcion: 'Acceso total + Entrenador personal dedicado',
+        precio: 99.99,
+        duracionDias: 30,
+        beneficios: 'Clases ilimitadas, Entrenador personal, Acceso 24/7, Plan nutricional'
+      }
+    ];
+
+    for (const planData of planesData) {
+      const planExistente = await prisma.plan.findUnique({
+        where: { nombre: planData.nombre }
+      });
+
+      if (!planExistente) {
+        await prisma.plan.create({
+          data: planData
+        });
+        resultado.planesCreados = (resultado.planesCreados || 0) + 1;
       }
     }
     return resultado;

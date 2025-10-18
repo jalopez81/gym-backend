@@ -10,6 +10,8 @@ import entrenadorRutas from './rutas/entrenador.rutas'
 import claseRutas from './rutas/clase.rutas';
 import sesionRutas from './rutas/sesion.rutas';
 import reservaRutas from './rutas/reserva.rutas';
+import planRutas from './rutas/plan.rutas';
+import suscripcionRutas from './rutas/suscripcion.rutas';
 
 import { manejarErrores, rutaNoEncontrada } from './middlewares/error.middleware';
 
@@ -29,6 +31,8 @@ app.use('/api/entrenadores', entrenadorRutas);
 app.use('/api/clases', claseRutas);
 app.use('/api/sesiones', sesionRutas);
 app.use('/api/reservas', reservaRutas);
+app.use('/api/planes', planRutas);
+app.use('/api/suscripciones', suscripcionRutas);
 
 // Manejo de errores
 app.use(rutaNoEncontrada);
