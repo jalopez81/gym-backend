@@ -26,7 +26,8 @@ model Usuario {
   reservas              Reserva[]
   suscripciones         Suscripcion[]
   asistencias           Asistencia[]
-  
+  carritoItems          CarritoItem[]
+  ordenes               Orden[]
 
   @@map("usuarios")
 }
@@ -39,6 +40,9 @@ model Producto {
   stock       Int      @default(0)
   categoria   String
   creado      DateTime @default(now())
+
+  carritoItems CarritoItem[]
+  ordenItems   OrdenItem[]
 
   @@map("productos")
 }
@@ -151,4 +155,42 @@ model Asistencia {
 
   @@unique([sesionId, clienteId])
   @@map("asistencias")
+}
+
+model CarritoItem {
+  id        String   @id @default(uuid())
+  usuarioId String
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  productoId String
+  producto  Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  cantidad  Int      @default(1)
+  creado    DateTime @default(now())
+
+  @@unique([usuarioId, productoId])
+  @@map("carrito_items")
+}
+
+model Orden {
+  id        String   @id @default(uuid())
+  usuarioId String
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  items     OrdenItem[]
+  total     Float
+  estado    String   @default("pendiente")
+  creado    DateTime @default(now())
+
+  @@map("ordenes")
+}
+
+model OrdenItem {
+  id        String   @id @default(uuid())
+  ordenId   String
+  orden     Orden    @relation(fields: [ordenId], references: [id], onDelete: Cascade)
+  productoId String
+  producto  Producto @relation(fields: [productoId], references: [id])
+  cantidad  Int
+  precioUnitario Float
+  subtotal  Float
+
+  @@map("orden_items")
 }
