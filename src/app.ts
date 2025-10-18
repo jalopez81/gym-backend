@@ -12,6 +12,7 @@ import sesionRutas from './rutas/sesion.rutas';
 import reservaRutas from './rutas/reserva.rutas';
 import planRutas from './rutas/plan.rutas';
 import suscripcionRutas from './rutas/suscripcion.rutas';
+import asistenciaRutas from './rutas/asistencia.rutas';
 
 import { manejarErrores, rutaNoEncontrada } from './middlewares/error.middleware';
 
@@ -33,6 +34,7 @@ app.use('/api/sesiones', sesionRutas);
 app.use('/api/reservas', reservaRutas);
 app.use('/api/planes', planRutas);
 app.use('/api/suscripciones', suscripcionRutas);
+app.use('/api/asistencia', asistenciaRutas);
 
 // Manejo de errores
 app.use(rutaNoEncontrada);
