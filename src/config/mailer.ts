@@ -26,7 +26,7 @@ export const enviarEmail = async (
   try {
     await transporter.sendMail({
       from: '"Leury Gym" <leury.gym@gmail.com>',
-      to: 'jorge0481rd@gmail.com',
+      to: destinatario,
       subject: asunto,
       html
     });

@@ -11,9 +11,13 @@
 ## Estructura del Proyecto
 - `src/index.ts` - Servidor principal
 - `src/config/logger.ts` - Configuración de Winston
+- `src/config/mailer.ts` - Configuración de Nodemailer para envío de emails
 - `src/modelos/prisma.ts` - Cliente de Prisma
 - `src/utilidades/jwt.ts` - Generación y verificación de tokens
 - `src/utilidades/hash.ts` - Encriptación de contraseñas
+- `src/utilidades/generador.ts` - Generador de datos de ejemplo
+- `src/utilidades/emailTemplates.ts` - Templates HTML profesionales para emails
+- `src/utilidades/generador.ts` - Generador de datos de ejemplo
 - `src/middlewares/auth.middleware.ts` - Middleware de autenticación y autorización
 - `src/middlewares/error.middleware.ts` - Middleware de manejo de errores centralizado
 - `src/validadores/usuario.validador.ts` - Esquemas de validación con Zod (usuarios)
