@@ -8,7 +8,6 @@
     "build": "tsc",
     "start": "node dist/app.js",
     "generar-datos": "ts-node ./scripts/generarEjemplos.ts"
-
   },
   "keywords": [],
   "author": "",
@@ -30,8 +29,6 @@
     "axios": "^1.12.2",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
-    "datadog-winston": "^1.6.0",
-    "dd-trace": "^5.71.0",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",

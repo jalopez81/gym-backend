@@ -1,4 +1,3 @@
-import '../tracer.js';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -13,6 +12,8 @@ import reservaRutas from './rutas/reserva.rutas';
 import planRutas from './rutas/plan.rutas';
 import suscripcionRutas from './rutas/suscripcion.rutas';
 import asistenciaRutas from './rutas/asistencia.rutas';
+import carritoRutas from './rutas/carrito.rutas';
+import ordenRutas from './rutas/orden.rutas';
 
 import { manejarErrores, rutaNoEncontrada } from './middlewares/error.middleware';
 
@@ -35,6 +36,8 @@ app.use('/api/reservas', reservaRutas);
 app.use('/api/planes', planRutas);
 app.use('/api/suscripciones', suscripcionRutas);
 app.use('/api/asistencia', asistenciaRutas);
+app.use('/api/carrito', carritoRutas);
+app.use('/api/ordenes', ordenRutas);
 
 // Manejo de errores
 app.use(rutaNoEncontrada);
