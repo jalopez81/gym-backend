@@ -1,5 +1,7 @@
 import prisma from '../modelos/prisma';
 import logger from '../config/logger';
+import { enviarEmail } from '../config/mailer';
+import { templateConfirmacionOrden, templateNotificacionAdmin } from '../utils/emailTemplates';
 
 export const crearOrden = async (usuarioId: string) => {
   // Obtener carrito del usuario
@@ -160,6 +162,13 @@ export const completarOrden = async (ordenId: string, usuarioId: string) => {
         include: {
           producto: true
         }
+      },
+      usuario: {
+        select: {
+          id: true,
+          nombre: true,
+          email: true
+        }
       }
     }
   });
@@ -168,6 +177,34 @@ export const completarOrden = async (ordenId: string, usuarioId: string) => {
   await prisma.carritoItem.deleteMany({
     where: { usuarioId }
   });
+
+  // Enviar email al cliente
+  enviarEmail(
+    ordenActualizada.usuario.email,
+    `Orden #${ordenId} Confirmada`,
+    templateConfirmacionOrden(
+      ordenActualizada.usuario.nombre,
+      ordenId,
+      ordenActualizada.total,
+      ordenActualizada.items.map(item => ({
+        nombre: item.producto.nombre,
+        cantidad: item.cantidad,
+        precio: item.precioUnitario
+      }))
+    )
+  );
+
+  // Enviar notificación al admin
+  enviarEmail(
+    process.env.EMAIL_USER || '',
+    'Nueva Orden Completada',
+    templateNotificacionAdmin(
+      ordenActualizada.usuario.nombre,
+      ordenActualizada.usuario.email,
+      ordenActualizada.total,
+      ordenId
+    )
+  );
 
   logger.info(`Orden completada: ${ordenId}`);
   return ordenActualizada;

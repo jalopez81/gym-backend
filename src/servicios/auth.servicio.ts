@@ -3,51 +3,59 @@ import prisma from "../modelos/prisma";
 import { compararHash, generarHash } from "../utils/hash";
 import { generarToken } from "../utils/jwt";
 import { LoginDTO, RegistroDTO } from "../validadores/usuario.validador";
+import { enviarEmail } from '../config/mailer';
+import {
+  templateBienvenida
+} from '../utils/emailTemplates';
 
 
 export const registrarUsuario = async (datos: RegistroDTO) => {
-    logger.warn('Iniciando proceso de registro...');
+  // Verificar si el email ya existe
+  const usuarioExistente = await prisma.usuario.findUnique({
+    where: { email: datos.email }
+  });
 
-    // Verificar si el email ya existe
-    const usuarioExistente = await prisma.usuario.findUnique({
-        where: { email: datos.email }
-    })
+  if (usuarioExistente) {
+    throw new Error('El email ya está registrado');
+  }
 
-    if (usuarioExistente) {
-        throw new Error('El email ya está registrado');
+  // Encriptar contraseña
+  const passwordHash = await generarHash(datos.password);
+
+  // Crear usuario
+  const usuario = await prisma.usuario.create({
+    data: {
+      nombre: datos.nombre,
+      email: datos.email,
+      password: passwordHash,
+      rol: datos.rol || 'cliente'
+    },
+    select: {
+      id: true,
+      nombre: true,
+      email: true,
+      rol: true,
+      creado: true,
     }
+  });
 
-    // Encriptar contraseña
-    const passwordHash = await generarHash(datos.password);
+  logger.info(`Usuario registrado: ${usuario.email}`);
 
-    // Crear usuario
-    const usuario = await prisma.usuario.create({
-        data: {
-            nombre: datos.nombre,
-            email: datos.email,
-            password: passwordHash,
-            rol: datos.rol || 'cliente'
-        },
-        select: {
-            id: true,
-            nombre: true,
-            email: true,
-            rol: true,
-            creado: true,
-        }
-    })
+  // Enviar email de bienvenida (sin bloquear)
+  enviarEmail(
+    usuario.email,
+    'Bienvenido a nuestro Gimnasio',
+    templateBienvenida(usuario.nombre)
+  );
 
-    logger.info(`Usuario registrado: ${usuario.email}`);
+  // Generar token
+  const token = generarToken({
+    id: usuario.id,
+    email: usuario.email,
+    rol: usuario.rol
+  });
 
-    // Generar token
-    const token = generarToken({
-        id: usuario.id,
-        email: usuario.email,
-        rol: usuario.rol
-    })
-
-    return { usuario, token }
-
+  return { usuario, token }
 };
 
 export const loginUsuario = async (datos: LoginDTO) => {

@@ -1,6 +1,8 @@
 import prisma from '../modelos/prisma';
 import { CrearSuscripcionDTO } from '../validadores/suscripcion.validador';
 import logger from '../config/logger';
+import { enviarEmail } from '../config/mailer';
+import { templateSuscripcion } from '../utils/emailTemplates';
 
 export const crearSuscripcion = async (usuarioId: string, datos: CrearSuscripcionDTO) => {
   // Verificar que el usuario existe
@@ -56,6 +58,18 @@ export const crearSuscripcion = async (usuarioId: string, datos: CrearSuscripcio
       plan: true
     }
   });
+
+  // Enviar email de confirmación (sin bloquear)
+  enviarEmail(
+    suscripcion.usuario.email,
+    'Suscripción Confirmada',
+    templateSuscripcion(
+      suscripcion.usuario.nombre,
+      suscripcion.plan.nombre,
+      suscripcion.plan.precio,
+      suscripcion.fechaVencimiento.toLocaleDateString('es-ES')
+    )
+  );
 
   logger.info(`Suscripción creada: ${usuarioId} - Plan ${datos.planId}`);
   return suscripcion;
