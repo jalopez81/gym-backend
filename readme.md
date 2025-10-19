@@ -44,6 +44,7 @@
 - `src/servicios/carrito.servicio.ts` - Lógica de negocio de carrito (CRUD)
 - `src/servicios/orden.servicio.ts` - Lógica de negocio de órdenes (CRUD + completar)
 - `src/servicios/reporte.servicio.ts` - Lógica de negocio de reportes (generación Excel)
+- `src/servicios/backup.servicio.ts` - Lógica de negocio de backups automáticos
 - `src/controladores/auth.controlador.ts` - Manejo de peticiones HTTP (auth)
 - `src/controladores/producto.controlador.ts` - Manejo de peticiones HTTP (productos)
 - `src/controladores/usuario.controlador.ts` - Manejo de peticiones HTTP (usuarios)
@@ -57,6 +58,7 @@
 - `src/controladores/carrito.controlador.ts` - Manejo de peticiones HTTP (carrito)
 - `src/controladores/orden.controlador.ts` - Manejo de peticiones HTTP (órdenes)
 - `src/controladores/reporte.controlador.ts` - Manejo de peticiones HTTP (reportes)
+- `src/controladores/backup.controlador.ts` - Manejo de peticiones HTTP (backups)
 - `src/rutas/auth.rutas.ts` - Definición de endpoints (auth)
 - `src/rutas/producto.rutas.ts` - Definición de endpoints (productos con protección)
 - `src/rutas/usuario.rutas.ts` - Definición de endpoints (usuarios con protección)
@@ -70,6 +72,7 @@
 - `src/rutas/carrito.rutas.ts` - Definición de endpoints (carrito con protección)
 - `src/rutas/orden.rutas.ts` - Definición de endpoints (órdenes con protección)
 - `src/rutas/reporte.rutas.ts` - Definición de endpoints (reportes con protección admin)
+- `src/rutas/backup.rutas.ts` - Definición de endpoints (backups con protección admin)
 
 ## Base de Datos (Prisma Schema)
 - Modelo `Usuario`: id, email, nombre, password, rol, creado
@@ -190,6 +193,11 @@
 - `GET /api/reportes/asistencia` - Descargar reporte de asistencia (Excel)
 - `GET /api/reportes/asistencia?claseId={ID}` - Reporte de asistencia por clase
 
+### Backups (Solo Admin)
+- `POST /api/backups/manual` - Crear backup manual
+- `GET /api/backups` - Listar todos los backups
+- `POST /api/backups/{ID}/restaurar` - Restaurar un backup específico
+
 ## Scripts NPM
 - `npm run dev` - Ejecutar en modo desarrollo
 - `npm run build` - Compilar TypeScript
@@ -239,6 +247,8 @@
 - ✅ Sistema de Asistencia
 - ✅ Sistema de Carrito y Órdenes
 - ✅ Reportes Exportables
+- ✅ Notificaciones por Email
+- ✅ Sistema de Backups
 
 ## Próximos Pasos
 - Agregar módulo de Asistencia
