@@ -24,7 +24,9 @@
 - `src/validadores/sesion.validador.ts` - Esquemas de validación con Zod (sesiones)
 - `src/validadores/reserva.validador.ts` - Esquemas de validación con Zod (reservas)
 - `src/validadores/plan.validador.ts` - Esquemas de validación con Zod (planes)
-- `src/validadores/suscripcion.validador.ts` - Esquemas de validación con Zod (suscripciones)
+- `src/validadores/asistencia.validador.ts` - Esquemas de validación con Zod (asistencia)
+- `src/validadores/carrito.validador.ts` - Esquemas de validación con Zod (carrito)
+- `src/validadores/orden.validador.ts` - Esquemas de validación con Zod (órdenes)
 - `src/servicios/auth.servicio.ts` - Lógica de negocio de autenticación
 - `src/servicios/producto.servicio.ts` - Lógica de negocio de productos (CRUD + filtros)
 - `src/servicios/usuario.servicio.ts` - Lógica de negocio de usuarios (CRUD)
@@ -34,6 +36,10 @@
 - `src/servicios/reserva.servicio.ts` - Lógica de negocio de reservas (CRUD + validaciones)
 - `src/servicios/plan.servicio.ts` - Lógica de negocio de planes (CRUD)
 - `src/servicios/suscripcion.servicio.ts` - Lógica de negocio de suscripciones (CRUD + renovación)
+- `src/servicios/asistencia.servicio.ts` - Lógica de negocio de asistencia (CRUD + estadísticas)
+- `src/servicios/carrito.servicio.ts` - Lógica de negocio de carrito (CRUD)
+- `src/servicios/orden.servicio.ts` - Lógica de negocio de órdenes (CRUD + completar)
+- `src/servicios/reporte.servicio.ts` - Lógica de negocio de reportes (generación Excel)
 - `src/controladores/auth.controlador.ts` - Manejo de peticiones HTTP (auth)
 - `src/controladores/producto.controlador.ts` - Manejo de peticiones HTTP (productos)
 - `src/controladores/usuario.controlador.ts` - Manejo de peticiones HTTP (usuarios)
@@ -43,6 +49,10 @@
 - `src/controladores/reserva.controlador.ts` - Manejo de peticiones HTTP (reservas)
 - `src/controladores/plan.controlador.ts` - Manejo de peticiones HTTP (planes)
 - `src/controladores/suscripcion.controlador.ts` - Manejo de peticiones HTTP (suscripciones)
+- `src/controladores/asistencia.controlador.ts` - Manejo de peticiones HTTP (asistencia)
+- `src/controladores/carrito.controlador.ts` - Manejo de peticiones HTTP (carrito)
+- `src/controladores/orden.controlador.ts` - Manejo de peticiones HTTP (órdenes)
+- `src/controladores/reporte.controlador.ts` - Manejo de peticiones HTTP (reportes)
 - `src/rutas/auth.rutas.ts` - Definición de endpoints (auth)
 - `src/rutas/producto.rutas.ts` - Definición de endpoints (productos con protección)
 - `src/rutas/usuario.rutas.ts` - Definición de endpoints (usuarios con protección)
@@ -52,17 +62,25 @@
 - `src/rutas/reserva.rutas.ts` - Definición de endpoints (reservas con protección)
 - `src/rutas/plan.rutas.ts` - Definición de endpoints (planes con protección)
 - `src/rutas/suscripcion.rutas.ts` - Definición de endpoints (suscripciones con protección)
+- `src/rutas/asistencia.rutas.ts` - Definición de endpoints (asistencia con protección)
+- `src/rutas/carrito.rutas.ts` - Definición de endpoints (carrito con protección)
+- `src/rutas/orden.rutas.ts` - Definición de endpoints (órdenes con protección)
+- `src/rutas/reporte.rutas.ts` - Definición de endpoints (reportes con protección admin)
 
 ## Base de Datos (Prisma Schema)
 - Modelo `Usuario`: id, email, nombre, password, rol, creado
 - Modelo `Producto`: id, nombre, descripcion, precio, stock, categoria, creado
 - Modelo `Entrenador`: id, usuarioId, especialidad, experiencia, certificaciones, creado
-- Modelo `AsignacionEntrenador`: id, clienteId, entrenadorId, fechaAsignacion, activo (relación muchos-a-muchos)
+- Modelo `AsignacionEntrenador`: id, clienteId, entrenadorId, fechaAsignacion, activo
 - Modelo `Clase`: id, nombre, descripcion, duracion, capacidad, entrenadorId, creado
 - Modelo `Sesion`: id, claseId, fechaHora, creado
 - Modelo `Reserva`: id, clienteId, sesionId, estado, creado
 - Modelo `Plan`: id, nombre, descripcion, precio, duracionDias, beneficios, creado
 - Modelo `Suscripcion`: id, usuarioId, planId, fechaInicio, fechaVencimiento, estado, creado
+- Modelo `Asistencia`: id, sesionId, clienteId, estado, horaEntrada, creado
+- Modelo `CarritoItem`: id, usuarioId, productoId, cantidad, creado
+- Modelo `Orden`: id, usuarioId, total, estado, creado
+- Modelo `OrdenItem`: id, ordenId, productoId, cantidad, precioUnitario, subtotal
 
 ## Variables de Entorno (.env)
 - `PORT=5000`
@@ -134,6 +152,40 @@
 - `POST /api/suscripciones/:id/renovar` - Renovar suscripción (requiere: autenticación)
 - `GET /api/suscripciones` - Listar todas las suscripciones (requiere: autenticación + rol admin)
 
+### Asistencia
+- `POST /api/asistencia` - Marcar asistencia (requiere: autenticación)
+- `GET /api/asistencia/sesion/:sesionId` - Obtener asistencias de sesión (público)
+- `GET /api/asistencia/mi-historial` - Obtener mi historial (requiere: autenticación)
+- `GET /api/asistencia/estadisticas/:clienteId` - Obtener estadísticas (requiere: autenticación)
+- `GET /api/asistencia` - Listar todas (requiere: autenticación + rol admin)
+
+### Carrito
+- `POST /api/carrito` - Agregar producto (requiere: autenticación)
+- `GET /api/carrito` - Obtener mi carrito (requiere: autenticación)
+- `PUT /api/carrito/:productoId` - Actualizar cantidad (requiere: autenticación)
+- `DELETE /api/carrito/:productoId` - Eliminar producto (requiere: autenticación)
+- `DELETE /api/carrito` - Vaciar carrito (requiere: autenticación)
+
+### Órdenes
+- `POST /api/ordenes` - Crear orden (requiere: autenticación)
+- `GET /api/ordenes/mis-ordenes` - Obtener mis órdenes (requiere: autenticación)
+- `GET /api/ordenes/:id` - Obtener detalle de orden (requiere: autenticación)
+- `POST /api/ordenes/:id/completar` - Completar orden/pago simulado (requiere: autenticación)
+- `POST /api/ordenes/:id/cancelar` - Cancelar orden (requiere: autenticación)
+- `GET /api/ordenes` - Listar todas (requiere: autenticación + rol admin)
+
+### Reportes (Solo Admin)
+- `GET /api/reportes/usuarios` - Descargar reporte de usuarios (Excel)
+- `GET /api/reportes/productos` - Descargar reporte de productos (Excel)
+- `GET /api/reportes/ordenes` - Descargar reporte de órdenes (Excel)
+- `GET /api/reportes/ordenes?estado=completada` - Reporte de órdenes completadas
+- `GET /api/reportes/ordenes?estado=pendiente` - Reporte de órdenes pendientes
+- `GET /api/reportes/suscripciones` - Descargar reporte de suscripciones (Excel)
+- `GET /api/reportes/suscripciones?estado=activa` - Reporte de suscripciones activas
+- `GET /api/reportes/suscripciones?estado=vencida` - Reporte de suscripciones vencidas
+- `GET /api/reportes/asistencia` - Descargar reporte de asistencia (Excel)
+- `GET /api/reportes/asistencia?claseId={ID}` - Reporte de asistencia por clase
+
 ## Scripts NPM
 - `npm run dev` - Ejecutar en modo desarrollo
 - `npm run build` - Compilar TypeScript
@@ -180,3 +232,23 @@
 - ✅ Gestión de Sesiones
 - ✅ Sistema de Reservas
 - ✅ Sistema de Planes de Suscripción
+- ✅ Sistema de Asistencia
+- ✅ Sistema de Carrito y Órdenes
+- ✅ Reportes Exportables
+
+## Próximos Pasos
+- Agregar módulo de Asistencia
+- Agregar módulo de Ventas y Pagos (simulados)
+- Implementar sistema de notificaciones por email
+- Crear reportes exportables (Excel/PDF)
+- Sistema de backups automáticos
+- Comenzar con el frontend (Next.js)
+
+## Estado Actual
+✅ **Backend completamente funcional** con 9 módulos implementados
+✅ Todos los endpoints testeados en Postman
+✅ Sistema de autenticación y autorización por roles
+✅ Validaciones robustas con Zod
+✅ Logging completo con Winston
+✅ Manejo centralizado de errores
+✅ Generador de datos de ejemplo

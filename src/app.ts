@@ -14,6 +14,7 @@ import suscripcionRutas from './rutas/suscripcion.rutas';
 import asistenciaRutas from './rutas/asistencia.rutas';
 import carritoRutas from './rutas/carrito.rutas';
 import ordenRutas from './rutas/orden.rutas';
+import reporteRutas from './rutas/reporte.rutas';
 
 import { manejarErrores, rutaNoEncontrada } from './middlewares/error.middleware';
 
@@ -38,6 +39,7 @@ app.use('/api/suscripciones', suscripcionRutas);
 app.use('/api/asistencia', asistenciaRutas);
 app.use('/api/carrito', carritoRutas);
 app.use('/api/ordenes', ordenRutas);
+app.use('/api/reportes', reporteRutas);
 
 // Manejo de errores
 app.use(rutaNoEncontrada);
