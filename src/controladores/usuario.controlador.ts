@@ -18,7 +18,30 @@ export const listar = async (req: Request, res: Response) => {
     }
 }
 
-export const obtenerPerfil = async (req: Request, res: Response) => {
+export const miPerfil = async (req: Request, res: Response) => {
+    try {
+        const id = req.usuario?.id;
+        
+        if (!id) {
+            return res.status(401).json({
+                mensaje: 'No autenticado'
+            });
+        }
+
+        const usuario = await obtenerUsuarioPorId(id)
+        res.status(200).json(usuario)
+        
+    } catch (error:any) {
+        res.status(401).json({
+            mensaje: 'Hubo un error al obtener el perfil',
+            datos: error.message
+        })
+        
+    }
+
+}
+
+export const usuarioPorId = async (req: Request, res: Response) => {
     try {
         const id = req.usuario?.id;
 
