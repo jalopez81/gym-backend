@@ -28,7 +28,18 @@ export const miPerfil = async (req: Request, res: Response) => {
             });
         }
 
-        const usuario = await obtenerUsuarioPorId(id)
+        const obj  = await obtenerUsuarioPorId(id)        
+        const usuario = {
+            nombre: obj.nombre,
+            rol: obj.rol,
+            email: obj.email,
+            id: obj.id,
+            creado: obj.creado,
+        };
+        
+        
+
+        
         res.status(200).json(usuario)
         
     } catch (error:any) {

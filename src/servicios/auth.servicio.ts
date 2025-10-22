@@ -76,8 +76,7 @@ export const loginUsuario = async (datos: LoginDTO) => {
         id: usuario.id,
         email: usuario.email,
         nombre: usuario.nombre,
-        rol: usuario.rol,
-        creado: usuario.creado
+        rol: usuario.rol
     });
 
     return {
@@ -86,6 +85,7 @@ export const loginUsuario = async (datos: LoginDTO) => {
             nombre: usuario.nombre,
             email: usuario.email,
             rol: usuario.rol,
+            creado: usuario.creado
         },
         token
     }

@@ -39,8 +39,9 @@ export const login = async (req: Request, res: Response) => {
 
         return res.status(200).json({
             message: 'Usuario autenticado exitosamente',
-            datos: resultado
+            ...resultado
         })
+
 
     } catch (error: any) {
         logger.error(`Error de autenticación: ${error}`)
