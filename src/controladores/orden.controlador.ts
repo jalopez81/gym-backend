@@ -21,10 +21,7 @@ export const crear = async (req: Request, res: Response) => {
 
     const orden = await crearOrden(usuarioId);
 
-    res.status(201).json({
-      mensaje: 'Orden creada exitosamente',
-      datos: orden
-    });
+    res.status(201).json(orden);
   } catch (error: any) {
     logger.error('Error al crear orden:', error);
     res.status(400).json({
@@ -45,10 +42,7 @@ export const obtenerMias = async (req: Request, res: Response) => {
 
     const ordenes = await obtenerMisOrdenes(usuarioId);
 
-    res.status(200).json({
-      mensaje: 'Órdenes obtenidas exitosamente',
-      datos: ordenes
-    });
+    res.status(200).json(ordenes);
   } catch (error: any) {
     logger.error('Error al obtener órdenes:', error);
     res.status(500).json({
@@ -70,10 +64,7 @@ export const obtenerPorId = async (req: Request, res: Response) => {
 
     const orden = await obtenerOrdenPorId(id, usuarioId);
 
-    res.status(200).json({
-      mensaje: 'Orden obtenida exitosamente',
-      datos: orden
-    });
+    res.status(200).json(orden);
   } catch (error: any) {
     logger.error('Error al obtener orden:', error);
     res.status(404).json({
@@ -86,10 +77,7 @@ export const listar = async (req: Request, res: Response) => {
   try {
     const ordenes = await obtenerTodasLasOrdenes();
 
-    res.status(200).json({
-      mensaje: 'Órdenes obtenidas exitosamente',
-      datos: ordenes
-    });
+    res.status(200).json(ordenes);
   } catch (error: any) {
     logger.error('Error al listar órdenes:', error);
     res.status(500).json({
@@ -111,10 +99,7 @@ export const completar = async (req: Request, res: Response) => {
 
     const orden = await completarOrden(id, usuarioId);
 
-    res.status(200).json({
-      mensaje: 'Orden completada exitosamente (pago simulado)',
-      datos: orden
-    });
+    res.status(200).json(orden);
   } catch (error: any) {
     logger.error('Error al completar orden:', error);
     res.status(400).json({
@@ -136,10 +121,7 @@ export const cancelar = async (req: Request, res: Response) => {
 
     const orden = await cancelarOrden(id, usuarioId);
 
-    res.status(200).json({
-      mensaje: 'Orden cancelada exitosamente',
-      datos: orden
-    });
+    res.status(200).json(orden);
   } catch (error: any) {
     logger.error('Error al cancelar orden:', error);
     res.status(400).json({

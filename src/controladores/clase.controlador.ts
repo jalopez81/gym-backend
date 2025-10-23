@@ -17,10 +17,7 @@ export const crear = async (req: Request, res: Response) => {
     const datosValidados = crearClaseSchema.parse(req.body);
     const clase = await crearClase(datosValidados);
 
-    res.status(201).json({
-      mensaje: 'Clase creada exitosamente',
-      datos: clase
-    });
+    res.status(201).json(clase);
   } catch (error: any) {
     logger.error('Error al crear clase:', error);
 
@@ -41,10 +38,7 @@ export const listar = async (req: Request, res: Response) => {
   try {
     const clases = await obtenerClases();
 
-    res.status(200).json({
-      mensaje: 'Clases obtenidas exitosamente',
-      datos: clases
-    });
+    res.status(200).json(clases);
   } catch (error: any) {
     logger.error('Error al listar clases:', error);
     res.status(500).json({
@@ -58,10 +52,7 @@ export const obtenerPorId = async (req: Request, res: Response) => {
     const { id } = req.params;
     const clase = await obtenerClasePorId(id);
 
-    res.status(200).json({
-      mensaje: 'Clase obtenida exitosamente',
-      datos: clase
-    });
+    res.status(200).json(clase);
   } catch (error: any) {
     logger.error('Error al obtener clase:', error);
     res.status(404).json({
@@ -76,10 +67,7 @@ export const actualizar = async (req: Request, res: Response) => {
     const datosValidados = actualizarClaseSchema.parse(req.body);
     const clase = await actualizarClase(id, datosValidados);
 
-    res.status(200).json({
-      mensaje: 'Clase actualizada exitosamente',
-      datos: clase
-    });
+    res.status(200).json(clase);
   } catch (error: any) {
     logger.error('Error al actualizar clase:', error);
 

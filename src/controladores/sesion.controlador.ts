@@ -18,10 +18,7 @@ export const crear = async (req: Request, res: Response) => {
     const datosValidados = crearSesionSchema.parse(req.body);
     const sesion = await crearSesion(datosValidados);
 
-    res.status(201).json({
-      mensaje: 'Sesión creada exitosamente',
-      datos: sesion
-    });
+    res.status(201).json(sesion);
   } catch (error: any) {
     logger.error('Error al crear sesión:', error);
 
@@ -42,10 +39,7 @@ export const listar = async (req: Request, res: Response) => {
   try {
     const sesiones = await obtenerSesiones();
 
-    res.status(200).json({
-      mensaje: 'Sesiones obtenidas exitosamente',
-      datos: sesiones
-    });
+    res.status(200).json(sesiones);
   } catch (error: any) {
     logger.error('Error al listar sesiones:', error);
     res.status(500).json({
@@ -59,10 +53,7 @@ export const obtenerPorId = async (req: Request, res: Response) => {
     const { id } = req.params;
     const sesion = await obtenerSesionPorId(id);
 
-    res.status(200).json({
-      mensaje: 'Sesión obtenida exitosamente',
-      datos: sesion
-    });
+    res.status(200).json(sesion);
   } catch (error: any) {
     logger.error('Error al obtener sesión:', error);
     res.status(404).json({
@@ -77,10 +68,7 @@ export const actualizar = async (req: Request, res: Response) => {
     const datosValidados = actualizarSesionSchema.parse(req.body);
     const sesion = await actualizarSesion(id, datosValidados);
 
-    res.status(200).json({
-      mensaje: 'Sesión actualizada exitosamente',
-      datos: sesion
-    });
+    res.status(200).json(sesion);
   } catch (error: any) {
     logger.error('Error al actualizar sesión:', error);
 
@@ -118,10 +106,7 @@ export const obtenerPorClase = async (req: Request, res: Response) => {
     const { claseId } = req.params;
     const sesiones = await obtenerSesionesPorClase(claseId);
 
-    res.status(200).json({
-      mensaje: 'Sesiones de la clase obtenidas exitosamente',
-      datos: sesiones
-    });
+    res.status(200).json(sesiones);
   } catch (error: any) {
     logger.error('Error al obtener sesiones de la clase:', error);
     res.status(500).json({

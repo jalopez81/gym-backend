@@ -51,10 +51,7 @@ export const listar = async (req: Request, res: Response) => {
       orden: orden as 'asc' | 'desc'
     });
 
-    res.status(200).json({
-      mensaje: 'Productos obtenidos exitosamente',
-      datos: resultado
-    });
+    res.status(200).json(resultado);
   } catch (error: any) {
     logger.error('Error al listar productos:', error);
     res.status(500).json({
@@ -85,10 +82,7 @@ export const actualizar = async (req: Request, res: Response) => {
         const datosValidados = actualizarProductoSchema.parse(req.body)
         const productoActualizado = await actualizarProducto(id, datosValidados)
 
-        return res.status(200).json({
-            mensaje: 'Producto actualizado exitosamente',
-            datos: productoActualizado
-        })
+        return res.status(200).json(productoActualizado)
     } catch (error: any) {
         logger.info(`Hubo un error al actualizar el producto: ${error}`);
 

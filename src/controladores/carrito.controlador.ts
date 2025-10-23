@@ -25,10 +25,7 @@ export const agregar = async (req: Request, res: Response) => {
     const datosValidados = agregarAlCarritoSchema.parse(req.body);
     const carritoItem = await agregarAlCarrito(usuarioId, datosValidados);
 
-    res.status(201).json({
-      mensaje: 'Producto agregado al carrito exitosamente',
-      datos: carritoItem
-    });
+    res.status(201).json(carritoItem);
   } catch (error: any) {
     logger.error('Error al agregar al carrito:', error);
 
@@ -57,10 +54,7 @@ export const obtener = async (req: Request, res: Response) => {
 
     const carrito = await obtenerCarrito(usuarioId);
 
-    res.status(200).json({
-      mensaje: 'Carrito obtenido exitosamente',
-      datos: carrito
-    });
+    res.status(200).json(carrito);
   } catch (error: any) {
     logger.error('Error al obtener carrito:', error);
     res.status(500).json({
@@ -83,10 +77,7 @@ export const actualizar = async (req: Request, res: Response) => {
     const datosValidados = actualizarCarritoSchema.parse(req.body);
     const carritoItem = await actualizarItemCarrito(usuarioId, productoId, datosValidados);
 
-    res.status(200).json({
-      mensaje: 'Carrito actualizado exitosamente',
-      datos: carritoItem
-    });
+    res.status(200).json(carritoItem);
   } catch (error: any) {
     logger.error('Error al actualizar carrito:', error);
 

@@ -23,10 +23,7 @@ export const crear = async (req: Request, res: Response) => {
     const datosValidados = crearSuscripcionSchema.parse(req.body);
     const suscripcion = await crearSuscripcion(usuarioId, datosValidados);
 
-    res.status(201).json({
-      mensaje: 'Suscripción creada exitosamente',
-      datos: suscripcion
-    });
+    res.status(201).json(suscripcion);
   } catch (error: any) {
     logger.error('Error al crear suscripción:', error);
 
@@ -55,10 +52,7 @@ export const obtenerMia = async (req: Request, res: Response) => {
 
     const suscripcion = await obtenerMiSuscripcion(usuarioId);
 
-    res.status(200).json({
-      mensaje: 'Suscripción obtenida exitosamente',
-      datos: suscripcion
-    });
+    res.status(200).json(suscripcion);
   } catch (error: any) {
     logger.error('Error al obtener suscripción:', error);
     res.status(400).json({
@@ -71,10 +65,7 @@ export const listar = async (req: Request, res: Response) => {
   try {
     const suscripciones = await obtenerTodasLasSuscripciones();
 
-    res.status(200).json({
-      mensaje: 'Suscripciones obtenidas exitosamente',
-      datos: suscripciones
-    });
+    res.status(200).json(suscripciones);
   } catch (error: any) {
     logger.error('Error al listar suscripciones:', error);
     res.status(500).json({
@@ -96,10 +87,7 @@ export const cancelar = async (req: Request, res: Response) => {
 
     const suscripcion = await cancelarSuscripcion(id, usuarioId);
 
-    res.status(200).json({
-      mensaje: 'Suscripción cancelada exitosamente',
-      datos: suscripcion
-    });
+    res.status(200).json(suscripcion);
   } catch (error: any) {
     logger.error('Error al cancelar suscripción:', error);
     res.status(400).json({
@@ -121,10 +109,7 @@ export const renovar = async (req: Request, res: Response) => {
     const datosValidados = crearSuscripcionSchema.parse(req.body);
     const suscripcion = await renovarSuscripcion(usuarioId, datosValidados);
 
-    res.status(201).json({
-      mensaje: 'Suscripción renovada exitosamente',
-      datos: suscripcion
-    });
+    res.status(201).json(suscripcion);
   } catch (error: any) {
     logger.error('Error al renovar suscripción:', error);
 

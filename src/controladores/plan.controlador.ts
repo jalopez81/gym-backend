@@ -17,10 +17,7 @@ export const crear = async (req: Request, res: Response) => {
     const datosValidados = crearPlanSchema.parse(req.body);
     const plan = await crearPlan(datosValidados);
 
-    res.status(201).json({
-      mensaje: 'Plan creado exitosamente',
-      datos: plan
-    });
+    res.status(201).json(plan);
   } catch (error: any) {
     logger.error('Error al crear plan:', error);
 
@@ -41,10 +38,7 @@ export const listar = async (req: Request, res: Response) => {
   try {
     const planes = await obtenerPlanes();
 
-    res.status(200).json({
-      mensaje: 'Planes obtenidos exitosamente',
-      datos: planes
-    });
+    res.status(200).json(planes);
   } catch (error: any) {
     logger.error('Error al listar planes:', error);
     res.status(500).json({
@@ -58,10 +52,7 @@ export const obtenerPorId = async (req: Request, res: Response) => {
     const { id } = req.params;
     const plan = await obtenerPlanPorId(id);
 
-    res.status(200).json({
-      mensaje: 'Plan obtenido exitosamente',
-      datos: plan
-    });
+    res.status(200).json(plan);
   } catch (error: any) {
     logger.error('Error al obtener plan:', error);
     res.status(404).json({
@@ -76,10 +67,7 @@ export const actualizar = async (req: Request, res: Response) => {
     const datosValidados = actualizarPlanSchema.parse(req.body);
     const plan = await actualizarPlan(id, datosValidados);
 
-    res.status(200).json({
-      mensaje: 'Plan actualizado exitosamente',
-      datos: plan
-    });
+    res.status(200).json(plan);
   } catch (error: any) {
     logger.error('Error al actualizar plan:', error);
 

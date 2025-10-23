@@ -91,10 +91,7 @@ export const actualizarMiPerfil = async (req: Request, res: Response) => {
         const datosValidados = actualizarPerfilSchema.parse(req.body);
         const usuario = await actuarlizarPerfil(id, datosValidados);
 
-        res.status(200).json({
-            mensaje: 'Perfil actualizado exitosamente',
-            datos: usuario
-        })
+        res.status(200).json(usuario)
         
 
     } catch (error: any) {

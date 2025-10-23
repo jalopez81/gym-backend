@@ -22,10 +22,7 @@ export const crear = async (req: Request, res: Response) => {
     const datosValidados = crearReservaSchema.parse(req.body);
     const reserva = await crearReserva(clienteId, datosValidados);
 
-    res.status(201).json({
-      mensaje: 'Reserva creada exitosamente',
-      datos: reserva
-    });
+    res.status(201).json(reserva);
   } catch (error: any) {
     logger.error('Error al crear reserva:', error);
 
@@ -54,10 +51,7 @@ export const obtenerMias = async (req: Request, res: Response) => {
 
     const reservas = await obtenerMisReservas(clienteId);
 
-    res.status(200).json({
-      mensaje: 'Mis reservas obtenidas exitosamente',
-      datos: reservas
-    });
+    res.status(200).json(reservas);
   } catch (error: any) {
     logger.error('Error al obtener mis reservas:', error);
     res.status(500).json({
@@ -70,10 +64,7 @@ export const listar = async (req: Request, res: Response) => {
   try {
     const reservas = await obtenerTodasLasReservas();
 
-    res.status(200).json({
-      mensaje: 'Reservas obtenidas exitosamente',
-      datos: reservas
-    });
+    res.status(200).json(reservas);
   } catch (error: any) {
     logger.error('Error al listar reservas:', error);
     res.status(500).json({
@@ -87,10 +78,7 @@ export const obtenerPorSesion = async (req: Request, res: Response) => {
     const { sesionId } = req.params;
     const reservas = await obtenerReservasPorSesion(sesionId);
 
-    res.status(200).json({
-      mensaje: 'Reservas de la sesión obtenidas exitosamente',
-      datos: reservas
-    });
+    res.status(200).json(reservas);
   } catch (error: any) {
     logger.error('Error al obtener reservas de la sesión:', error);
     res.status(500).json({
@@ -112,10 +100,7 @@ export const cancelar = async (req: Request, res: Response) => {
 
     const reserva = await cancelarReserva(id, clienteId);
 
-    res.status(200).json({
-      mensaje: 'Reserva cancelada exitosamente',
-      datos: reserva
-    });
+    res.status(200).json(reserva);
   } catch (error: any) {
     logger.error('Error al cancelar reserva:', error);
     res.status(400).json({

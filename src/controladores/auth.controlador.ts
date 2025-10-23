@@ -10,10 +10,7 @@ export const registro = async (req: Request, res: Response) => {
 
         const resultado = await registrarUsuario(credencialesValidadas);
 
-        return res.status(201).json({
-            message: 'Usuario registrado exitosamente',
-            datos: resultado
-        })
+        return res.status(201).json(resultado)
 
     } catch (error: any) {
         logger.error(`Error de registro: ${error}`)
@@ -37,10 +34,7 @@ export const login = async (req: Request, res: Response) => {
 
         const resultado = await loginUsuario(credencialesValidadas);
 
-        return res.status(200).json({
-            message: 'Usuario autenticado exitosamente',
-            ...resultado
-        })
+        return res.status(200).json(resultado)
 
 
     } catch (error: any) {

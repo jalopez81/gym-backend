@@ -10,10 +10,7 @@ export const crearBackupManual = async (req: Request, res: Response) => {
   try {
     const backup = await crearBackup();
 
-    res.status(201).json({
-      mensaje: 'Backup creado exitosamente',
-      datos: backup
-    });
+    res.status(201).json(backup);
   } catch (error: any) {
     logger.error('Error al crear backup:', error);
     res.status(500).json({
@@ -26,9 +23,8 @@ export const listarBackups = async (req: Request, res: Response) => {
   try {
     const backups = await obtenerBackups();
 
-    res.status(200).json({
-      mensaje: 'Backups obtenidos exitosamente',
-      datos: backups,
+    res.status(200).json({      
+      backups,
       total: backups.length
     });
   } catch (error: any) {
@@ -52,10 +48,7 @@ export const restaurarBackupPorId = async (req: Request, res: Response) => {
 
     const resultado = await restaurarBackup(id);
 
-    res.status(200).json({
-      mensaje: 'Backup restaurado exitosamente',
-      datos: resultado
-    });
+    res.status(200).json(resultado);
   } catch (error: any) {
     logger.error('Error al restaurar backup:', error);
     res.status(500).json({

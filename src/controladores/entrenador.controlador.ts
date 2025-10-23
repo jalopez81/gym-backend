@@ -19,10 +19,7 @@ export const crear = async (req: Request, res: Response) => {
     const datosValidados = crearEntrenadorSchema.parse(req.body);
     const entrenador = await crearEntrenador(datosValidados);
 
-    res.status(201).json({
-      mensaje: 'Entrenador creado exitosamente',
-      datos: entrenador
-    });
+    res.status(201).json(entrenador);
   } catch (error: any) {
     logger.error('Error al crear entrenador:', error);
 
@@ -72,10 +69,7 @@ export const actualizar = async (req: Request, res: Response) => {
     const datosValidados = actualizarEntrenadorSchema.parse(req.body);
     const entrenador = await actualizarEntrenador(id, datosValidados);
 
-    res.status(200).json({
-      mensaje: 'Entrenador actualizado exitosamente',
-      datos: entrenador
-    });
+    res.status(200).json(entrenador);
   } catch (error: any) {
     logger.error('Error al actualizar entrenador:', error);
 

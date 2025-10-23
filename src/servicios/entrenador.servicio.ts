@@ -1,6 +1,7 @@
 import prisma from '../modelos/prisma';
 import { CrearEntrenadorDTO, ActualizarEntrenadorDTO } from '../validadores/entrenador.validador';
 import logger from '../config/logger';
+import { ROLES } from '../middlewares/auth.middleware';
 
 export const crearEntrenador = async (datos: CrearEntrenadorDTO) => {
   // Verificar que el usuario existe
@@ -12,12 +13,7 @@ export const crearEntrenador = async (datos: CrearEntrenadorDTO) => {
     throw new Error('Usuario no encontrado');
   }
 
-  // Verificar que el usuario no sea ya un entrenador
-  const entrenadorExistente = await prisma.entrenador.findUnique({
-    where: { usuarioId: datos.usuarioId }
-  });
-
-  if (entrenadorExistente) {
+  if (usuario.rol === ROLES.ENTRENADOR) {
     throw new Error('Este usuario ya es un entrenador');
   }
 
@@ -28,7 +24,8 @@ export const crearEntrenador = async (datos: CrearEntrenadorDTO) => {
         select: {
           id: true,
           email: true,
-          nombre: true
+          nombre: true,
+          rol: true
         }
       },
       clientes: {
@@ -45,6 +42,14 @@ export const crearEntrenador = async (datos: CrearEntrenadorDTO) => {
       }
     }
   });
+
+  // actualizar rol de usuario
+  if (entrenador) {
+    await prisma.usuario.update({
+      where: { id: datos.usuarioId },
+      data: { rol: ROLES.ENTRENADOR }
+    })
+  }
 
   logger.info(`Entrenador creado: ${usuario.nombre}`);
   return entrenador;
