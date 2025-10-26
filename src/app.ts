@@ -55,9 +55,9 @@ app.get('/status', (req, res) => {
 });
 
 // iniciar
-app.listen(port, () => {
-  logger.info(`Servidor "src/app.js" corriendo en el puerto ${port}`);
-
-   // Programar backup automático
+app.listen(port, () => {  
+  // Programar backup automático
   programarBackupAutomatico();
+
+  logger.info(`*** READY ***: Servidor "src/app.js" corriendo en el puerto ${port}`);
 });

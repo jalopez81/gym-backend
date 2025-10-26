@@ -1,0 +1,431 @@
+{
+  "basePath": "/api",
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/api/auth/registro",
+      "auth": false,
+      "body": {
+        "required": ["email","nombre","password"],
+        "properties": {
+          "email": "string (email)",
+          "nombre": "string (min 3)",
+          "password": "string (min 6)",
+          "rol": "enum: admin|cliente|entrenador|recepcionista (optional)"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "auth": false,
+      "body": {
+        "required": ["email","password"],
+        "properties": {
+          "email": "string (email)",
+          "password": "string"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/usuarios/:id",
+      "auth": true,
+      "params": ["id"]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/usuarios/actualizar-perfil",
+      "auth": true,
+      "body": {
+        "properties": {
+          "nombre": "string (min 3) optional",
+          "email": "string (email) optional"
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/usuarios/cambiar-password",
+      "auth": true,
+      "body": {
+        "required": ["passwordActual","passwordNuevo"],
+        "properties": {
+          "passwordActual": "string (min 6)",
+          "passwordNuevo": "string (min 6)"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/usuarios",
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/productos",
+      "auth": false,
+      "query": ["pagina","limite","busqueda","categoria","ordenarPor","orden"]
+    },
+    {
+      "method": "GET",
+      "path": "/api/productos/:id",
+      "auth": false,
+      "params": ["id"]
+    },
+    {
+      "method": "POST",
+      "path": "/api/productos/crear",
+      "auth": "admin",
+      "body": {
+        "required": ["nombre","precio","categoria"],
+        "properties": {
+          "nombre": "string (min 3)",
+          "descripcion": "string optional",
+          "precio": "number (>0)",
+          "stock": "int (>=0) optional",
+          "categoria": "string (min 3)"
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/productos/actualizar/:id",
+      "auth": "admin",
+      "params": ["id"],
+      "body": {"properties": {"nombre":"string optional","descripcion":"string optional","precio":"number optional","stock":"int optional","categoria":"string optional"}}
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/productos/eliminar/:id",
+      "auth": "admin",
+      "params": ["id"]
+    },
+    {
+      "method": "GET",
+      "path": "/api/planes",
+      "auth": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/planes/:id",
+      "auth": false,
+      "params": ["id"]
+    },
+    {
+      "method": "POST",
+      "path": "/api/planes",
+      "auth": "admin",
+      "body": {"required":["nombre","precio"],"properties":{"nombre":"string(min 3)","descripcion":"string optional","precio":"number (>0)","duracionDias":"int (>=1) optional (default 30)","beneficios":"string optional"}}
+    },
+    {
+      "method": "PUT",
+      "path": "/api/planes/:id",
+      "auth": "admin",
+      "params": ["id"],
+      "body": {"properties":{"nombre":"string optional","descripcion":"string optional","precio":"number optional","duracionDias":"int optional","beneficios":"string optional"}}
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/planes/:id",
+      "auth": "admin",
+      "params": ["id"]
+    },
+    {
+      "method": "POST",
+      "path": "/api/suscripciones",
+      "auth": true,
+      "body": {"required":["planId"],"properties":{"planId":"string (uuid)"}}
+    },
+    {
+      "method": "GET",
+      "path": "/api/suscripciones/mi-suscripcion",
+      "auth": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/suscripciones/:id",
+      "auth": true,
+      "params": ["id"]
+    },
+    {
+      "method": "POST",
+      "path": "/api/suscripciones/:id/renovar",
+      "auth": true,
+      "params": ["id"]
+    },
+    {
+      "method": "GET",
+      "path": "/api/clases",
+      "auth": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/clases/:id",
+      "auth": false,
+      "params": ["id"]
+    },
+    {
+      "method": "POST",
+      "path": "/api/clases",
+      "auth": "admin",
+      "body": {"required":["nombre","capacidad","entrenadorId"],"properties":{"nombre":"string(min3)","descripcion":"string optional","duracion":"int (>=15) optional(default 60)","capacidad":"int (>=1)","entrenadorId":"string (uuid)"}}
+    },
+    {
+      "method": "PUT",
+      "path": "/api/clases/:id",
+      "auth": "admin",
+      "params":["id"],
+      "body":{"properties":{"nombre":"string optional","descripcion":"string optional","duracion":"int optional","capacidad":"int optional","entrenadorId":"string optional"}}
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/clases/:id",
+      "auth": "admin",
+      "params": ["id"]
+    },
+    {
+      "method": "GET",
+      "path": "/api/sesiones",
+      "auth": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/sesiones/:id",
+      "auth": false,
+      "params": ["id"]
+    },
+    {
+      "method": "GET",
+      "path": "/api/sesiones/clase/:claseId",
+      "auth": false,
+      "params": ["claseId"]
+    },
+    {
+      "method": "POST",
+      "path": "/api/sesiones",
+      "auth": "admin",
+      "body": {"required":["claseId","fechaHora"],"properties":{"claseId":"uuid","fechaHora":"ISO datetime"}}
+    },
+    {
+      "method": "PUT",
+      "path": "/api/sesiones/:id",
+      "auth": "admin",
+      "params": ["id"],
+      "body": {"properties":{"fechaHora":"ISO datetime optional"}}
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/sesiones/:id",
+      "auth": "admin",
+      "params": ["id"]
+    },
+    {
+      "method": "GET",
+      "path": "/api/reservas/sesion/:sesionId",
+      "auth": false,
+      "params": ["sesionId"]
+    },
+    {
+      "method": "POST",
+      "path": "/api/reservas",
+      "auth": true,
+      "body": {"required":["sesionId"],"properties":{"sesionId":"uuid"}}
+    },
+    {
+      "method": "GET",
+      "path": "/api/reservas",
+      "auth": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/reservas/:id",
+      "auth": true,
+      "params": ["id"]
+    },
+    {
+      "method": "GET",
+      "path": "/api/reservas/admin/todas",
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/asistencia/sesion/:sesionId",
+      "auth": false,
+      "params": ["sesionId"]
+    },
+    {
+      "method": "POST",
+      "path": "/api/asistencia",
+      "auth": true,
+      "body": {"required":["sesionId","clienteId"],"properties":{"sesionId":"uuid","clienteId":"uuid","estado":"enum: asistio|no_asistio|llego_tarde (default asistio)","horaEntrada":"ISO datetime optional"}}
+    },
+    {
+      "method": "GET",
+      "path": "/api/asistencia/mi-historial",
+      "auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/asistencia/estadisticas/:clienteId",
+      "auth": true,
+      "params": ["clienteId"]
+    },
+    {
+      "method": "GET",
+      "path": "/api/asistencia",
+      "auth": "admin"
+    },
+    {
+      "method": "POST",
+      "path": "/api/carrito",
+      "auth": true,
+      "body": {"required":["productoId","cantidad"],"properties":{"productoId":"uuid","cantidad":"int (>=1)"}}
+    },
+    {
+      "method": "GET",
+      "path": "/api/carrito",
+      "auth": true
+    },
+    {
+      "method": "PUT",
+      "path": "/api/carrito/:productoId",
+      "auth": true,
+      "params": ["productoId"],
+      "body": {"required":["cantidad"],"properties":{"cantidad":"int (>=1)"}}
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/carrito/:productoId",
+      "auth": true,
+      "params": ["productoId"]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/carrito",
+      "auth": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/ordenes",
+      "auth": true,
+      "body": {"properties": {}}
+    },
+    {
+      "method": "GET",
+      "path": "/api/ordenes/mis-ordenes",
+      "auth": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/ordenes/:id",
+      "auth": true,
+      "params": ["id"]
+    },
+    {
+      "method": "POST",
+      "path": "/api/ordenes/:id/completar",
+      "auth": true,
+      "params": ["id"]
+    },
+    {
+      "method": "POST",
+      "path": "/api/ordenes/:id/cancelar",
+      "auth": true,
+      "params": ["id"]
+    },
+    {
+      "method": "GET",
+      "path": "/api/ordenes",
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/entrenadores",
+      "auth": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/entrenadores/:id",
+      "auth": false,
+      "params": ["id"]
+    },
+    {
+      "method": "POST",
+      "path": "/api/entrenadores",
+      "auth": "admin",
+      "body": {"required":["usuarioId","especialidad"],"properties":{"usuarioId":"uuid","especialidad":"string(min3)","experiencia":"int >=0 optional","certificaciones":"string optional"}}
+    },
+    {
+      "method": "PUT",
+      "path": "/api/entrenadores/:id",
+      "auth": "admin",
+      "params":["id"],
+      "body":{"properties":{"especialidad":"string optional","experiencia":"int optional","certificaciones":"string optional"}}
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/entrenadores/:id",
+      "auth": "admin",
+      "params": ["id"]
+    },
+    {
+      "method": "POST",
+      "path": "/api/entrenadores/asignar/cliente",
+      "auth": "admin",
+      "body": {"required":["entrenadorId","clienteId"],"properties":{"entrenadorId":"string","clienteId":"string"}}
+    },
+    {
+      "method": "POST",
+      "path": "/api/entrenadores/desasignar/cliente",
+      "auth": "admin",
+      "body": {"required":["entrenadorId","clienteId"],"properties":{"entrenadorId":"string","clienteId":"string"}}
+    },
+    {
+      "method": "GET",
+      "path": "/api/reportes/usuarios",
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/reportes/productos",
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/reportes/ordenes",
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/reportes/suscripciones",
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/reportes/asistencia",
+      "auth": "admin"
+    },
+    {
+      "method": "POST",
+      "path": "/api/backups/manual",
+      "auth": "admin"
+    },
+    {
+      "method": "GET",
+      "path": "/api/backups",
+      "auth": "admin"
+    },
+    {
+      "method": "POST",
+      "path": "/api/backups/:id/restaurar",
+      "auth": "admin",
+      "params": ["id"]
+    },
+    {
+      "method": "GET",
+      "path": "/status",
+      "auth": false
+    }
+  ]
+}

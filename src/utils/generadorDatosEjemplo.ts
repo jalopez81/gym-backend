@@ -79,63 +79,148 @@ export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
 
     // Generar productos
     const productosData = [
-      {
-        nombre: 'Guantes de entrenamiento',
-        descripcion: 'Guantes profesionales para levantamiento de pesas',
-        precio: 25.99,
-        stock: 50,
-        categoria: 'Accesorios'
-      },
-      {
-        nombre: 'Botella de agua deportiva',
-        descripcion: 'Botella reutilizable de 1 litro',
-        precio: 15.99,
-        stock: 100,
-        categoria: 'Accesorios'
-      },
-      {
-        nombre: 'Proteína Whey',
-        descripcion: 'Proteína de suero de 2kg',
-        precio: 45.99,
-        stock: 30,
-        categoria: 'Suplementos'
-      },
-      {
-        nombre: 'Banda elástica de resistencia',
-        descripcion: 'Set de 5 bandas de diferentes resistencias',
-        precio: 19.99,
-        stock: 40,
-        categoria: 'Accesorios'
-      },
-      {
-        nombre: 'Camiseta deportiva',
-        descripcion: 'Camiseta de secado rápido',
-        precio: 29.99,
-        stock: 80,
-        categoria: 'Ropa'
-      },
-      {
-        nombre: 'Protector de rodillas',
-        descripcion: 'Protección para entrenamiento intenso',
-        precio: 22.99,
-        stock: 35,
-        categoria: 'Protección'
-      },
-      {
-        nombre: 'Mancuerna ajustable',
-        descripcion: 'Mancuerna de 2.5 a 15 kg',
-        precio: 89.99,
-        stock: 20,
-        categoria: 'Equipos'
-      },
-      {
-        nombre: 'Mat de yoga',
-        descripcion: 'Tapete antideslizante de 6mm',
-        precio: 34.99,
-        stock: 45,
-        categoria: 'Accesorios'
-      }
-    ];
+  {
+    nombre: 'Guantes de entrenamiento',
+    descripcion: 'Guantes profesionales para levantamiento de pesas',
+    precio: 25.99,
+    stock: 50,
+    categoria: 'Accesorios'
+  },
+  {
+    nombre: 'Botella de agua deportiva',
+    descripcion: 'Botella reutilizable de 1 litro',
+    precio: 15.99,
+    stock: 100,
+    categoria: 'Accesorios'
+  },
+  {
+    nombre: 'Proteína Whey',
+    descripcion: 'Proteína de suero de 2kg',
+    precio: 45.99,
+    stock: 30,
+    categoria: 'Suplementos'
+  },
+  {
+    nombre: 'Banda elástica de resistencia',
+    descripcion: 'Set de 5 bandas de diferentes resistencias',
+    precio: 19.99,
+    stock: 40,
+    categoria: 'Accesorios'
+  },
+  {
+    nombre: 'Camiseta deportiva',
+    descripcion: 'Camiseta de secado rápido',
+    precio: 29.99,
+    stock: 80,
+    categoria: 'Ropa'
+  },
+  {
+    nombre: 'Protector de rodillas',
+    descripcion: 'Protección para entrenamiento intenso',
+    precio: 22.99,
+    stock: 35,
+    categoria: 'Protección'
+  },
+  {
+    nombre: 'Mancuerna ajustable',
+    descripcion: 'Mancuerna de 2.5 a 15 kg',
+    precio: 89.99,
+    stock: 20,
+    categoria: 'Equipos'
+  },
+  {
+    nombre: 'Mat de yoga',
+    descripcion: 'Tapete antideslizante de 6mm',
+    precio: 34.99,
+    stock: 45,
+    categoria: 'Accesorios'
+  },
+  {
+    nombre: 'Cuerda para saltar',
+    descripcion: 'Cuerda ajustable para cardio',
+    precio: 12.99,
+    stock: 60,
+    categoria: 'Accesorios'
+  },
+  {
+    nombre: 'Bandas de resistencia',
+    descripcion: 'Set de 3 bandas para entrenamiento',
+    precio: 17.99,
+    stock: 50,
+    categoria: 'Accesorios'
+  },
+  {
+    nombre: 'Guantes de boxeo',
+    descripcion: 'Guantes acolchados para boxeo',
+    precio: 35.99,
+    stock: 25,
+    categoria: 'Accesorios'
+  },
+  {
+    nombre: 'Rodillera deportiva',
+    descripcion: 'Protección para articulaciones durante el entrenamiento',
+    precio: 28.99,
+    stock: 40,
+    categoria: 'Protección'
+  },
+  {
+    nombre: 'Saco de arena para boxeo',
+    descripcion: 'Saco de 25 kg para entrenamiento de fuerza y resistencia',
+    precio: 120.99,
+    stock: 10,
+    categoria: 'Equipos'
+  },
+  {
+    nombre: 'Zapatillas de running',
+    descripcion: 'Calzado ligero y transpirable para correr',
+    precio: 75.99,
+    stock: 60,
+    categoria: 'Ropa'
+  },
+  {
+    nombre: 'Kettlebell 12kg',
+    descripcion: 'Pesa rusa para entrenamiento funcional',
+    precio: 49.99,
+    stock: 30,
+    categoria: 'Equipos'
+  },
+  {
+    nombre: 'Reloj deportivo GPS',
+    descripcion: 'Monitor de ritmo cardíaco y distancia',
+    precio: 199.99,
+    stock: 15,
+    categoria: 'Tecnología'
+  },
+  {
+    nombre: 'Colchoneta pilates',
+    descripcion: 'Tapete cómodo para ejercicios de pilates y estiramientos',
+    precio: 27.99,
+    stock: 50,
+    categoria: 'Accesorios'
+  },
+  {
+    nombre: 'Camiseta compresiva',
+    descripcion: 'Camiseta de compresión para mejorar recuperación',
+    precio: 39.99,
+    stock: 35,
+    categoria: 'Ropa'
+  },
+  {
+    nombre: 'Guantes de ciclismo',
+    descripcion: 'Guantes acolchados para mayor comodidad en bicicleta',
+    precio: 18.99,
+    stock: 45,
+    categoria: 'Accesorios'
+  },
+  {
+    nombre: 'Bicicleta estática',
+    descripcion: 'Bicicleta indoor con resistencia ajustable',
+    precio: 299.99,
+    stock: 8,
+    categoria: 'Equipos'
+  }
+];
+
 
     for (const productoData of productosData) {
       const productoExistente = await prisma.producto.findFirst({
