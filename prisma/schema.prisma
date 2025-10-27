@@ -14,32 +14,35 @@ datasource db {
 }
 
 model Usuario {
-  id                    String   @id @default(uuid())
-  email                 String   @unique
-  nombre                String
-  password              String
-  rol                   String   @default("cliente")
-  creado                DateTime @default(now())
-  
-  entrenador            Entrenador?
+  id       String   @id @default(uuid())
+  email    String   @unique
+  nombre   String
+  password String
+  rol      String   @default("cliente")
+  creado   DateTime @default(now())
+
+  entrenador             Entrenador?
   asignacionesEntrenador AsignacionEntrenador[] @relation("ClienteEntrenador")
-  reservas              Reserva[]
-  suscripciones         Suscripcion[]
-  asistencias           Asistencia[]
-  carritoItems          CarritoItem[]
-  ordenes               Orden[]
+  reservas               Reserva[]
+  suscripciones          Suscripcion[]
+  asistencias            Asistencia[]
+  carritoItems           CarritoItem[]
+  ordenes                Orden[]
 
   @@map("usuarios")
 }
 
 model Producto {
-  id          String   @id @default(uuid())
-  nombre      String
-  descripcion String?
-  precio      Float
-  stock       Int      @default(0)
-  categoria   String
-  creado      DateTime @default(now())
+  id              String   @id @default(uuid())
+  nombre          String
+  descripcion     String?
+  imagenPublicId  String?
+  imagenUrl       String?
+  imagenSecureUrl String?
+  precio          Float
+  stock           Int      @default(0)
+  categoria       String
+  creado          DateTime @default(now())
 
   carritoItems CarritoItem[]
   ordenItems   OrdenItem[]
@@ -48,54 +51,53 @@ model Producto {
 }
 
 model Entrenador {
-  id              String   @id @default(uuid())
-  usuarioId       String   @unique
-  usuario         Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  id              String                 @id @default(uuid())
+  usuarioId       String                 @unique
+  usuario         Usuario                @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   especialidad    String
-  experiencia     Int      @default(0)
+  experiencia     Int                    @default(0)
   certificaciones String?
   clientes        AsignacionEntrenador[]
-  creado          DateTime @default(now())
+  creado          DateTime               @default(now())
   clases          Clase[]
-
 
   @@map("entrenadores")
 }
 
 model AsignacionEntrenador {
-  id             String   @id @default(uuid())
-  clienteId      String
-  cliente        Usuario  @relation("ClienteEntrenador", fields: [clienteId], references: [id], onDelete: Cascade)
-  entrenadorId   String
-  entrenador     Entrenador @relation(fields: [entrenadorId], references: [id], onDelete: Cascade)
-  fechaAsignacion DateTime @default(now())
-  activo         Boolean  @default(true)
+  id              String     @id @default(uuid())
+  clienteId       String
+  cliente         Usuario    @relation("ClienteEntrenador", fields: [clienteId], references: [id], onDelete: Cascade)
+  entrenadorId    String
+  entrenador      Entrenador @relation(fields: [entrenadorId], references: [id], onDelete: Cascade)
+  fechaAsignacion DateTime   @default(now())
+  activo          Boolean    @default(true)
 
   @@unique([clienteId, entrenadorId])
   @@map("asignaciones_entrenador")
 }
 
 model Clase {
-  id              String   @id @default(uuid())
-  nombre          String
-  descripcion     String?
-  duracion        Int      @default(60)
-  capacidad       Int
-  entrenadorId    String
-  entrenador      Entrenador @relation(fields: [entrenadorId], references: [id], onDelete: Cascade)
-  sesiones        Sesion[]
-  creado          DateTime @default(now())
+  id           String     @id @default(uuid())
+  nombre       String
+  descripcion  String?
+  duracion     Int        @default(60)
+  capacidad    Int
+  entrenadorId String
+  entrenador   Entrenador @relation(fields: [entrenadorId], references: [id], onDelete: Cascade)
+  sesiones     Sesion[]
+  creado       DateTime   @default(now())
 
   @@map("clases")
 }
 
 model Sesion {
-  id          String   @id @default(uuid())
-  claseId     String
-  clase       Clase    @relation(fields: [claseId], references: [id], onDelete: Cascade)
-  fechaHora   DateTime
-  reservas    Reserva[]
-  creado      DateTime @default(now())
+  id        String    @id @default(uuid())
+  claseId   String
+  clase     Clase     @relation(fields: [claseId], references: [id], onDelete: Cascade)
+  fechaHora DateTime
+  reservas  Reserva[]
+  creado    DateTime  @default(now())
 
   asistencias Asistencia[]
 
@@ -103,94 +105,94 @@ model Sesion {
 }
 
 model Reserva {
-  id          String   @id @default(uuid())
-  clienteId   String
-  cliente     Usuario  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
-  sesionId    String
-  sesion      Sesion   @relation(fields: [sesionId], references: [id], onDelete: Cascade)
-  estado      String   @default("reservado")
-  creado      DateTime @default(now())
+  id        String   @id @default(uuid())
+  clienteId String
+  cliente   Usuario  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  sesionId  String
+  sesion    Sesion   @relation(fields: [sesionId], references: [id], onDelete: Cascade)
+  estado    String   @default("reservado")
+  creado    DateTime @default(now())
 
   @@unique([clienteId, sesionId])
   @@map("reservas")
 }
 
 model Plan {
-  id            String   @id @default(uuid())
-  nombre        String   @unique
+  id            String        @id @default(uuid())
+  nombre        String        @unique
   descripcion   String?
   precio        Float
-  duracionDias  Int      @default(30)
+  duracionDias  Int           @default(30)
   beneficios    String?
   suscripciones Suscripcion[]
-  creado        DateTime @default(now())
+  creado        DateTime      @default(now())
 
   @@map("planes")
 }
 
 model Suscripcion {
-  id              String   @id @default(uuid())
-  usuarioId       String
-  usuario         Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-  planId          String
-  plan            Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
-  fechaInicio     DateTime @default(now())
+  id               String   @id @default(uuid())
+  usuarioId        String
+  usuario          Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  planId           String
+  plan             Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
+  fechaInicio      DateTime @default(now())
   fechaVencimiento DateTime
-  estado          String   @default("activa")
-  creado          DateTime @default(now())
+  estado           String   @default("activa")
+  creado           DateTime @default(now())
 
   @@unique([usuarioId, estado])
   @@map("suscripciones")
 }
 
 model Asistencia {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   sesionId    String
-  sesion      Sesion   @relation(fields: [sesionId], references: [id], onDelete: Cascade)
+  sesion      Sesion    @relation(fields: [sesionId], references: [id], onDelete: Cascade)
   clienteId   String
-  cliente     Usuario  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
-  estado      String   @default("asistio")
+  cliente     Usuario   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  estado      String    @default("asistio")
   horaEntrada DateTime?
-  creado      DateTime @default(now())
+  creado      DateTime  @default(now())
 
   @@unique([sesionId, clienteId])
   @@map("asistencias")
 }
 
 model CarritoItem {
-  id        String   @id @default(uuid())
-  usuarioId String
-  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  id         String   @id @default(uuid())
+  usuarioId  String
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   productoId String
-  producto  Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
-  cantidad  Int      @default(1)
-  creado    DateTime @default(now())
+  producto   Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  cantidad   Int      @default(1)
+  creado     DateTime @default(now())
 
   @@unique([usuarioId, productoId])
   @@map("carrito_items")
 }
 
 model Orden {
-  id        String   @id @default(uuid())
+  id        String      @id @default(uuid())
   usuarioId String
-  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  usuario   Usuario     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   items     OrdenItem[]
   total     Float
-  estado    String   @default("pendiente")
-  creado    DateTime @default(now())
+  estado    String      @default("pendiente")
+  creado    DateTime    @default(now())
 
   @@map("ordenes")
 }
 
 model OrdenItem {
-  id        String   @id @default(uuid())
-  ordenId   String
-  orden     Orden    @relation(fields: [ordenId], references: [id], onDelete: Cascade)
-  productoId String
-  producto  Producto @relation(fields: [productoId], references: [id])
-  cantidad  Int
+  id             String   @id @default(uuid())
+  ordenId        String
+  orden          Orden    @relation(fields: [ordenId], references: [id], onDelete: Cascade)
+  productoId     String
+  producto       Producto @relation(fields: [productoId], references: [id])
+  cantidad       Int
   precioUnitario Float
-  subtotal  Float
+  subtotal       Float
 
   @@map("orden_items")
 }

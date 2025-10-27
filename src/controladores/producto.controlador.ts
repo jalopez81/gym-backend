@@ -6,8 +6,16 @@ import logger from "../config/logger";
 
 export const crear = async (req: Request, res: Response) => {
     try {
+        // imagen 
+        const imagenFile: Express.Multer.File | undefined = req.file;
+
+        if (!imagenFile) {
+            return res.status(400).json({ mensaje: "Debe subir una imagen" });
+        }
+
         const datosValidados = crearProductoSchema.parse(req.body);
-        const producto = await crearProducto(datosValidados)
+        const producto = await crearProducto(datosValidados, imagenFile)
+
 
         return res.status(201).json({
             mensaje: "Producto creado exitosamente",
@@ -32,32 +40,32 @@ export const crear = async (req: Request, res: Response) => {
 }
 
 export const listar = async (req: Request, res: Response) => {
-  try {
-    const {
-      pagina = '1',
-      limite = '10',
-      busqueda,
-      categoria,
-      ordenarPor = 'creado',
-      orden = 'desc'
-    } = req.query;
+    try {
+        const {
+            pagina = '1',
+            limite = '10',
+            busqueda,
+            categoria,
+            ordenarPor = 'creado',
+            orden = 'desc'
+        } = req.query;
 
-    const resultado = await getProductos({
-      pagina: parseInt(pagina as string),
-      limite: parseInt(limite as string),
-      busqueda: busqueda as string,
-      categoria: categoria as string,
-      ordenarPor: ordenarPor as 'precio' | 'creado' | 'nombre',
-      orden: orden as 'asc' | 'desc'
-    });
+        const resultado = await getProductos({
+            pagina: parseInt(pagina as string),
+            limite: parseInt(limite as string),
+            busqueda: busqueda as string,
+            categoria: categoria as string,
+            ordenarPor: ordenarPor as 'precio' | 'creado' | 'nombre',
+            orden: orden as 'asc' | 'desc'
+        });
 
-    res.status(200).json(resultado);
-  } catch (error: any) {
-    logger.error('Error al listar productos:', error);
-    res.status(500).json({
-      mensaje: 'Error al obtener productos'
-    });
-  }
+        res.status(200).json(resultado);
+    } catch (error: any) {
+        logger.error('Error al listar productos:', error);
+        res.status(500).json({
+            mensaje: 'Error al obtener productos'
+        });
+    }
 };
 
 export const getPorId = async (req: Request, res: Response) => {
@@ -78,9 +86,12 @@ export const getPorId = async (req: Request, res: Response) => {
 
 export const actualizar = async (req: Request, res: Response) => {
     try {
+        // imagen 
+        const imagenFile: Express.Multer.File | undefined = req.file;
+        
         const id = req.params.id;
         const datosValidados = actualizarProductoSchema.parse(req.body)
-        const productoActualizado = await actualizarProducto(id, datosValidados)
+        const productoActualizado = await actualizarProducto(id, datosValidados, imagenFile)
 
         return res.status(200).json(productoActualizado)
     } catch (error: any) {

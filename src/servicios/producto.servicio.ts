@@ -1,14 +1,37 @@
 import logger from "../config/logger";
 import prisma from "../modelos/prisma";
 import { ActualizarProductoDTO, CrearProductoDTO } from "../validadores/producto.validador";
+import { v2 as cloudinary } from 'cloudinary'
 
-export const crearProducto = async (datos: CrearProductoDTO) => {
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+})
+
+export const crearProducto = async (datos: CrearProductoDTO, imagen: Express.Multer.File) => {
+
+    // Subir a Cloudinary    
+    const uploadedImage = await cloudinary.uploader.upload(imagen.path, {
+        folder: "productos",
+    });
+
+    datos = {
+      ...datos,
+      imagenSecureUrl: uploadedImage.secure_url,
+      imagenUrl: uploadedImage.url,
+      imagenPublicId: uploadedImage.public_id,
+    }
+
+    // prisma
     const producto = await prisma.producto.create({
         data: datos
     });
 
     logger.info('Producto creado con éxito:', producto);
-    return producto;
+    return {
+        ...producto 
+    };
 }
 
 
@@ -38,7 +61,7 @@ export const getProductos = async (filtros: FiltrosProducto = {}) => {
     if (busqueda) {
         where.nombre = {
             contains: busqueda,
-            mode: 'insensitive' 
+            mode: 'insensitive'
         };
     }
 
@@ -81,18 +104,43 @@ export const getProductoPorId = async (id: string) => {
     return producto;
 }
 
-export const actualizarProducto = async (id: string, datos: ActualizarProductoDTO) => {
-    // revisar si producto existe (si no, getProductPorId devuelve error)
-    await getProductoPorId(id);
+export const actualizarProducto = async (
+  id: string,
+  datos: ActualizarProductoDTO,
+  imagen?: Express.Multer.File
+) => {
+  // Obtener producto existente
+  const producto = await prisma.producto.findUnique({ where: { id } });
+  if (!producto) throw new Error("Producto no encontrado");
 
-    const producto = await prisma.producto.update({
-        where: { id },
-        data: datos
+  // Manejo de imagen
+  if (imagen) {
+    if (producto.imagenPublicId) {
+      await cloudinary.uploader.destroy(producto.imagenPublicId);
+    }
+
+    const uploadedImage = await cloudinary.uploader.upload(imagen.path, {
+      folder: "productos",
     });
 
-    logger.info('Producto actualizado: ', producto);
-    return producto;
-}
+    datos = {
+      ...datos,
+      imagenSecureUrl: uploadedImage.secure_url,
+      imagenUrl: uploadedImage.url,
+      imagenPublicId: uploadedImage.public_id,
+    };
+  }
+
+  // Actualizar producto
+  const productoActualizado = await prisma.producto.update({
+    where: { id },
+    data: datos,
+  });
+
+  logger.info("Producto actualizado:", productoActualizado);
+  return productoActualizado;
+};
+
 
 export const eliminarProducto = async (id: string) => {
     // revisar si producto existe (si no, getProductPorId devuelve error)
