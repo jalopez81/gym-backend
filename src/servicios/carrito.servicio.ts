@@ -5,7 +5,7 @@ import { ActualizarCarritoDTO, AgregarAlCarritoDTO } from '../validadores/carrit
 export const agregarAlCarrito = async (usuarioId: string, datos: AgregarAlCarritoDTO) => {
   // Verificar que el producto existe
   const producto = await prisma.producto.findUnique({
-    where: { id: datos.productoId }
+    where: { id: datos.producto.id }
   });
 
   if (!producto) {
@@ -21,7 +21,7 @@ export const agregarAlCarrito = async (usuarioId: string, datos: AgregarAlCarrit
   const itemExistente = await prisma.carritoItem.findFirst({
     where: {
       usuarioId,
-      productoId: datos.productoId
+      productoId: datos.producto.id
     }
   });
 
@@ -43,7 +43,7 @@ export const agregarAlCarrito = async (usuarioId: string, datos: AgregarAlCarrit
     carritoItem = await prisma.carritoItem.create({
       data: {
         usuarioId,
-        productoId: datos.productoId,
+        productoId: datos.producto.id,
         cantidad: datos.cantidad
       },
       include: {
@@ -76,13 +76,12 @@ export const obtenerCarrito = async (usuarioId: string) => {
 
 export const actualizarItemCarrito = async (
   usuarioId: string,
-  productoId: string,
   datos: ActualizarCarritoDTO
 ) => {
   const carritoItem = await prisma.carritoItem.findFirst({
     where: {
       usuarioId,
-      productoId
+      productoId: datos.id
     }
   });
 
@@ -91,7 +90,7 @@ export const actualizarItemCarrito = async (
   }
 
   const producto = await prisma.producto.findUnique({
-    where: { id: productoId }
+    where: { id: datos.id }
   });
 
   if (!producto) {

@@ -13,7 +13,7 @@ const router = Router();
 // Rutas protegidas (usuario autenticado)
 router.post('/', autenticar, agregar);
 router.get('/', autenticar, obtener);
-router.put('/:productoId', autenticar, actualizar);
+router.put('/', autenticar, actualizar);
 router.delete('/:productoId', autenticar, eliminar);
 router.delete('/', autenticar, vaciar);
 

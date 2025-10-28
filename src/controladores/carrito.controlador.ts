@@ -66,8 +66,7 @@ export const obtener = async (req: Request, res: Response) => {
 export const actualizar = async (req: Request, res: Response) => {
   try {
     const usuarioId = req.usuario?.id;
-    const { productoId } = req.params;
-
+    
     if (!usuarioId) {
       return res.status(401).json({
         mensaje: 'No autenticado'
@@ -75,7 +74,7 @@ export const actualizar = async (req: Request, res: Response) => {
     }
 
     const datosValidados = actualizarCarritoSchema.parse(req.body);
-    const carritoItem = await actualizarItemCarrito(usuarioId, productoId, datosValidados);
+    const carritoItem = await actualizarItemCarrito(usuarioId, datosValidados);
 
     res.status(200).json(carritoItem);
   } catch (error: any) {
