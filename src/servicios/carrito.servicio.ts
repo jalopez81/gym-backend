@@ -52,7 +52,7 @@ export const agregarAlCarrito = async (usuarioId: string, datos: AgregarAlCarrit
     });
   }
 
-  logger.info(`Producto agregado al carrito: ${usuarioId}`);
+  logger.info(`Producto agregado al carrito: ${datos.producto.id}`);
   return carritoItem;
 };
 
@@ -91,7 +91,7 @@ export const eliminarDelCarrito = async (usuarioId: string, productoId: string) 
     where: { id: carritoItem.id }
   });
 
-  logger.info(`Producto eliminado del carrito: ${usuarioId}`);
+  logger.info(`Producto eliminado del carrito: ${productoId}`);
 };
 
 export const vaciarCarrito = async (usuarioId: string) => {
@@ -99,5 +99,5 @@ export const vaciarCarrito = async (usuarioId: string) => {
     where: { usuarioId }
   });
 
-  logger.info(`Carrito vaciado: ${usuarioId}`);
+  logger.info(`Carrito vaciado`);
 };

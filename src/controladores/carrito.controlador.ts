@@ -65,7 +65,7 @@ export const obtener = async (req: Request, res: Response) => {
 export const eliminar = async (req: Request, res: Response) => {
   try {
     const usuarioId = req.usuario?.id;
-    const { productoId } = req.params;
+    const { id } = req.params;
 
     if (!usuarioId) {
       return res.status(401).json({
@@ -73,7 +73,7 @@ export const eliminar = async (req: Request, res: Response) => {
       });
     }
 
-    await eliminarDelCarrito(usuarioId, productoId);
+    await eliminarDelCarrito(usuarioId, id);
 
     res.status(200).json({
       mensaje: 'Producto eliminado del carrito exitosamente'
