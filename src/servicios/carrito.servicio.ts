@@ -32,7 +32,7 @@ export const agregarAlCarrito = async (usuarioId: string, datos: AgregarAlCarrit
     carritoItem = await prisma.carritoItem.update({
       where: { id: itemExistente.id },
       data: {
-        cantidad: itemExistente.cantidad + datos.cantidad
+        cantidad: datos.cantidad
       },
       include: {
         producto: true

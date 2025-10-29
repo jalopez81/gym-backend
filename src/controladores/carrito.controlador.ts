@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import {
   agregarAlCarrito,
   obtenerCarrito,
-  actualizarItemCarrito,
   eliminarDelCarrito,
   vaciarCarrito
 } from '../servicios/carrito.servicio';
@@ -59,36 +58,6 @@ export const obtener = async (req: Request, res: Response) => {
     logger.error('Error al obtener carrito:', error);
     res.status(500).json({
       mensaje: 'Error al obtener carrito'
-    });
-  }
-};
-
-export const actualizar = async (req: Request, res: Response) => {
-  try {
-    const usuarioId = req.usuario?.id;
-    
-    if (!usuarioId) {
-      return res.status(401).json({
-        mensaje: 'No autenticado'
-      });
-    }
-
-    const datosValidados = actualizarCarritoSchema.parse(req.body);
-    const carritoItem = await actualizarItemCarrito(usuarioId, datosValidados);
-
-    res.status(200).json(carritoItem);
-  } catch (error: any) {
-    logger.error('Error al actualizar carrito:', error);
-
-    if (error.name === 'ZodError') {
-      return res.status(400).json({
-        mensaje: 'Datos inválidos',
-        errores: error.errors
-      });
-    }
-
-    res.status(400).json({
-      mensaje: error.message || 'Error al actualizar carrito'
     });
   }
 };
