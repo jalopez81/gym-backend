@@ -14,12 +14,15 @@ datasource db {
 }
 
 model Usuario {
-  id       String   @id @default(uuid())
-  email    String   @unique
-  nombre   String
-  password String
-  rol      String   @default("cliente")
-  creado   DateTime @default(now())
+  id              String   @id @default(uuid())
+  email           String   @unique
+  nombre          String
+  imagenPublicId  String?
+  imagenUrl       String?
+  imagenSecureUrl String?
+  password        String
+  rol             String   @default("cliente")
+  creado          DateTime @default(now())
 
   entrenador             Entrenador?
   asignacionesEntrenador AsignacionEntrenador[] @relation("ClienteEntrenador")

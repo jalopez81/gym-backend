@@ -80,54 +80,54 @@ export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
     // Generar productos
     const productosData = [
       {
-        nombre: 'Guantes de entrenamiento',
-        descripcion: 'Guantes profesionales para levantamiento de pesas',
-        precio: 25.99,
+        nombre: 'Banco inclinado',
+        descripcion: 'Ideal para ejercicios de pecho',
+        precio: 615.99,
         stock: 50,
         categoria: 'Accesorios',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
+        "imagenPublicId": "productos/banco_s8rbc9",
+        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761669784/banco_s8rbc9.jpg",
+        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761669784/banco_s8rbc9.jpg",
       },
       {
-        nombre: 'Botella de agua deportiva',
-        descripcion: 'Botella reutilizable de 1 litro',
-        precio: 15.99,
+        nombre: 'Mancuerna',
+        descripcion: '50 libras cada una',
+        precio: 250.99,
         stock: 100,
         categoria: 'Accesorios',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
+        "imagenPublicId": "productos/mancuerna_e4yyvq",
+        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761669784/mancuerna_e4yyvq.jpg",
+        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761669784/mancuerna_e4yyvq.jpg",
       },
       {
-        nombre: 'Proteína Whey',
-        descripcion: 'Proteína de suero de 2kg',
+        nombre: 'Faja',
+        descripcion: 'Faja Sintetica',
         precio: 45.99,
         stock: 30,
-        categoria: 'Suplementos',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
+        categoria: 'Accesorios',
+        "imagenPublicId": "productos/faja_g0upvr",
+        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761669784/faja_g0upvr.jpg",
+        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761669784/faja_g0upvr.jpg",
       },
       {
-        nombre: 'Banda elástica de resistencia',
+        nombre: 'Mat Premium',
         descripcion: 'Set de 5 bandas de diferentes resistencias',
         precio: 19.99,
         stock: 40,
         categoria: 'Accesorios',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
+        "imagenPublicId": "productos/mat_llz20g",
+        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761669784/mat_llz20g.jpg",
+        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761669784/mat_llz20g.jpg",
       },
       {
-        nombre: 'Camiseta deportiva',
-        descripcion: 'Camiseta de secado rápido',
+        nombre: 'Productos Gym',
+        descripcion: 'Pack de productos variados',
         precio: 29.99,
         stock: 80,
         categoria: 'Ropa',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
+        "imagenPublicId": "productos/gym-products_f0yvsu",
+        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761544761/gym-products_f0yvsu.jpg",
+        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761544761/gym-products_f0yvsu.jpg",
       },
       {
         nombre: 'Protector de rodillas',
@@ -139,146 +139,6 @@ export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
         "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
         "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
       },
-      {
-        nombre: 'Mancuerna ajustable',
-        descripcion: 'Mancuerna de 2.5 a 15 kg',
-        precio: 89.99,
-        stock: 20,
-        categoria: 'Equipos',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-      },
-      {
-        nombre: 'Mat de yoga',
-        descripcion: 'Tapete antideslizante de 6mm',
-        precio: 34.99,
-        stock: 45,
-        categoria: 'Accesorios',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-      },
-      {
-        nombre: 'Cuerda para saltar',
-        descripcion: 'Cuerda ajustable para cardio',
-        precio: 12.99,
-        stock: 60,
-        categoria: 'Accesorios',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-      },
-      {
-        nombre: 'Bandas de resistencia',
-        descripcion: 'Set de 3 bandas para entrenamiento',
-        precio: 17.99,
-        stock: 50,
-        categoria: 'Accesorios',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-      },
-      {
-        nombre: 'Guantes de boxeo',
-        descripcion: 'Guantes acolchados para boxeo',
-        precio: 35.99,
-        stock: 25,
-        categoria: 'Accesorios',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-      },
-      {
-        nombre: 'Rodillera deportiva',
-        descripcion: 'Protección para articulaciones durante el entrenamiento',
-        precio: 28.99,
-        stock: 40,
-        categoria: 'Protección',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-      },
-      {
-        nombre: 'Saco de arena para boxeo',
-        descripcion: 'Saco de 25 kg para entrenamiento de fuerza y resistencia',
-        precio: 120.99,
-        stock: 10,
-        categoria: 'Equipos',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-      },
-      {
-        nombre: 'Zapatillas de running',
-        descripcion: 'Calzado ligero y transpirable para correr',
-        precio: 75.99,
-        stock: 60,
-        categoria: 'Ropa',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-      },
-      {
-        nombre: 'Kettlebell 12kg',
-        descripcion: 'Pesa rusa para entrenamiento funcional',
-        precio: 49.99,
-        stock: 30,
-        categoria: 'Equipos',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-      },
-      {
-        nombre: 'Reloj deportivo GPS',
-        descripcion: 'Monitor de ritmo cardíaco y distancia',
-        precio: 199.99,
-        stock: 15,
-        categoria: 'Tecnología',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-      },
-      {
-        nombre: 'Colchoneta pilates',
-        descripcion: 'Tapete cómodo para ejercicios de pilates y estiramientos',
-        precio: 27.99,
-        stock: 50,
-        categoria: 'Accesorios',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-      },
-      {
-        nombre: 'Camiseta compresiva',
-        descripcion: 'Camiseta de compresión para mejorar recuperación',
-        precio: 39.99,
-        stock: 35,
-        categoria: 'Ropa',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-      },
-      {
-        nombre: 'Guantes de ciclismo',
-        descripcion: 'Guantes acolchados para mayor comodidad en bicicleta',
-        precio: 18.99,
-        stock: 45,
-        categoria: 'Accesorios',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-      },
-      {
-        nombre: 'Bicicleta estática',
-        descripcion: 'Bicicleta indoor con resistencia ajustable',
-        precio: 299.99,
-        stock: 8,
-        categoria: 'Equipos',
-        "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
-        "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-        "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
-      }
     ];
 
 
@@ -310,14 +170,26 @@ export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
         const especialidadAleatoria =
           especialidades[Math.floor(Math.random() * especialidades.length)];
 
-        await prisma.entrenador.create({
-          data: {
-            usuarioId: usuario.id,
-            especialidad: especialidadAleatoria,
-            experiencia: Math.floor(Math.random() * 15) + 1,
-            certificaciones: 'NASM, ACE'
-          }
-        });
+        await prisma.$transaction(async (tx) => {
+          const entrenador = await tx.entrenador.create({
+            data: {
+              usuario: { connect: { id: usuario.id } },
+              especialidad: especialidadAleatoria,
+              experiencia: Math.floor(Math.random() * 15) + 1,
+              certificaciones: 'NASM, ACE'
+            }
+          });
+
+          await tx.usuario.update({
+            where: { id: usuario.id },
+            data: {
+              imagenPublicId: 'trainerw_so8xhb',
+              imagenSecureUrl: 'https://res.cloudinary.com/dhf0il3ul/image/upload/v1761674355/trainerw_so8xhb.jpg'
+            }
+          });
+
+          return entrenador;
+        });        
         resultado.entrenadoresCreados++;
       }
     }

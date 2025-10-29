@@ -74,47 +74,6 @@ export const obtenerCarrito = async (usuarioId: string) => {
   };
 };
 
-export const actualizarItemCarrito = async (
-  usuarioId: string,
-  datos: ActualizarCarritoDTO
-) => {
-  const carritoItem = await prisma.carritoItem.findFirst({
-    where: {
-      usuarioId,
-      productoId: datos.id
-    }
-  });
-
-  if (!carritoItem) {
-    throw new Error('Producto no encontrado en el carrito');
-  }
-
-  const producto = await prisma.producto.findUnique({
-    where: { id: datos.id }
-  });
-
-  if (!producto) {
-    throw new Error('Producto no encontrado');
-  }
-
-  // Verificar stock
-  if (producto.stock < datos.cantidad) {
-    throw new Error(`Stock insuficiente. Disponibles: ${producto.stock}`);
-  }
-
-  const itemActualizado = await prisma.carritoItem.update({
-    where: { id: carritoItem.id },
-    data: {
-      cantidad: datos.cantidad
-    },
-    include: {
-      producto: true
-    }
-  });
-
-  logger.info(`Carrito actualizado: ${usuarioId}`);
-  return itemActualizado;
-};
 
 export const eliminarDelCarrito = async (usuarioId: string, productoId: string) => {
   const carritoItem = await prisma.carritoItem.findFirst({
