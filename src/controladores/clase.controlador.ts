@@ -74,7 +74,7 @@ export const actualizar = async (req: Request, res: Response) => {
     if (error.name === 'ZodError') {
       return res.status(400).json({
         mensaje: 'Datos inválidos',
-        errores: error.errors
+        error
       });
     }
 

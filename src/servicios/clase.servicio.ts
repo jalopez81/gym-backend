@@ -13,7 +13,7 @@ export const crearClase = async (datos: CrearClaseDTO) => {
   }
 
   const clase = await prisma.clase.create({
-    data: datos,
+    data: datos,    
     include: {
       entrenador: {
         include: {
@@ -49,7 +49,10 @@ export const obtenerClases = async () => {
         }
       },
       sesiones: {
-        orderBy: { fechaHora: 'asc' }
+        orderBy: { fechaHora: 'asc' },
+        include: {
+          reservas: true
+        }
       }
     },
     orderBy: { creado: 'desc' }
