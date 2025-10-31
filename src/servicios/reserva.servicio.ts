@@ -45,29 +45,47 @@ export const crearReserva = async (clienteId: string, datos: CrearReservaDTO) =>
     throw new Error('Cliente no encontrado');
   }
 
-  const reserva = await prisma.reserva.create({
-    data: {
+  // verificar si reseerva existe
+  const reservaExistente = await prisma.reserva.findFirst({
+    where: {
       clienteId,
       sesionId: datos.sesionId
-    },
-    include: {
-      cliente: {
-        select: {
-          id: true,
-          nombre: true,
-          email: true
-        }
-      },
-      sesion: {
-        include: {
-          clase: true
-        }
-      }
     }
   });
 
-  logger.info(`Reserva creada: ${clienteId} - Sesión ${datos.sesionId}`);
-  return reserva;
+  if (reservaExistente) {
+    await prisma.reserva.update({
+      where: {
+        id: reservaExistente.id
+      },
+      data: { estado: "reservado" }
+    })
+    logger.info(`Reserva creada: ${clienteId} - Sesión ${datos.sesionId}`);
+    return reservaExistente;
+  } else {
+    const reserva = await prisma.reserva.create({
+      data: {
+        clienteId,
+        sesionId: datos.sesionId
+      },
+      include: {
+        cliente: {
+          select: {
+            id: true,
+            nombre: true,
+            email: true
+          }
+        },
+        sesion: {
+          include: {
+            clase: true
+          }
+        }
+      }
+    });
+    logger.info(`Reserva creada: ${clienteId} - Sesión ${datos.sesionId}`);
+    return reserva;
+  }
 };
 
 export const obtenerMisReservas = async (clienteId: string) => {

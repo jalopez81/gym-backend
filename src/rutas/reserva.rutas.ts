@@ -14,7 +14,7 @@ const router = Router();
 router.get('/sesion/:sesionId', obtenerPorSesion);
 
 // Rutas protegidas
-router.post('/', autenticar, crear);
+router.post('/:sesionId', autenticar, crear);
 router.get('/', autenticar, obtenerMias);
 router.delete('/:id', autenticar, cancelar);
 

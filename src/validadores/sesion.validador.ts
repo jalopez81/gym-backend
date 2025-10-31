@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const crearSesionSchema = z.object({
-  claseId: z.string().uuid('ID de clase inválido'),
+  claseId: z.string('ID de clase inválido'),
   fechaHora: z.iso.datetime('Fecha y hora inválida')
 });
 

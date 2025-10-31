@@ -5,7 +5,7 @@ export const crearClaseSchema = z.object({
   descripcion: z.string().optional(),
   duracion: z.number().int().default(60),
   capacidad: z.number().int().min(1, 'La capacidad debe ser mínimo 1'),
-  entrenadorId: z.string().uuid('ID de entrenador inválido')
+  entrenadorId: z.string('ID de entrenador inválido')
 });
 
 export const actualizarClaseSchema = z.object({
@@ -13,7 +13,7 @@ export const actualizarClaseSchema = z.object({
   descripcion: z.string().optional(),
   duracion: z.number().int().default(60),
   capacidad: z.number().int().min(1, 'La capacidad debe ser mínimo 1'),
-    entrenadorId: z.string().uuid().optional()
+    entrenadorId: z.string().optional()
 });
 
 export type CrearClaseDTO = z.infer<typeof crearClaseSchema>;
