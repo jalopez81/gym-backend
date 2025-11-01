@@ -2,6 +2,13 @@ import prisma from '../modelos/prisma';
 import { CrearAsistenciaDTO } from '../validadores/asistencia.validador';
 import logger from '../config/logger';
 
+enum EstadoAsistencia {
+  asistio,
+  no_asistio,
+  llego_tarde
+}
+
+
 export const marcarAsistencia = async (datos: CrearAsistenciaDTO) => {
   // Verificar que la sesión existe
   const sesion = await prisma.sesion.findUnique({

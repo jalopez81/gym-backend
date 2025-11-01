@@ -29,7 +29,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/asistencia',     asistenciaRutas);
+app.use('/api/asistencias',    asistenciaRutas);
 app.use('/api/auth',           authRutas)
 app.use('/api/backups',        backupRutas);
 app.use('/api/carrito',        carritoRutas);
