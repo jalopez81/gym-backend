@@ -6,7 +6,7 @@ import {
   listar,
   obtenerEstadisticas
 } from '../controladores/asistencia.controlador';
-import { autenticar, autorizar } from '../middlewares/auth.middleware';
+import { autenticar, autorizar, ROLES } from '../middlewares/auth.middleware';
 
 const router = Router();
 
@@ -16,6 +16,7 @@ router.get('/mi-historial', autenticar, obtenerMiHistorial);
 router.get('/estadisticas/:clienteId', autenticar, obtenerEstadisticas);
 
 // Rutas solo admin
-router.get('/sesion/:sesionId', autenticar, autorizar('admin', 'entrenador'), obtenerPorSesion);
+router.post('/', autenticar, autorizar(ROLES.ADMIN, ROLES.ENTRENADOR), listar);
+router.get('/sesion/:sesionId', autenticar, autorizar(ROLES.ADMIN, ROLES.ENTRENADOR), obtenerPorSesion);
 
 export default router;

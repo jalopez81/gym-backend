@@ -6,7 +6,7 @@ import {
   cancelar,
   renovar
 } from '../controladores/suscripcion.controlador';
-import { autenticar, autorizar } from '../middlewares/auth.middleware';
+import { autenticar, autorizar, ROLES } from '../middlewares/auth.middleware';
 
 const router = Router();
 
@@ -17,6 +17,6 @@ router.delete('/:id', autenticar, cancelar);
 router.post('/:id/renovar', autenticar, renovar);
 
 // Rutas solo admin
-router.get('/', autenticar, autorizar('admin'), listar);
+router.get('/', autenticar, autorizar(ROLES.ADMIN), listar);
 
 export default router;

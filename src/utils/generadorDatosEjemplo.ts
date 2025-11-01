@@ -1,6 +1,7 @@
 import prisma from '../modelos/prisma';
 import { generarHash } from './hash';
 import logger from '../config/logger';
+import { ROLES } from '../middlewares/auth.middleware';
 
 interface DatosEjemplo {
   usuariosCreados: number;
@@ -24,19 +25,19 @@ export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
         email: 'admin@gym.com',
         nombre: 'Administrador',
         password: await generarHash('admin123'),
-        rol: 'admin'
+        rol: ROLES.ADMIN
       },
       {
         email: 'carlos@gym.com',
         nombre: 'Carlos García',
         password: await generarHash('123456'),
-        rol: 'entrenador'
+        rol: ROLES.ENTRENADOR
       },
       {
         email: 'maria@gym.com',
         nombre: 'María López',
         password: await generarHash('123456'),
-        rol: 'entrenador'
+        rol: ROLES.ENTRENADOR
       },
       {
         email: 'juan@gym.com',
@@ -157,7 +158,7 @@ export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
 
     // Generar entrenadores (sin relación con clientes)
     const usuarios = await prisma.usuario.findMany({
-      where: { rol: 'entrenador' }
+      where: { rol: ROLES.ENTRENADOR }
     });
 
     for (const usuario of usuarios) {
