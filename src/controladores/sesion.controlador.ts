@@ -34,6 +34,39 @@ export const crear = async (req: Request, res: Response) => {
     });
   }
 };
+export const crearMultiple = async (req: Request, res: Response) => {
+  try {
+    const sesiones = req.body;
+
+    const resultados = await Promise.all(
+      sesiones.map(async (item: any) => {
+
+        // valida y crea cada sesión
+        const datosValidados = crearSesionSchema.parse({
+          fechaHora: item.fechaHora,
+          claseId: item.claseId
+        });
+        return await crearSesion(datosValidados);
+      })
+    );
+
+    res.status(201).json(resultados);
+  } catch (error: any) {
+    logger.error('Error al crear sesiones:', error);
+
+    if (error.name === 'ZodError') {
+      return res.status(400).json({
+        mensaje: 'Datos inválidos',
+        errores: error.errors
+      });
+    }
+
+    res.status(500).json({
+      mensaje: error.message || 'Error al crear sesiones'
+    });
+  }
+};
+
 
 export const listar = async (req: Request, res: Response) => {
   try {

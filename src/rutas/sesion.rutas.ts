@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   crear,
+  crearMultiple,
   listar,
   obtenerPorId,
   actualizar,
@@ -18,6 +19,7 @@ router.get('/clase/:claseId', obtenerPorClase);
 
 // Rutas protegidas (solo admin)
 router.post('/', autenticar, autorizar('admin'), crear);
+router.post('/multiple', autenticar, autorizar('admin'), crearMultiple);
 router.put('/:id', autenticar, autorizar('admin'), actualizar);
 router.delete('/:id', autenticar, autorizar('admin'), eliminar);
 
