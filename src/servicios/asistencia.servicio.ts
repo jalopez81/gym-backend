@@ -1,6 +1,7 @@
 import prisma from '../modelos/prisma';
 import { CrearAsistenciaDTO } from '../validadores/asistencia.validador';
 import logger from '../config/logger';
+import { verificarAsistenciaDuplicada, verificarCliente, verificarReserva, verificarSesion } from './helpers/asistencias.helper';
 
 enum EstadoAsistencia {
   asistio,
@@ -8,77 +9,31 @@ enum EstadoAsistencia {
   llego_tarde
 }
 
-
 export const marcarAsistencia = async (datos: CrearAsistenciaDTO) => {
-  // Verificar que la sesión existe
-  const sesion = await prisma.sesion.findUnique({
-    where: { id: datos.sesionId },
-    include: { clase: true }
-  });
+  const { clienteId, sesionId, estado, horaEntrada } = datos;
 
-  if (!sesion) {
-    throw new Error('Sesión no encontrada');
-  }
-
-  // Verificar que el cliente existe
-  const cliente = await prisma.usuario.findUnique({
-    where: { id: datos.clienteId }
-  });
-
-  if (!cliente) {
-    throw new Error('Cliente no encontrado');
-  }
-
-  // Verificar que existe una reserva
-  const reserva = await prisma.reserva.findFirst({
-    where: {
-      sesionId: datos.sesionId,
-      clienteId: datos.clienteId
-    }
-  });
-
-  if (!reserva) {
-    throw new Error('El cliente no tiene reserva en esta sesión');
-  }
-
-  // Verificar que no exista asistencia previa
-  const asistenciaExistente = await prisma.asistencia.findFirst({
-    where: {
-      sesionId: datos.sesionId,
-      clienteId: datos.clienteId
-    }
-  });
-
-  if (asistenciaExistente) {
-    throw new Error('La asistencia ya ha sido marcada para este cliente en esta sesión');
-  }
+  await verificarSesion(sesionId);
+  await verificarCliente(clienteId);
+  await verificarReserva(clienteId, sesionId);
+  await verificarAsistenciaDuplicada(clienteId, sesionId);
 
   const asistencia = await prisma.asistencia.create({
     data: {
-      sesionId: datos.sesionId,
-      clienteId: datos.clienteId,
-      estado: datos.estado,
-      horaEntrada: datos.horaEntrada ? new Date(datos.horaEntrada) : null
+      clienteId,
+      sesionId,
+      estado,
+      horaEntrada: horaEntrada ? new Date(horaEntrada) : new Date(),
     },
     include: {
-      cliente: {
-        select: {
-          id: true,
-          nombre: true,
-          email: true
-        }
-      },
-      sesion: {
-        include: {
-          clase: true
-        }
-      }
-    }
+      cliente: { select: { id: true, nombre: true, email: true } },
+      sesion: { include: { clase: true } },
+    },
   });
 
-  logger.info(`Asistencia marcada: ${datos.clienteId} en sesión ${datos.sesionId}`);
+  logger.info(`Asistencia marcada: ${clienteId} en sesión ${sesionId}`);
   return asistencia;
 };
+
 
 export const obtenerAsistenciasPorSesion = async (sesionId: string) => {
   const sesion = await prisma.sesion.findUnique({
@@ -108,6 +63,13 @@ export const obtenerMiHistorialAsistencia = async (clienteId: string) => {
   return await prisma.asistencia.findMany({
     where: { clienteId },
     include: {
+      cliente: {
+        select: {
+          id: true,
+          nombre: true,
+          email: true
+        }
+      },
       sesion: {
         include: {
           clase: {
@@ -115,9 +77,7 @@ export const obtenerMiHistorialAsistencia = async (clienteId: string) => {
               entrenador: {
                 include: {
                   usuario: {
-                    select: {
-                      nombre: true
-                    }
+                    select: { nombre: true }
                   }
                 }
               }
@@ -129,6 +89,7 @@ export const obtenerMiHistorialAsistencia = async (clienteId: string) => {
     orderBy: { creado: 'desc' }
   });
 };
+
 
 export const obtenerTodasLasAsistencias = async () => {
   return await prisma.asistencia.findMany({

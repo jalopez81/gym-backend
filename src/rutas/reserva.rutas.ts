@@ -19,6 +19,6 @@ router.get('/', autenticar, obtenerMias);
 router.delete('/:id', autenticar, cancelar);
 
 // Rutas solo admin
-router.get('/admin/todas', autenticar, autorizar(ROLES.ADMIN), listar);
+router.get('/admin', autenticar, autorizar(ROLES.ADMIN), listar);
 
 export default router;

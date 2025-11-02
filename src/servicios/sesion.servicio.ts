@@ -47,8 +47,8 @@ export const crearSesion = async (datos: CrearSesionDTO) => {
 
 export const obtenerSesiones = async () => {
   return await prisma.sesion.findMany({
-    include: {
-      clase: {
+    include: {      
+      clase: {         
         include: {
           entrenador: {
             include: {

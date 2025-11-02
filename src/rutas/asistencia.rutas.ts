@@ -12,7 +12,7 @@ const router = Router();
 
 // Rutas protegidas
 router.post('/', autenticar, crear);
-router.get('/mi-historial', autenticar, obtenerMiHistorial);
+router.get('/', autenticar, obtenerMiHistorial);
 router.get('/estadisticas/:clienteId', autenticar, obtenerEstadisticas);
 
 // Rutas solo admin
