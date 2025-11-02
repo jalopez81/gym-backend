@@ -20,5 +20,8 @@ router.post('/:id/cancelar', autenticar, cancelar);
 
 // Rutas solo admin
 router.get('/', autenticar, autorizar(ROLES.ADMIN), listar);
+router.put('/:id', autenticar, autorizar(ROLES.ADMIN), completar);
+router.delete('/:id', autenticar, autorizar(ROLES.ADMIN), cancelar);
+
 
 export default router;
