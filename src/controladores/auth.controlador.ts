@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import logger from "../config/logger";
 import { loginSchema, registroSchema } from "../validadores/usuario.validador"
-import { loginUsuario, registrarUsuario } from "../servicios/auth.servicio";
+import { actualizarUsuario, loginUsuario, registrarUsuario } from "../servicios/auth.servicio";
 
 export const registro = async (req: Request, res: Response) => {
     try {

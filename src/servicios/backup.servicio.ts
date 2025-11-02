@@ -154,11 +154,38 @@ export const programarBackupAutomatico = () => {
     logger.info('Iniciando backup automático semanal...');
     try {
       await crearBackup();
-      logger.info('Backup automático completado exitosamente');
+      await limpiarBackupsAntiguos(180);
+      logger.info('Backup automático completado y limpieza realizada');
     } catch (error) {
       logger.error('Error en backup automático:', error);
     }
   });
 
   logger.info('Backup automático programado para domingos a las 2:00 AM');
+};
+
+
+export const eliminarBackup = async (nombreArchivo: string) => {
+  try {
+    const rutaCompleta = path.join(BACKUP_DIR, nombreArchivo);
+    await fs.unlink(rutaCompleta);
+    logger.info(`Backup eliminado: ${nombreArchivo}`);
+    return { mensaje: 'Backup eliminado', archivo: nombreArchivo };
+  } catch (error) {
+    logger.error('Error al eliminar backup:', error);
+    throw new Error('Error al eliminar backup');
+  }
+};
+
+
+export const limpiarBackupsAntiguos = async (dias = 30) => {
+  const archivos = await obtenerBackups();
+  const limite = Date.now() - dias * 24 * 60 * 60 * 1000;
+
+  for (const b of archivos) {
+    if (new Date(b.fecha).getTime() < limite) {
+      await fs.unlink(path.join(BACKUP_DIR, b.nombre));
+      logger.info(`Backup antiguo eliminado: ${b.nombre}`);
+    }
+  }
 };

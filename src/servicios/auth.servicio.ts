@@ -90,3 +90,38 @@ export const loginUsuario = async (datos: LoginDTO) => {
         token
     }
 };
+
+export const actualizarUsuario = async (
+  id: string,
+  datos: Partial<RegistroDTO> & { status?: string }
+) => {
+  const usuario = await prisma.usuario.findUnique({ where: { id } });
+  if (!usuario) throw new Error('Usuario no encontrado');
+
+  let dataActualizada: any = {
+    nombre: datos.nombre,
+    email: datos.email,
+    rol: datos.rol,
+    status: datos.status,
+  };
+
+  if (datos.password) {
+    dataActualizada.password = await generarHash(datos.password);
+  }
+
+  const actualizado = await prisma.usuario.update({
+    where: { id },
+    data: dataActualizada,
+    select: {
+      id: true,
+      nombre: true,
+      email: true,
+      rol: true,
+      status: true,
+      creado: true,
+    },
+  });
+
+  logger.info(`Usuario actualizado: ${actualizado.email}`);
+  return actualizado;
+};
