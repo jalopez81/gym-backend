@@ -1,9 +1,10 @@
+import { PrismaClient } from '@prisma/client';
 import { exec } from 'child_process';
-import { promisify } from 'util';
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import archiver from 'archiver';
+import { promisify } from 'util';
 import logger from '../config/logger';
+const prisma = new PrismaClient();
 
 const execAsync = promisify(exec);
 
@@ -189,3 +190,24 @@ export const limpiarBackupsAntiguos = async (dias = 30) => {
     }
   }
 };
+
+export const borrarTodosLosDatos = () => {
+  async function clearAll() {
+    const models = Object.keys(prisma).filter(
+      (key) => typeof (prisma as any)[key]?.deleteMany === 'function'
+    );
+
+    for (const model of models) {
+      await (prisma as any)[model].deleteMany();
+      console.log(`Cleared table: ${model}`);
+    }
+    clearAll()
+      .then(() => console.log('✅ All tables cleared'))
+      .catch(console.error)
+      .finally(() => prisma.$disconnect());
+  }
+}
+
+
+
+

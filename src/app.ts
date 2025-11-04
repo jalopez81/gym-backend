@@ -7,7 +7,9 @@ import authRutas from         './rutas/auth.rutas'
 import backupRutas from       './rutas/backup.rutas';
 import carritoRutas from      './rutas/carrito.rutas';
 import claseRutas from        './rutas/clase.rutas';
+import configuracionRutas from './rutas/configuracion.rutas';
 import entrenadorRutas from   './rutas/entrenador.rutas'
+import devRutas from          './rutas/dev.rutas'
 import ordenRutas from        './rutas/orden.rutas';
 import planRutas from         './rutas/plan.rutas';
 import productoRutas from     './rutas/producto.rutas'
@@ -19,6 +21,7 @@ import usuarioRutas from      './rutas/usuario.rutas'
 
 import { programarBackupAutomatico } from './servicios/backup.servicio';
 import { manejarErrores, rutaNoEncontrada } from './middlewares/error.middleware';
+import inicializarConfiguracion from './inicializarConfiguracion';
 
 dotenv.config();
 
@@ -34,7 +37,9 @@ app.use('/api/auth',           authRutas)
 app.use('/api/backups',        backupRutas);
 app.use('/api/carrito',        carritoRutas);
 app.use('/api/clases',         claseRutas);
+app.use('/api/configuracion',  configuracionRutas);
 app.use('/api/entrenadores',   entrenadorRutas);
+app.use('/api/dev',            devRutas);
 app.use('/api/ordenes',        ordenRutas);
 app.use('/api/planes',         planRutas);
 app.use('/api/productos',      productoRutas)
@@ -54,14 +59,13 @@ app.get('/status', (req, res) => {
   res.send('Status OK');
 });
 
+// Llama esto antes de app.listen()
+inicializarConfiguracion();
+
 // iniciar
 app.listen(port, () => {  
   // Programar backup automático
   programarBackupAutomatico();
 
-  console.clear();
-  logger.info(`*** READY ***: Servidor "src/app.js" corriendo en el puerto ${port}`);
-  logger.info(`*** READY ***: Servidor "src/app.js" corriendo en el puerto ${port}`);
-  logger.info(`*** READY ***: Servidor "src/app.js" corriendo en el puerto ${port}`);
   logger.info(`*** READY ***: Servidor "src/app.js" corriendo en el puerto ${port}`);
 });

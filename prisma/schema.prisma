@@ -208,3 +208,29 @@ model OrdenItem {
 
   @@map("orden_items")
 }
+
+model Configuracion {
+  id                   String   @id @default(uuid())
+  nombreGimnasio       String
+  direccion            String
+  telefono             String
+  emailContacto        String
+  moneda               String
+  impuestos            Float
+  horarioApertura      String
+  horarioCierre        String
+  permitirReservas     Boolean
+  duracionSesionMinutos Int
+  maxClasesPorDia      Int
+  permitirPagoOnline   Boolean
+  metodosPago          String[]
+  notificarEmail       Boolean
+  emailNotificaciones  String?
+  notificarWhatsapp    Boolean
+  whatsappNumero       String?
+  logoUrl              String?
+  colorPrincipal       String
+  colorSecundario      String
+  creado               DateTime @default(now())
+  actualizado          DateTime @updatedAt
+}

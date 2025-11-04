@@ -294,6 +294,34 @@ export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
         resultado.planesCreados = (resultado.planesCreados || 0) + 1;
       }
     }
+
+    // configuracion por defecto
+    await prisma.configuracion.create({
+      data: {
+        nombreGimnasio: 'GymPlus Fitness Center',
+        direccion: 'Av. Bolívar 123, Santo Domingo',
+        telefono: '+1 (809) 555-1234',
+        emailContacto: 'contacto@gymplus.do',
+        moneda: 'DOP',
+        impuestos: 18,
+        horarioApertura: '06:00',
+        horarioCierre: '22:00',
+        permitirReservas: true,
+        duracionSesionMinutos: 60,
+        maxClasesPorDia: 5,
+        permitirPagoOnline: true,
+        metodosPago: ['Tarjeta', 'Efectivo'],
+        notificarEmail: true,
+        emailNotificaciones: 'notificaciones@gymplus.do',
+        notificarWhatsapp: false,
+        whatsappNumero: '',
+        logoUrl: '/images/logo.png',
+        colorPrincipal: '#1976d2',
+        colorSecundario: '#9c27b0',
+      },
+    });
+    // configuracion por defecto generada
+
     return resultado;
   } catch (error) {
     logger.error('Error al generar datos de ejemplo:', error);
