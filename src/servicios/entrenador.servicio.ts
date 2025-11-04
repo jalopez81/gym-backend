@@ -77,7 +77,8 @@ export const obtenerEntrenadores = async () => {
             }
           }
         }
-      }
+      },
+      clases: true
     },
     orderBy: { creado: 'desc' }
   });

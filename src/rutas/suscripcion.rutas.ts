@@ -1,22 +1,25 @@
 import { Router } from 'express';
 import {
   crear,
-  obtenerMia,
+  obtener,   // nombre claro
   listar,
-  cancelar,
-  renovar
+  cancelar,                // cambia estado a CANCELADA
+  renovar,
+  actualizar
 } from '../controladores/suscripcion.controlador';
 import { autenticar, autorizar, ROLES } from '../middlewares/auth.middleware';
 
 const router = Router();
 
-// Rutas protegidas (usuario autenticado)
-router.post('/', autenticar, crear);
-router.get('/mi-suscripcion', autenticar, obtenerMia);
-router.delete('/:id', autenticar, cancelar);
-router.post('/:id/renovar', autenticar, renovar);
+// Rutas usuario autenticado
+router.post('/', autenticar, crear);                       // crear nueva suscripción
+router.get('/mi-suscripcion', autenticar, obtener); // obtener la propia
+router.patch('/:id/cancelar', autenticar, cancelar);       // cancelar (soft) => PATCH
+router.post('/:id/renovar', autenticar, renovar);          // renovar (crea nueva/extend)
+router.patch('/:id', actualizar)
 
-// Rutas solo admin
-router.get('/', autenticar, autorizar(ROLES.ADMIN), listar);
+
+// Rutas admin
+router.get('/', autenticar, autorizar(ROLES.ADMIN), listar); // listar todas
 
 export default router;

@@ -190,7 +190,7 @@ export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
           });
 
           return entrenador;
-        });        
+        });
         resultado.entrenadoresCreados++;
       }
     }
@@ -259,28 +259,31 @@ export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
       {
         nombre: 'Básico',
         descripcion: 'Acceso a todas las clases grupales',
-        precio: 19.99,
+        precio: 499.99,
         duracionDias: 30,
-        beneficios: 'Clases ilimitadas, Sin entrenador personal'
+        beneficios: 'Clases ilimitadas, Sin entrenador personal',
+        nivel: 1
       },
       {
         nombre: 'Premium',
         descripcion: 'Acceso a todas las clases + 2 sesiones con entrenador',
-        precio: 49.99,
+        precio: 999.99,
         duracionDias: 30,
-        beneficios: 'Clases ilimitadas, 2 sesiones con entrenador, Acceso 24/7'
+        beneficios: 'Clases ilimitadas, 2 sesiones con entrenador, Acceso 24/7',
+        nivel: 2
       },
       {
         nombre: 'Gold',
         descripcion: 'Acceso total + Entrenador personal dedicado',
-        precio: 99.99,
+        precio: 1599.99,
         duracionDias: 30,
-        beneficios: 'Clases ilimitadas, Entrenador personal, Acceso 24/7, Plan nutricional'
+        beneficios: 'Clases ilimitadas, Entrenador personal, Acceso 24/7, Plan nutricional',
+        nivel: 3
       }
     ];
 
     for (const planData of planesData) {
-      const planExistente = await prisma.plan.findUnique({
+      const planExistente = await prisma.plan.findFirst({
         where: { nombre: planData.nombre }
       });
 

@@ -13,7 +13,7 @@ export const crearPlan = async (datos: CrearPlanDTO) => {
 
 export const obtenerPlanes = async () => {
   return await prisma.plan.findMany({
-    orderBy: { precio: 'asc' }
+    orderBy: { nivel: 'asc' }
   });
 };
 

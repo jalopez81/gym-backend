@@ -10,6 +10,7 @@ const ejecutar = async () => {
     logger.info(`Usuarios creados: ${resultado.usuariosCreados}`);
     logger.info(`Productos creados: ${resultado.productosCreados}`);
     logger.info(`Entrenadores creados: ${resultado.entrenadoresCreados}`);
+    logger.info(`Planes creados: ${resultado.planesCreados}`);
     logger.info('=======================');
     
     process.exit(0);
