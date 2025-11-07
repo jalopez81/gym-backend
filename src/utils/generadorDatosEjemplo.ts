@@ -157,43 +157,40 @@ export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
     }
 
     // Generar entrenadores (sin relación con clientes)
-    const usuarios = await prisma.usuario.findMany({
-      where: { rol: ROLES.ENTRENADOR }
-    });
-
-    for (const usuario of usuarios) {
-      const entrenadorExistente = await prisma.entrenador.findUnique({
-        where: { usuarioId: usuario.id }
-      });
-
-      if (!entrenadorExistente) {
-        const especialidades = ['Levantamiento de pesas', 'Cardio', 'Yoga', 'Pilates'];
-        const especialidadAleatoria =
-          especialidades[Math.floor(Math.random() * especialidades.length)];
-
-        await prisma.$transaction(async (tx) => {
-          const entrenador = await tx.entrenador.create({
-            data: {
-              usuario: { connect: { id: usuario.id } },
-              especialidad: especialidadAleatoria,
-              experiencia: Math.floor(Math.random() * 15) + 1,
-              certificaciones: 'NASM, ACE'
-            }
-          });
-
-          await tx.usuario.update({
-            where: { id: usuario.id },
-            data: {
-              imagenPublicId: 'trainerw_so8xhb',
-              imagenSecureUrl: 'https://res.cloudinary.com/dhf0il3ul/image/upload/v1761674355/trainerw_so8xhb.jpg'
-            }
-          });
-
-          return entrenador;
+    const arrEntrenadores = [
+      {
+        usuarioId: "46b71957-9146-427b-9bef-7b40218e3b35",
+        especialidad: "Pilates",
+        experiencia: 3,
+        certificaciones: "NASM, ACE",
+      },
+      {
+        usuarioId: "af97daca-abe2-46f8-9882-3943a3765364",
+        especialidad: "Cardio",
+        experiencia: 3,
+        certificaciones: "NASM, ACE",
+      },
+      {
+        usuarioId: "92e8875d-42f9-4277-9787-62b0d0321611",
+        especialidad: "Yoga",
+        experiencia: 3,
+        certificaciones: "NASM, ACE",
+      },
+      {
+        usuarioId: "ad4cd64f-072d-4ae8-9190-4fb12241f0da",
+        especialidad: "Levantamiento de pesas",
+        experiencia: 3,
+        certificaciones: "NASM, ACE",
+      },
+    ]
+    await prisma.$transaction(async (tx) => {
+      for (const ent of arrEntrenadores) {
+        await tx.entrenador.create({
+          data: ent
         });
         resultado.entrenadoresCreados++;
       }
-    }
+    });
 
     logger.info('Datos de ejemplo generados correctamente');
 

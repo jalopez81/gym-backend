@@ -39,13 +39,8 @@ export const obtenerClases = async () => {
     include: {
       entrenador: {
         include: {
-          usuario: {
-            select: {
-              id: true,
-              nombre: true,
-              email: true
-            }
-          }
+          usuario: true,
+          clases: true
         }
       },
       sesiones: {
