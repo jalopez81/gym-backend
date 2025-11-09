@@ -41,12 +41,14 @@ export const crearSuscripcion = async (usuarioId: string, datos: CrearSuscripcio
   const fechaVencimiento = new Date();
   fechaVencimiento.setDate(fechaVencimiento.getDate() + plan.duracionDias);
 
+  
   const suscripcion = await prisma.suscripcion.create({
     data: {
       usuarioId,
       planId: datos.planId,
       fechaInicio,
-      fechaVencimiento
+      fechaVencimiento,
+      monto: plan.precio
     },
     include: {
       usuario: {

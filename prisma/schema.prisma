@@ -127,7 +127,7 @@ model Plan {
   descripcion  String?
   precio       Float
   duracionDias Int
-  beneficios   String? 
+  beneficios   String?
   nivel        Int?
   creado       DateTime @default(now())
   actualizada  DateTime @updatedAt
@@ -146,9 +146,12 @@ model Suscripcion {
   fechaVencimiento DateTime
   creado           DateTime          @default(now())
   actualizada      DateTime          @updatedAt
+  monto            Float
 
   usuario Usuario @relation(fields: [usuarioId], references: [id])
   plan    Plan    @relation(fields: [planId], references: [id])
+  
+  @@map("suscripciones")
 }
 
 enum EstadoSuscripcion {
@@ -210,27 +213,27 @@ model OrdenItem {
 }
 
 model Configuracion {
-  id                   String   @id @default(uuid())
-  nombreGimnasio       String
-  direccion            String
-  telefono             String
-  emailContacto        String
-  moneda               String
-  impuestos            Float
-  horarioApertura      String
-  horarioCierre        String
-  permitirReservas     Boolean
+  id                    String   @id @default(uuid())
+  nombreGimnasio        String
+  direccion             String
+  telefono              String
+  emailContacto         String
+  moneda                String
+  impuestos             Float
+  horarioApertura       String
+  horarioCierre         String
+  permitirReservas      Boolean
   duracionSesionMinutos Int
-  maxClasesPorDia      Int
-  permitirPagoOnline   Boolean
-  metodosPago          String[]
-  notificarEmail       Boolean
-  emailNotificaciones  String?
-  notificarWhatsapp    Boolean
-  whatsappNumero       String?
-  logoUrl              String?
-  colorPrincipal       String
-  colorSecundario      String
-  creado               DateTime @default(now())
-  actualizado          DateTime @updatedAt
+  maxClasesPorDia       Int
+  permitirPagoOnline    Boolean
+  metodosPago           String[]
+  notificarEmail        Boolean
+  emailNotificaciones   String?
+  notificarWhatsapp     Boolean
+  whatsappNumero        String?
+  logoUrl               String?
+  colorPrincipal        String
+  colorSecundario       String
+  creado                DateTime @default(now())
+  actualizado           DateTime @updatedAt
 }

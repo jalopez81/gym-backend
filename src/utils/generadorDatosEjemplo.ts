@@ -1,84 +1,150 @@
-import prisma from '../modelos/prisma';
-import { generarHash } from './hash';
-import logger from '../config/logger';
+import { PrismaClient } from '@prisma/client';
 import { ROLES } from '../middlewares/auth.middleware';
+import { generarHash } from './hash';
+const prisma = new PrismaClient();
 
 interface DatosEjemplo {
   usuariosCreados: number;
   productosCreados: number;
   entrenadoresCreados: number;
+  planesCreados: number;
   clasesCreadas?: number;
-  planesCreados?: number;
+  sesionesCreadas?: number;
 }
 
 export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
   const resultado: DatosEjemplo = {
     usuariosCreados: 0,
     productosCreados: 0,
-    entrenadoresCreados: 0
-  };
+    entrenadoresCreados: 0,
+    planesCreados: 0,
+    clasesCreadas: 0,
+    sesionesCreadas: 0,
+  }
 
   try {
-    // Generar usuarios
+    console.log('Borrando datos existentes...');
+
+    await prisma.ordenItem.deleteMany();
+    await prisma.orden.deleteMany();
+    await prisma.carritoItem.deleteMany();
+    await prisma.asistencia.deleteMany();
+    await prisma.reserva.deleteMany();
+    await prisma.sesion.deleteMany();
+    await prisma.clase.deleteMany();
+    await prisma.asignacionEntrenador.deleteMany();
+    await prisma.entrenador.deleteMany();
+    await prisma.suscripcion.deleteMany();
+    await prisma.plan.deleteMany();
+    await prisma.producto.deleteMany();
+    await prisma.usuario.deleteMany();
+    await prisma.configuracion.deleteMany();
+
+    console.log('Insertando datos base...');
+
+    // usuarios
+    const passwordHash = await generarHash('123456');
     const usuariosData = [
       {
-        email: 'admin@gym.com',
-        nombre: 'Administrador',
-        password: await generarHash('admin123'),
-        rol: ROLES.ADMIN
+        email: "admin@gym.com",
+        nombre: "Administrador",
+        password: passwordHash,
+        rol: ROLES.ADMIN,
+        creado: new Date("2025-11-09T01:48:36.694Z"),
+        status: 'activo',
       },
       {
-        email: 'carlos@gym.com',
-        nombre: 'Carlos García',
-        password: await generarHash('123456'),
-        rol: ROLES.ENTRENADOR
+        email: "carlos@gym.com",
+        nombre: "Carlos García",
+        imagenPublicId: "entrenador_no_2_s4kbtu",
+        imagenUrl: "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761674355/entrenador_no_2_s4kbtu.jpg",
+        imagenSecureUrl: "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761674355/entrenador_no_2_s4kbtu.jpg",
+        password: passwordHash,
+        rol: ROLES.ENTRENADOR,
+        creado: new Date("2025-11-09T01:48:36.710Z"),
+        status: 'activo',
       },
       {
-        email: 'maria@gym.com',
-        nombre: 'María López',
-        password: await generarHash('123456'),
-        rol: ROLES.ENTRENADOR
+        nombre: "Julio Iglesias",
+        email: "julio@gym.com",
+        imagenPublicId: "trainer_3_ypilrf",
+        imagenUrl: "https://res.cloudinary.com/dhf0il3ul/image/upload/v1762266352/trainer_3_ypilrf.jpg",
+        imagenSecureUrl: "https://res.cloudinary.com/dhf0il3ul/image/upload/v1762266352/trainer_3_ypilrf.jpg",
+        password: passwordHash,
+        rol: ROLES.ENTRENADOR,
+        creado: new Date("2025-11-09T01:48:36.712Z"),
+        status: 'activo',
       },
       {
-        email: 'juan@gym.com',
-        nombre: 'Juan Pérez',
-        password: await generarHash('123456'),
-        rol: 'cliente'
+        email: "maria@gym.com",
+        nombre: "María López",
+        imagenPublicId: "trainerw_so8xhb",
+        imagenUrl: "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761674355/trainerw_so8xhb.jpg",
+        imagenSecureUrl: "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761674355/trainerw_so8xhb.jpg",
+        password: passwordHash,
+        rol: ROLES.ENTRENADOR,
+        creado: new Date("2025-11-09T01:48:36.712Z"),
+        status: 'activo',
       },
       {
-        email: 'ana@gym.com',
-        nombre: 'Ana Martínez',
-        password: await generarHash('123456'),
-        rol: 'cliente'
+        email: "juan@gym.com",
+        nombre: "Juan Pérez",
+        password: passwordHash,
+        rol: ROLES.CLIENTE,
+        creado: new Date("2025-11-09T01:48:36.715Z"),
+        status: 'activo',
       },
       {
-        email: 'luis@gym.com',
-        nombre: 'Luis Rodríguez',
-        password: await generarHash('123456'),
-        rol: 'cliente'
+        email: "ana@gym.com",
+        nombre: "Ana Martínez",
+        password: passwordHash,
+        rol: ROLES.CLIENTE,
+        creado: new Date("2025-11-09T01:48:36.719Z"),
+        status: 'activo',
       },
       {
-        email: 'recepcion@gym.com',
-        nombre: 'Recepcionista',
-        password: await generarHash('123456'),
-        rol: 'recepcionista'
-      }
+        email: "luis@gym.com",
+        nombre: "Luis Rodríguez",
+        password: passwordHash,
+        rol: ROLES.CLIENTE,
+        creado: new Date("2025-11-09T01:48:36.722Z"),
+        status: 'activo',
+      },
+      {
+        email: "recepcion@gym.com",
+        nombre: "Recepcionista",
+        password: passwordHash,
+        rol: ROLES.RECEPCIONISTA,
+        creado: new Date("2025-11-09T01:48:36.725Z"),
+        status: 'activo',
+      },
     ];
 
-    for (const usuarioData of usuariosData) {
-      const usuarioExistente = await prisma.usuario.findUnique({
-        where: { email: usuarioData.email }
-      });
-
-      if (!usuarioExistente) {
-        await prisma.usuario.create({
-          data: usuarioData
-        });
-        resultado.usuariosCreados++;
-      }
+    for (const usuario of usuariosData) {
+      await prisma.usuario.create({
+        data: usuario
+      })
+      resultado.usuariosCreados += 1;
     }
 
-    // Generar productos
+    // entrenadores
+    const arrEntrenadores = await prisma.usuario.findMany({ where: { rol: ROLES.ENTRENADOR } })
+    const especialidades = ["Fuerza", "Cardio", "Yoga", "Pilates", "CrossFit", "Natación"];
+    const certificaciones = ["ACE", "NASM", "ISSA", "ACSM", "NSCA", "CPR"];
+
+    for (const entrenador of arrEntrenadores) {
+      await prisma.entrenador.create({
+        data: {
+          usuarioId: entrenador.id,
+          especialidad: especialidades[Math.floor(Math.random() * especialidades.length)],
+          certificaciones: certificaciones[Math.floor(Math.random() * certificaciones.length)],
+          experiencia: 5,
+        }
+      })
+      resultado.entrenadoresCreados += 1;
+    }
+
+    // productos
     const productosData = [
       {
         nombre: 'Banco inclinado',
@@ -142,186 +208,160 @@ export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
       },
     ];
 
-
-    for (const productoData of productosData) {
-      const productoExistente = await prisma.producto.findFirst({
-        where: { nombre: productoData.nombre }
-      });
-
-      if (!productoExistente) {
-        await prisma.producto.create({
-          data: productoData
-        });
-        resultado.productosCreados++;
-      }
+    for (const producto of productosData) {
+      await prisma.producto.create({
+        data: producto
+      })
+      resultado.productosCreados += 1;
     }
 
-    // Generar entrenadores (sin relación con clientes)
-    const arrEntrenadores = [
-      {
-        usuarioId: "46b71957-9146-427b-9bef-7b40218e3b35",
-        especialidad: "Pilates",
-        experiencia: 3,
-        certificaciones: "NASM, ACE",
-      },
-      {
-        usuarioId: "af97daca-abe2-46f8-9882-3943a3765364",
-        especialidad: "Cardio",
-        experiencia: 3,
-        certificaciones: "NASM, ACE",
-      },
-      {
-        usuarioId: "92e8875d-42f9-4277-9787-62b0d0321611",
-        especialidad: "Yoga",
-        experiencia: 3,
-        certificaciones: "NASM, ACE",
-      },
-      {
-        usuarioId: "ad4cd64f-072d-4ae8-9190-4fb12241f0da",
-        especialidad: "Levantamiento de pesas",
-        experiencia: 3,
-        certificaciones: "NASM, ACE",
-      },
-    ]
-    await prisma.$transaction(async (tx) => {
-      for (const ent of arrEntrenadores) {
-        await tx.entrenador.create({
-          data: ent
-        });
-        resultado.entrenadoresCreados++;
-      }
-    });
+    // planes
 
-    logger.info('Datos de ejemplo generados correctamente');
-
-    // Generar clases y sesiones
-    const entrenadores = await prisma.entrenador.findMany();
-
-    if (entrenadores.length > 0) {
-      const clasesData = [
-        {
-          nombre: 'Yoga Matutino',
-          descripcion: 'Clase de yoga para principiantes',
-          duracion: 60,
-          capacidad: 15,
-          entrenadorId: entrenadores[0].id
-        },
-        {
-          nombre: 'CrossFit',
-          descripcion: 'Entrenamiento de alta intensidad',
-          duracion: 90,
-          capacidad: 20,
-          entrenadorId: entrenadores[0].id
-        },
-        {
-          nombre: 'Pilates',
-          descripcion: 'Fortalecimiento del core',
-          duracion: 50,
-          capacidad: 12,
-          entrenadorId: entrenadores[1]?.id || entrenadores[0].id
-        }
-      ];
-
-      for (const claseData of clasesData) {
-        const claseExistente = await prisma.clase.findFirst({
-          where: { nombre: claseData.nombre }
-        });
-
-        if (!claseExistente) {
-          const clase = await prisma.clase.create({
-            data: claseData
-          });
-
-          // Crear sesiones para cada clase
-          for (let i = 0; i < 3; i++) {
-            const fechaHora = new Date();
-            fechaHora.setDate(fechaHora.getDate() + i + 1);
-            fechaHora.setHours(9, 0, 0, 0);
-
-            await prisma.sesion.create({
-              data: {
-                claseId: clase.id,
-                fechaHora
-              }
-            });
-          }
-
-          resultado.clasesCreadas = (resultado.clasesCreadas || 0) + 1;
-        }
-      }
-    }
-
-    // Generar planes
     const planesData = [
       {
-        nombre: 'Básico',
-        descripcion: 'Acceso a todas las clases grupales',
-        precio: 499.99,
+        nombre: 'Plan Básico',
+        descripcion: 'Acceso limitado a las instalaciones y clases grupales.',
+        precio: 29.99,
         duracionDias: 30,
-        beneficios: 'Clases ilimitadas, Sin entrenador personal',
-        nivel: 1
+        beneficios: 'Acceso a gimnasio, 2 clases grupales por semana.',
+        nivel: 1,
       },
       {
-        nombre: 'Premium',
-        descripcion: 'Acceso a todas las clases + 2 sesiones con entrenador',
-        precio: 999.99,
+        nombre: 'Plan Estándar',
+        descripcion: 'Acceso completo a las instalaciones y clases grupales.',
+        precio: 49.99,
         duracionDias: 30,
-        beneficios: 'Clases ilimitadas, 2 sesiones con entrenador, Acceso 24/7',
-        nivel: 2
+        beneficios: 'Acceso a gimnasio, clases grupales ilimitadas, 1 sesión con entrenador personal.',
+        nivel: 2,
       },
       {
-        nombre: 'Gold',
-        descripcion: 'Acceso total + Entrenador personal dedicado',
-        precio: 1599.99,
+        nombre: 'Plan Premium',
+        descripcion: 'Acceso VIP a todas las instalaciones, clases y servicios adicionales.',
+        precio: 79.99,
         duracionDias: 30,
-        beneficios: 'Clases ilimitadas, Entrenador personal, Acceso 24/7, Plan nutricional',
-        nivel: 3
-      }
+        beneficios: 'Acceso a gimnasio 24/7, clases grupales ilimitadas, 4 sesiones con entrenador personal, acceso a spa y sauna.',
+        nivel: 3,
+      },
     ];
-
-    for (const planData of planesData) {
-      const planExistente = await prisma.plan.findFirst({
-        where: { nombre: planData.nombre }
-      });
-
-      if (!planExistente) {
-        await prisma.plan.create({
-          data: planData
-        });
-        resultado.planesCreados = (resultado.planesCreados || 0) + 1;
-      }
+    for (const plan of planesData) {
+      await prisma.plan.create({
+        data: plan
+      })
+      resultado.planesCreados += 1;
     }
 
-    // configuracion por defecto
-    await prisma.configuracion.create({
-      data: {
-        nombreGimnasio: 'GymPlus Fitness Center',
-        direccion: 'Av. Bolívar 123, Santo Domingo',
-        telefono: '+1 (809) 555-1234',
-        emailContacto: 'contacto@gymplus.do',
-        moneda: 'DOP',
-        impuestos: 18,
-        horarioApertura: '06:00',
-        horarioCierre: '22:00',
-        permitirReservas: true,
-        duracionSesionMinutos: 60,
-        maxClasesPorDia: 5,
-        permitirPagoOnline: true,
-        metodosPago: ['Tarjeta', 'Efectivo'],
-        notificarEmail: true,
-        emailNotificaciones: 'notificaciones@gymplus.do',
-        notificarWhatsapp: false,
-        whatsappNumero: '',
-        logoUrl: '/images/logo.png',
-        colorPrincipal: '#1976d2',
-        colorSecundario: '#9c27b0',
-      },
-    });
-    // configuracion por defecto generada
+    // clases y sesiones
+    const entrenadoresIds = await prisma.entrenador.findMany().then(entrenadores => entrenadores.map(e => e.id));
+if (entrenadoresIds.length === 0) {
+  console.warn("No hay entrenadores disponibles, no se crearán clases.");
+} else {
+  const clasesData = [
+    { nombre: 'Yoga para principiantes', descripcion: 'Clase de yoga enfocada en posturas básicas y respiración.', duracion: 60, capacidad: 15 },
+    { nombre: 'HIIT avanzado', descripcion: 'Entrenamiento de alta intensidad para quemar grasa y mejorar resistencia.', duracion: 45, capacidad: 20 },
+    { nombre: 'Pilates intermedio', descripcion: 'Clase de pilates para fortalecer el core y mejorar la flexibilidad.', duracion: 50, capacidad: 10 },
+    { nombre: 'CrossFit básico', descripcion: 'Introducción al CrossFit con ejercicios funcionales y trabajo en equipo.', duracion: 60, capacidad: 25 },
+    { nombre: 'Natación para todos', descripcion: 'Clase de natación para mejorar técnica y resistencia en el agua.', duracion: 55, capacidad: 15 },
+    { nombre: 'Cardio Dance', descripcion: 'Clase divertida que combina baile y ejercicios cardiovasculares.', duracion: 50, capacidad: 30 },
+  ];
 
-    return resultado;
-  } catch (error) {
-    logger.error('Error al generar datos de ejemplo:', error);
-    throw error;
+  for (let i = 0; i < clasesData.length; i++) {
+    // asignar entrenador de forma cíclica
+    const entrenadorId = entrenadoresIds[i % entrenadoresIds.length];
+    const clase = { ...clasesData[i], entrenadorId };
+
+    const claseCreada = await prisma.clase.create({
+      data: clase
+    });
+
+    // crear 5 sesiones en los próximos días
+    for (let j = 1; j <= 5; j++) {
+      const fechaSesion = new Date();
+      fechaSesion.setDate(fechaSesion.getDate() + j);
+      fechaSesion.setHours(10 + j, 0, 0, 0); // diferentes horas
+
+      await prisma.sesion.create({
+        data: {
+          claseId: claseCreada.id,
+          fechaHora: fechaSesion,
+        }
+      });
+    }
+
+    resultado.clasesCreadas! += 1;
   }
-};
+}
+
+    // reservas y asistencias
+    /* 
+    model Reserva {
+  id        String   @id @default(uuid())
+  clienteId String
+  cliente   Usuario  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  sesionId  String
+  sesion    Sesion   @relation(fields: [sesionId], references: [id], onDelete: Cascade)
+  estado    String   @default("reservado")
+  creado    DateTime @default(now())
+
+  @@unique([clienteId, sesionId])
+  @@map("reservas")
+}
+  model Asistencia {
+  id          String    @id @default(uuid())
+  sesionId    String
+  sesion      Sesion    @relation(fields: [sesionId], references: [id], onDelete: Cascade)
+  clienteId   String
+  cliente     Usuario   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  estado      String    @default("asistio")
+  horaEntrada DateTime?
+  creado      DateTime  @default(now())
+
+  @@unique([sesionId, clienteId])
+  @@map("asistencias")
+}
+    */
+
+    const clientes = await prisma.usuario.findMany({ where: { rol: ROLES.CLIENTE } });
+    const sesiones = await prisma.sesion.findMany();
+    for (const cliente of clientes) {
+      for (const sesion of sesiones) {
+        // crear reserva
+        await prisma.reserva.create({
+          data: {
+            clienteId: cliente.id,
+            sesionId: sesion.id,
+            estado: 'reservado',
+          }
+        })
+        resultado.sesionesCreadas! += 1;
+
+        // crear asistencia
+        await prisma.asistencia.create({
+          data: {
+            clienteId: cliente.id,
+            sesionId: sesion.id,
+            estado: 'asistio',
+            horaEntrada: sesion.fechaHora,
+          }
+        })
+      }      
+    }
+
+
+
+
+    
+
+
+
+
+
+
+
+  } catch (err) {
+    console.log(err)
+  }
+
+
+  // return los resultados
+  return resultado;
+}
