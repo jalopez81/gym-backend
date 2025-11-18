@@ -193,10 +193,18 @@ model Orden {
   usuario   Usuario     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   items     OrdenItem[]
   total     Float
-  estado    String      @default("pendiente")
+  estado    EstadoOrden @default(PENDIENTE)
   creado    DateTime    @default(now())
 
   @@map("ordenes")
+}
+
+enum EstadoOrden {
+  PENDIENTE
+  PAGADA
+  ENVIADA
+  CANCELADA
+  COMPLETADA
 }
 
 model OrdenItem {

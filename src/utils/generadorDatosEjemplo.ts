@@ -10,6 +10,7 @@ interface DatosEjemplo {
   planesCreados: number;
   clasesCreadas?: number;
   sesionesCreadas?: number;
+  ordenesCreadas?: number;
 }
 
 export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
@@ -20,6 +21,7 @@ export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
     planesCreados: 0,
     clasesCreadas: 0,
     sesionesCreadas: 0,
+    ordenesCreadas: 0,
   }
 
   try {
@@ -252,74 +254,45 @@ export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
 
     // clases y sesiones
     const entrenadoresIds = await prisma.entrenador.findMany().then(entrenadores => entrenadores.map(e => e.id));
-if (entrenadoresIds.length === 0) {
-  console.warn("No hay entrenadores disponibles, no se crearán clases.");
-} else {
-  const clasesData = [
-    { nombre: 'Yoga para principiantes', descripcion: 'Clase de yoga enfocada en posturas básicas y respiración.', duracion: 60, capacidad: 15 },
-    { nombre: 'HIIT avanzado', descripcion: 'Entrenamiento de alta intensidad para quemar grasa y mejorar resistencia.', duracion: 45, capacidad: 20 },
-    { nombre: 'Pilates intermedio', descripcion: 'Clase de pilates para fortalecer el core y mejorar la flexibilidad.', duracion: 50, capacidad: 10 },
-    { nombre: 'CrossFit básico', descripcion: 'Introducción al CrossFit con ejercicios funcionales y trabajo en equipo.', duracion: 60, capacidad: 25 },
-    { nombre: 'Natación para todos', descripcion: 'Clase de natación para mejorar técnica y resistencia en el agua.', duracion: 55, capacidad: 15 },
-    { nombre: 'Cardio Dance', descripcion: 'Clase divertida que combina baile y ejercicios cardiovasculares.', duracion: 50, capacidad: 30 },
-  ];
+    if (entrenadoresIds.length === 0) {
+      console.warn("No hay entrenadores disponibles, no se crearán clases.");
+    } else {
+      const clasesData = [
+        { nombre: 'Yoga para principiantes', descripcion: 'Clase de yoga enfocada en posturas básicas y respiración.', duracion: 60, capacidad: 15 },
+        { nombre: 'HIIT avanzado', descripcion: 'Entrenamiento de alta intensidad para quemar grasa y mejorar resistencia.', duracion: 45, capacidad: 20 },
+        { nombre: 'Pilates intermedio', descripcion: 'Clase de pilates para fortalecer el core y mejorar la flexibilidad.', duracion: 50, capacidad: 10 },
+        { nombre: 'CrossFit básico', descripcion: 'Introducción al CrossFit con ejercicios funcionales y trabajo en equipo.', duracion: 60, capacidad: 25 },
+        { nombre: 'Natación para todos', descripcion: 'Clase de natación para mejorar técnica y resistencia en el agua.', duracion: 55, capacidad: 15 },
+        { nombre: 'Cardio Dance', descripcion: 'Clase divertida que combina baile y ejercicios cardiovasculares.', duracion: 50, capacidad: 30 },
+      ];
 
-  for (let i = 0; i < clasesData.length; i++) {
-    // asignar entrenador de forma cíclica
-    const entrenadorId = entrenadoresIds[i % entrenadoresIds.length];
-    const clase = { ...clasesData[i], entrenadorId };
+      for (let i = 0; i < clasesData.length; i++) {
+        // asignar entrenador de forma cíclica
+        const entrenadorId = entrenadoresIds[i % entrenadoresIds.length];
+        const clase = { ...clasesData[i], entrenadorId };
 
-    const claseCreada = await prisma.clase.create({
-      data: clase
-    });
+        const claseCreada = await prisma.clase.create({
+          data: clase
+        });
 
-    // crear 5 sesiones en los próximos días
-    for (let j = 1; j <= 5; j++) {
-      const fechaSesion = new Date();
-      fechaSesion.setDate(fechaSesion.getDate() + j);
-      fechaSesion.setHours(10 + j, 0, 0, 0); // diferentes horas
+        // crear 5 sesiones en los próximos días
+        for (let j = 1; j <= 5; j++) {
+          const fechaSesion = new Date();
+          fechaSesion.setDate(fechaSesion.getDate() + j);
+          fechaSesion.setHours(10 + j, 0, 0, 0); // diferentes horas
 
-      await prisma.sesion.create({
-        data: {
-          claseId: claseCreada.id,
-          fechaHora: fechaSesion,
+          await prisma.sesion.create({
+            data: {
+              claseId: claseCreada.id,
+              fechaHora: fechaSesion,
+            }
+          });
         }
-      });
+
+        resultado.clasesCreadas! += 1;
+      }
     }
-
-    resultado.clasesCreadas! += 1;
-  }
-}
-
-    // reservas y asistencias
-    /* 
-    model Reserva {
-  id        String   @id @default(uuid())
-  clienteId String
-  cliente   Usuario  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
-  sesionId  String
-  sesion    Sesion   @relation(fields: [sesionId], references: [id], onDelete: Cascade)
-  estado    String   @default("reservado")
-  creado    DateTime @default(now())
-
-  @@unique([clienteId, sesionId])
-  @@map("reservas")
-}
-  model Asistencia {
-  id          String    @id @default(uuid())
-  sesionId    String
-  sesion      Sesion    @relation(fields: [sesionId], references: [id], onDelete: Cascade)
-  clienteId   String
-  cliente     Usuario   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
-  estado      String    @default("asistio")
-  horaEntrada DateTime?
-  creado      DateTime  @default(now())
-
-  @@unique([sesionId, clienteId])
-  @@map("asistencias")
-}
-    */
-
+    
     const clientes = await prisma.usuario.findMany({ where: { rol: ROLES.CLIENTE } });
     const sesiones = await prisma.sesion.findMany();
     for (const cliente of clientes) {
@@ -343,13 +316,77 @@ if (entrenadoresIds.length === 0) {
             horaEntrada: sesion.fechaHora,
           }
         })
-      }      
+      }
     }
 
+    // ordenes
+    /*
+    model Orden {
+  id        String      @id @default(uuid())
+  usuarioId String
+  usuario   Usuario     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  items     OrdenItem[]
+  total     Float
+  estado    String      @default("pendiente")
+  creado    DateTime    @default(now())
 
+  @@map("ordenes")
+}
 
+model OrdenItem {
+  id             String   @id @default(uuid())
+  ordenId        String
+  orden          Orden    @relation(fields: [ordenId], references: [id], onDelete: Cascade)
+  productoId     String
+  producto       Producto @relation(fields: [productoId], references: [id])
+  cantidad       Int
+  precioUnitario Float
+  subtotal       Float
 
+  @@map("orden_items")
+}
+     */
+    const clientesIds = clientes.map(c => c.id);
+    const productos = await prisma.producto.findMany();
+    for (let i = 0; i < 5; i++) {
+      const clienteId = clientesIds[i % clientesIds.length];
+      const orden = await prisma.orden.create({
+        data: {
+          usuarioId: clienteId,
+          total: 0,
+          estado: 'COMPLETADA',
+        }
+      });
+      let totalOrden = 0;
+      for (let j = 0; j < 2; j++) {
+        const producto = productos[Math.floor(Math.random() * productos.length)];
+        const cantidad = Math.floor(Math.random() * 3) + 1;
+        const subtotal = producto.precio * cantidad;
+        totalOrden += subtotal;
+        await prisma.ordenItem.create({
+          data: {
+            ordenId: orden.id,
+            productoId: producto.id,
+            cantidad,
+            precioUnitario: producto.precio,
+            subtotal,
+          }
+        });
+      }
+      // actualizar total de la orden
+      await prisma.orden.update({
+        where: { id: orden.id },
+        data: { total: totalOrden },
+      });
+    }
+    resultado.ordenesCreadas! += 5;
     
+
+
+
+
+
+
 
 
 
