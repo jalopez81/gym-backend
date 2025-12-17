@@ -26,11 +26,15 @@ import inicializarConfiguracion from './inicializarConfiguracion';
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 
 // middlewares
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));app.use(express.json());
 
 app.use('/api/asistencias',    asistenciaRutas);
 app.use('/api/auth',           authRutas)
