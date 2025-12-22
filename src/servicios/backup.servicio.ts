@@ -20,6 +20,16 @@ const asegurarDirectorioBackups = async () => {
   }
 };
 
+async function dockerDisponible(): Promise<boolean> {
+  try {
+    await execAsync('docker info');
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+
 export const crearBackup = async () => {
   try {
     await asegurarDirectorioBackups();
@@ -43,15 +53,29 @@ export const crearBackup = async () => {
 
     // Ejecutar pg_dump con soporte Windows y Linux/Mac
     let comando: string;
-    if (process.platform === 'win32') {
-      // Windows
-      comando = `set PGPASSWORD=${password}& pg_dump -U ${usuario} -h ${host} -p ${puerto} ${baseDatos} > "${rutaCompleta}"`;
+    const usarDocker = await dockerDisponible();
+
+    if (usarDocker) {
+      comando = `
+      docker exec -t ${process.env.DB_CONTAINER}
+      pg_dump -U ${usuario} ${baseDatos}
+      > "${rutaCompleta}"
+      `;
     } else {
-      // Linux/Mac
-      comando = `PGPASSWORD="${password}" pg_dump -U ${usuario} -h ${host} -p ${puerto} ${baseDatos} > "${rutaCompleta}"`;
+      if (process.platform === 'win32') {
+        comando = `set PGPASSWORD=${password}& pg_dump -U ${usuario} -h ${host} -p ${puerto} ${baseDatos} > "${rutaCompleta}"`;
+      } else {
+        comando = `PGPASSWORD="${password}" pg_dump -U ${usuario} -h ${host} -p ${puerto} ${baseDatos} > "${rutaCompleta}"`;
+      }
     }
 
-    await execAsync(comando, { shell: 'cmd.exe' });
+
+    const shell =
+      process.platform === 'win32'
+        ? 'cmd.exe'
+        : '/bin/bash';
+
+    await execAsync(comando, { shell });
 
     logger.info(`Backup creado: ${nombreArchivo}`);
 
