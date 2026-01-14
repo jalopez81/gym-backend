@@ -16,7 +16,7 @@ export const crear = async (req: Request, res: Response) => {
     const nueva = await crearConfiguracion(req.body);
     res.status(201).json(nueva);
   } catch (error: any) {
-    res.status(400).json({ mensaje: error.message });
+    res.status(400).json({ mensaje: error.message, testing: 'test' });
   }
 };
 

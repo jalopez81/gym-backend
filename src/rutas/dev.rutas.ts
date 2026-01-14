@@ -22,6 +22,7 @@ router.post('/reset-db', async (req, res) => {
     prisma.sesion.deleteMany(),
     prisma.suscripcion.deleteMany(),
     prisma.usuario.deleteMany(),
+    prisma.configuracion.deleteMany(),
    
   ]);
 
