@@ -25,3 +25,6 @@
 
 ## (C) prisma
 1. npx prisma db push
+
+## (D) generar datos de ejemplo
+1. npm run generar-datos
