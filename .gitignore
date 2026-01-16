@@ -8,3 +8,5 @@ dist
 logs
 backups
 uploads
+.DS_Store
+.desktop.ini
