@@ -26,7 +26,6 @@ import inicializarConfiguracion from './inicializarConfiguracion';
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 5001;
 
 // middlewares
 app.use(cors({
@@ -34,7 +33,9 @@ app.use(cors({
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
-}));app.use(express.json());
+}));
+
+app.use(express.json());
 
 app.use('/api/asistencias',    asistenciaRutas);
 app.use('/api/auth',           authRutas)
@@ -63,13 +64,22 @@ app.get('/status', (req, res) => {
   res.send('Status OK');
 });
 
-// Llama esto antes de app.listen()
-inicializarConfiguracion();
+const startServer = async () => {
+  
+  try {
+    await inicializarConfiguracion();
+    console.log('Base de datos conectada y configurada.');
 
-// iniciar
-app.listen(port, () => {  
-  // Programar backup automático
-  programarBackupAutomatico();
+    const port = process.env.PORT || 5001;
+    app.listen(port,  () => {  
+      programarBackupAutomatico();
+      logger.info(`*** READY ***: Servidor corriendo en el puerto ${port}`);
+    });
+  } catch (error) {
+    console.error('Error al iniciar el servidor:', error);
+    process.exit(1); // Forzamos el cierre si no hay conexión a la DB
+  }
+};
 
-  logger.info(`*** READY ***: Servidor "src/app.js" corriendo en el puerto ${port}`);
-});
+startServer();
+
