@@ -70,8 +70,8 @@ const startServer = async () => {
     await inicializarConfiguracion();
     console.log('Base de datos conectada y configurada.');
 
-    const port = process.env.PORT || 5001;
-    app.listen(port,  () => {  
+    const port = Number(process.env.PORT) || 5001;
+    app.listen(port, '0.0.0.0', () => {  
       programarBackupAutomatico();
       logger.info(`*** READY ***: Servidor corriendo en el puerto ${port}`);
     });
