@@ -47,7 +47,7 @@ export const autenticar = async (req: Request, res: Response, nextFunc: NextFunc
 
 
         return res.status(401).json({
-            mensaje: 'Token inválido o expirado'
+            mensaje: 'Autenticar: Token inválido o expirado'
         });
     }
 }
