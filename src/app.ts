@@ -53,9 +53,9 @@ app.use('/api/reservas',       reservaRutas);
 app.use('/api/sesiones',       sesionRutas);
 app.use('/api/suscripciones',  suscripcionRutas);
 app.use('/api/usuarios',       usuarioRutas)
-*/
-app.use(rutaNoEncontrada);
+app.use(rutaNoEncontrada); 
 app.use(manejarErrores);
+*/
 
 app.get('/status', (req, res) => {
   logger.info('Status OK');
@@ -67,5 +67,5 @@ inicializarConfiguracion();
 app.listen(port, () => {  
   //programarBackupAutomatico();
 
-  logger.info(`*** READY ***: Servidor "src/app.js" corriendo en el puerto ${port}`);
+  logger.info(`*** READY ***: Servidor corriendo en el puerto ${port}`);
 });
