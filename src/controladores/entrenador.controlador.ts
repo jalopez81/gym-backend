@@ -89,7 +89,7 @@ export const actualizar = async (req: Request, res: Response) => {
 export const eliminar = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    await eliminarEntrenador(id);
+    await eliminarEntrenador(id as string);
 
     res.status(200).json({
       mensaje: 'Entrenador eliminado exitosamente'

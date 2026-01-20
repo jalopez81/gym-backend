@@ -97,7 +97,7 @@ export const completar = async (req: Request, res: Response) => {
       });
     }
 
-    const orden = await completarOrden(id, usuarioId);
+    const orden = await completarOrden(id as string, usuarioId);
 
     res.status(200).json(orden);
   } catch (error: any) {
