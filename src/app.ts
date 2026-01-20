@@ -28,14 +28,15 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5001;
 
-// middlewares
 app.use(cors({
   origin: "http://localhost:3000",
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
-}));app.use(express.json());
+}));
 
+app.use(express.json());
+/*
 app.use('/api/asistencias',    asistenciaRutas);
 app.use('/api/auth',           authRutas)
 app.use('/api/backups',        backupRutas);
@@ -52,24 +53,19 @@ app.use('/api/reservas',       reservaRutas);
 app.use('/api/sesiones',       sesionRutas);
 app.use('/api/suscripciones',  suscripcionRutas);
 app.use('/api/usuarios',       usuarioRutas)
-
-// Manejo de errores
+*/
 app.use(rutaNoEncontrada);
 app.use(manejarErrores);
 
-// status
 app.get('/status', (req, res) => {
   logger.info('Status OK');
   res.send('Status OK');
 });
 
-// Llama esto antes de app.listen()
 inicializarConfiguracion();
 
-// iniciar
 app.listen(port, () => {  
-  // Programar backup automático
-  programarBackupAutomatico();
+  //programarBackupAutomatico();
 
   logger.info(`*** READY ***: Servidor "src/app.js" corriendo en el puerto ${port}`);
 });
