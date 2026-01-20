@@ -76,7 +76,7 @@ export const listar = async (req: Request, res: Response) => {
 export const obtenerPorSesion = async (req: Request, res: Response) => {
   try {
     const { sesionId } = req.params;
-    const reservas = await obtenerReservasPorSesion(sesionId);
+    const reservas = await obtenerReservasPorSesion(sesionId as string);
 
     res.status(200).json(reservas);
   } catch (error: any) {
@@ -98,7 +98,7 @@ export const cancelar = async (req: Request, res: Response) => {
       });
     }
 
-    const reserva = await cancelarReserva(id, clienteId);
+    const reserva = await cancelarReserva(id as string, clienteId);
 
     res.status(200).json(reserva);
   } catch (error: any) {

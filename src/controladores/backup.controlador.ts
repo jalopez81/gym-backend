@@ -40,13 +40,13 @@ export const restaurarBackupPorId = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     // Validar que el ID sea un nombre válido de backup
-    if (!id.startsWith('backup-') || !id.endsWith('.sql')) {
+    if (!(id as string).startsWith('backup-') || !(id as string).endsWith('.sql')) {
       return res.status(400).json({
         mensaje: 'ID de backup inválido'
       });
     }
 
-    const resultado = await restaurarBackup(id);
+    const resultado = await restaurarBackup(id as string);
 
     res.status(200).json(resultado);
   } catch (error: any) {

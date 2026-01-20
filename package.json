@@ -4,11 +4,14 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
-    "build": "tsc",
-    "start": "node dist/app.js",
-    "generar-datos": "ts-node ./scripts/generarEjemplos.ts"
-  },
+  "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+  "build": "npx prisma generate && tsc",
+  "start": "node dist/app.js",
+  "generar-datos": "ts-node ./scripts/generarEjemplos.ts"
+},
+"prisma": {
+  "seed": "ts-node ./scripts/generarEjemplos.ts"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",

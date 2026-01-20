@@ -68,7 +68,7 @@ export const usuarioPorId = async (req: Request, res: Response) => {
             })
         }
 
-        const usuario = await obtenerUsuarioPorId(req.params.id)
+        const usuario = await obtenerUsuarioPorId(req.params.id as string)
         res.status(200).json(usuario)
     } catch (error: any) {
         logger.error('Error al obtener perfil:', error);

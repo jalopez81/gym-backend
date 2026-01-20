@@ -50,7 +50,7 @@ export const listar = async (req: Request, res: Response) => {
 export const obtenerPorId = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const clase = await obtenerClasePorId(id);
+    const clase = await obtenerClasePorId(id as string);
 
     res.status(200).json(clase);
   } catch (error: any) {
@@ -65,7 +65,7 @@ export const actualizar = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const datosValidados = actualizarClaseSchema.parse(req.body);
-    const clase = await actualizarClase(id, datosValidados);
+    const clase = await actualizarClase(id as string, datosValidados);
 
     res.status(200).json(clase);
   } catch (error: any) {
@@ -87,7 +87,7 @@ export const actualizar = async (req: Request, res: Response) => {
 export const eliminar = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    await eliminarClase(id);
+    await eliminarClase(id as string);
 
     res.status(200).json({
       mensaje: 'Clase eliminada exitosamente'

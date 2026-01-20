@@ -51,7 +51,7 @@ export const listar = async (req: Request, res: Response) => {
 export const obtenerPorId = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const sesion = await obtenerSesionPorId(id);
+    const sesion = await obtenerSesionPorId(id as string);
 
     res.status(200).json(sesion);
   } catch (error: any) {
@@ -66,7 +66,7 @@ export const actualizar = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const datosValidados = actualizarSesionSchema.parse(req.body);
-    const sesion = await actualizarSesion(id, datosValidados);
+    const sesion = await actualizarSesion(id as string, datosValidados);
 
     res.status(200).json(sesion);
   } catch (error: any) {
@@ -88,7 +88,7 @@ export const actualizar = async (req: Request, res: Response) => {
 export const eliminar = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    await eliminarSesion(id);
+    await eliminarSesion(id as string);
 
     res.status(200).json({
       mensaje: 'Sesión eliminada exitosamente'
@@ -104,7 +104,7 @@ export const eliminar = async (req: Request, res: Response) => {
 export const obtenerPorClase = async (req: Request, res: Response) => {
   try {
     const { claseId } = req.params;
-    const sesiones = await obtenerSesionesPorClase(claseId);
+    const sesiones = await obtenerSesionesPorClase(claseId as string);
 
     res.status(200).json(sesiones);
   } catch (error: any) {

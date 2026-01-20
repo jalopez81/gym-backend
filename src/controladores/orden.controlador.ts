@@ -62,7 +62,7 @@ export const obtenerPorId = async (req: Request, res: Response) => {
       });
     }
 
-    const orden = await obtenerOrdenPorId(id, usuarioId);
+    const orden = await obtenerOrdenPorId(id as string, usuarioId);
 
     res.status(200).json(orden);
   } catch (error: any) {
@@ -119,7 +119,7 @@ export const cancelar = async (req: Request, res: Response) => {
       });
     }
 
-    const orden = await cancelarOrden(id, usuarioId);
+    const orden = await cancelarOrden(id as string, usuarioId);
 
     res.status(200).json(orden);
   } catch (error: any) {

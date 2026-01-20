@@ -50,7 +50,7 @@ export const listar = async (req: Request, res: Response) => {
 export const obtenerPorId = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const plan = await obtenerPlanPorId(id);
+    const plan = await obtenerPlanPorId(id as string);
 
     res.status(200).json(plan);
   } catch (error: any) {
@@ -65,7 +65,7 @@ export const actualizar = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const datosValidados = actualizarPlanSchema.parse(req.body);
-    const plan = await actualizarPlan(id, datosValidados);
+    const plan = await actualizarPlan(id as string, datosValidados);
 
     res.status(200).json(plan);
   } catch (error: any) {
@@ -87,7 +87,7 @@ export const actualizar = async (req: Request, res: Response) => {
 export const eliminar = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    await eliminarPlan(id);
+    await eliminarPlan(id as string);
 
     res.status(200).json({
       mensaje: 'Plan eliminado exitosamente'

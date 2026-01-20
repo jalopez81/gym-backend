@@ -63,7 +63,7 @@ export const listar = async (req: Request, res: Response) => {
 export const getPorId = async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
-        const producto = await getProductoPorId(id);
+        const producto = await getProductoPorId(id as string);
 
         return res.status(200).json(producto)
     } catch (error: any) {
@@ -80,7 +80,7 @@ export const actualizar = async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
         const datosValidados = actualizarProductoSchema.parse(req.body)
-        const productoActualizado = await actualizarProducto(id, datosValidados)
+        const productoActualizado = await actualizarProducto(id as string, datosValidados)
 
         return res.status(200).json(productoActualizado)
     } catch (error: any) {
@@ -102,7 +102,7 @@ export const actualizar = async (req: Request, res: Response) => {
 export const eliminar = async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
-        await eliminarProducto(id);
+        await eliminarProducto(id as string);
 
         res.status(200).json({
             mensaje: "Producto eliminado exitosamente",

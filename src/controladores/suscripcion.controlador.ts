@@ -85,7 +85,7 @@ export const cancelar = async (req: Request, res: Response) => {
       });
     }
 
-    const suscripcion = await cancelarSuscripcion(id, usuarioId);
+    const suscripcion = await cancelarSuscripcion(id  as string, usuarioId);
 
     res.status(200).json(suscripcion);
   } catch (error: any) {

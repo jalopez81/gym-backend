@@ -52,7 +52,7 @@ export const listar = async (req: Request, res: Response) => {
 export const obtenerPorId = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const entrenador = await obtenerEntrenadorPorId(id);
+    const entrenador = await obtenerEntrenadorPorId(id as string);
 
     res.status(200).json(entrenador);
   } catch (error: any) {
@@ -67,7 +67,7 @@ export const actualizar = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const datosValidados = actualizarEntrenadorSchema.parse(req.body);
-    const entrenador = await actualizarEntrenador(id, datosValidados);
+    const entrenador = await actualizarEntrenador(id as string, datosValidados);
 
     res.status(200).json(entrenador);
   } catch (error: any) {

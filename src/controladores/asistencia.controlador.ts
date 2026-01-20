@@ -34,7 +34,7 @@ export const crear = async (req: Request, res: Response) => {
 export const obtenerPorSesion = async (req: Request, res: Response) => {
   try {
     const { sesionId } = req.params;
-    const asistencias = await obtenerAsistenciasPorSesion(sesionId);
+    const asistencias = await obtenerAsistenciasPorSesion(sesionId as string);
 
     res.status(200).json(asistencias);
   } catch (error: any) {
@@ -82,7 +82,7 @@ export const listar = async (req: Request, res: Response) => {
 export const obtenerEstadisticas = async (req: Request, res: Response) => {
   try {
     const { clienteId } = req.params;
-    const estadisticas = await obtenerEstadisticasUsuario(clienteId);
+    const estadisticas = await obtenerEstadisticasUsuario(clienteId as string);
 
     res.status(200).json(estadisticas);
   } catch (error: any) {

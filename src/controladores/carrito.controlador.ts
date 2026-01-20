@@ -75,7 +75,7 @@ export const actualizar = async (req: Request, res: Response) => {
     }
 
     const datosValidados = actualizarCarritoSchema.parse(req.body);
-    const carritoItem = await actualizarItemCarrito(usuarioId, productoId, datosValidados);
+    const carritoItem = await actualizarItemCarrito(usuarioId, productoId as string, datosValidados);
 
     res.status(200).json(carritoItem);
   } catch (error: any) {
@@ -105,7 +105,7 @@ export const eliminar = async (req: Request, res: Response) => {
       });
     }
 
-    await eliminarDelCarrito(usuarioId, productoId);
+    await eliminarDelCarrito(usuarioId, productoId as string);
 
     res.status(200).json({
       mensaje: 'Producto eliminado del carrito exitosamente'
