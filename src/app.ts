@@ -56,13 +56,14 @@ app.use(express.json());
 // app.use('/api/suscripciones',  suscripcionRutas);
 // app.use('/api/usuarios',       usuarioRutas)
 
-app.use(rutaNoEncontrada);
-app.use(manejarErrores);
 
 app.get('/status', (req, res) => {
   logger.info('Status OK');
   res.send('Status OK');
 });
+
+app.use(rutaNoEncontrada);
+app.use(manejarErrores);
 
 // inicializarConfiguracion();
 
