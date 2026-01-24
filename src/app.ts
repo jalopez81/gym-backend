@@ -30,8 +30,20 @@ const app = express();
 const port = process.env.PORT || 5001;
 
 // middlewares
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://gym-frontend-gules.vercel.app/" // Agrega aquí la URL de tu frontend cuando la tengas
+];
+
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: (origin, callback) => {
+    // Permitir peticiones sin origen (como Postman o apps móviles)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error('CORS no permitido'), false);
+    }
+    return callback(null, true);
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
@@ -67,7 +79,7 @@ app.use(manejarErrores);
 
 // inicializarConfiguracion();
 
-app.listen(port, () => {  
+app.listen(Number(port), '0.0.0.0', () => {    
   // programarBackupAutomatico();
   logger.info(`Servidor listo. Puerto ::: ${port}`);
 });
