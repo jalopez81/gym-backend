@@ -2,8 +2,8 @@ import express from           'express';
 import cors from              'cors';
 import dotenv from            'dotenv';
 import logger from            './config/logger'
-// import { programarBackupAutomatico } from './servicios/backup.servicio';
-// import inicializarConfiguracion from './inicializarConfiguracion';
+import { programarBackupAutomatico } from './servicios/backup.servicio';
+import inicializarConfiguracion from './inicializarConfiguracion';
 
 import asistenciaRutas from   './rutas/asistencia.rutas';
 import authRutas from         './rutas/auth.rutas'
@@ -77,9 +77,9 @@ app.get('/status', (req, res) => {
 app.use(rutaNoEncontrada);
 app.use(manejarErrores);
 
-// inicializarConfiguracion();
+inicializarConfiguracion();
 
 app.listen(Number(port), '0.0.0.0', () => {    
-  // programarBackupAutomatico();
+  programarBackupAutomatico();
   logger.info(`Servidor listo. Puerto ::: ${port}`);
 });
