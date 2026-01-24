@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
-    "build": "tsc",    
+    "build": "rm -rf dist && tsc && npx prisma db push && npx prisma db seed",    
     "start": "node dist/app.js", 
     "migrate": "npx prisma db push",
     "generar-datos": "ts-node ./scripts/generarEjemplos.ts"
