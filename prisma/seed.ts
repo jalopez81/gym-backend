@@ -55,7 +55,7 @@ export const generarDatosEjemplo = async () => {
 
     logger.info('Insertando datos base...');
 
-    const passwordHash = await generarHash('123456');
+    const passwordHash = await generarHash('@dmIn1299');
 
     // 1. Usuarios (Usando transacción para asegurar la creación)
     const usuariosData = [
@@ -158,8 +158,30 @@ export const generarDatosEjemplo = async () => {
     resultado.productosCreados = productosData.length;
 
     const planesData = [
-      { nombre: 'Plan Básico', precio: 29.99, duracionDias: 30, nivel: 1 },
-      { nombre: 'Plan Premium', precio: 79.99, duracionDias: 30, nivel: 3 },
+      {
+        nombre: 'Plan Básico',
+        descripcion: 'Acceso limitado a las instalaciones y clases grupales.',
+        precio: 29.99,
+        duracionDias: 30,
+        beneficios: 'Acceso a gimnasio, 2 clases grupales por semana.',
+        nivel: 1,
+      },
+      {
+        nombre: 'Plan Estándar',
+        descripcion: 'Acceso completo a las instalaciones y clases grupales.',
+        precio: 49.99,
+        duracionDias: 30,
+        beneficios: 'Acceso a gimnasio, clases grupales ilimitadas, 1 sesión con entrenador personal.',
+        nivel: 2,
+      },
+      {
+        nombre: 'Plan Premium',
+        descripcion: 'Acceso VIP a todas las instalaciones, clases y servicios adicionales.',
+        precio: 79.99,
+        duracionDias: 30,
+        beneficios: 'Acceso a gimnasio 24/7, clases grupales ilimitadas, 4 sesiones con entrenador personal, acceso a spa y sauna.',
+        nivel: 3,
+      },
     ];
     await prisma.plan.createMany({ data: planesData });
     resultado.planesCreados = planesData.length;
