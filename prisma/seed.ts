@@ -92,10 +92,67 @@ export const generarDatosEjemplo = async () => {
 
     // 3. Productos y Planes
     const productosData = [
-      { nombre: 'Mancuerna', precio: 250.99, stock: 100, categoria: 'Accesorios' },
-      { nombre: 'Mat Premium', precio: 19.99, stock: 40, categoria: 'Accesorios' },
-      { nombre: 'Protector rodillas', precio: 22.99, stock: 35, categoria: 'Protección' },
-    ];
+            {
+                nombre: 'Banco inclinado',
+                descripcion: 'Ideal para ejercicios de pecho',
+                precio: 615.99,
+                stock: 50,
+                categoria: 'Accesorios',
+                "imagenPublicId": "productos/banco_s8rbc9",
+                "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761669784/banco_s8rbc9.jpg",
+                "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761669784/banco_s8rbc9.jpg",
+            },
+            {
+                nombre: 'Mancuerna',
+                descripcion: '50 libras cada una',
+                precio: 250.99,
+                stock: 100,
+                categoria: 'Accesorios',
+                "imagenPublicId": "productos/mancuerna_e4yyvq",
+                "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761669784/mancuerna_e4yyvq.jpg",
+                "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761669784/mancuerna_e4yyvq.jpg",
+            },
+            {
+                nombre: 'Faja',
+                descripcion: 'Faja Sintetica',
+                precio: 45.99,
+                stock: 30,
+                categoria: 'Accesorios',
+                "imagenPublicId": "productos/faja_g0upvr",
+                "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761669784/faja_g0upvr.jpg",
+                "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761669784/faja_g0upvr.jpg",
+            },
+            {
+                nombre: 'Mat Premium',
+                descripcion: 'Set de 5 bandas de diferentes resistencias',
+                precio: 19.99,
+                stock: 40,
+                categoria: 'Accesorios',
+                "imagenPublicId": "productos/mat_llz20g",
+                "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761669784/mat_llz20g.jpg",
+                "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761669784/mat_llz20g.jpg",
+            },
+            {
+                nombre: 'Productos Gym',
+                descripcion: 'Pack de productos variados',
+                precio: 29.99,
+                stock: 80,
+                categoria: 'Ropa',
+                "imagenPublicId": "productos/gym-products_f0yvsu",
+                "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761544761/gym-products_f0yvsu.jpg",
+                "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761544761/gym-products_f0yvsu.jpg",
+            },
+            {
+                nombre: 'Protector de rodillas',
+                descripcion: 'Protección para entrenamiento intenso',
+                precio: 22.99,
+                stock: 35,
+                categoria: 'Protección',
+                "imagenPublicId": "productos/vj7vj28lt1tmdmdo2bqu",
+                "imagenUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
+                "imagenSecureUrl": "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761543993/productos/vj7vj28lt1tmdmdo2bqu.jpg",
+            },
+        ];
     
     await prisma.producto.createMany({ data: productosData });
     resultado.productosCreados = productosData.length;
