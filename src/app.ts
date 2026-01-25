@@ -1,6 +1,7 @@
 import express from           'express';
 import cors from              'cors';
 import dotenv from            'dotenv';
+import path from 'path';
 import logger from            './config/logger'
 import { programarBackupAutomatico } from './servicios/backup.servicio';
 import inicializarConfiguracion from './inicializarConfiguracion';
@@ -24,15 +25,21 @@ import usuarioRutas from      './rutas/usuario.rutas'
 
 import { manejarErrores, rutaNoEncontrada } from './middlewares/error.middleware';
 
-dotenv.config();
+const envFile = process.env.NODE_ENV === 'production' 
+  ? '.env.production' 
+  : '.env.development';
 
+dotenv.config({ path: path.resolve(process.cwd(), envFile) });
+
+console.log(`Running in ${process.env.NODE_ENV} mode`);
+console.log(`DB Host: ${process.env.DB_HOST}`);
 const app = express();
 const port = process.env.PORT || 5001;
 
 // middlewares
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://gym-frontend-gules.vercel.app/" // Agrega aquí la URL de tu frontend cuando la tengas
+  "https://gym-frontend-gules.vercel.app" // Agrega aquí la URL de tu frontend cuando la tengas
 ];
 
 app.use(cors({
