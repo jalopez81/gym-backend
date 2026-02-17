@@ -67,7 +67,7 @@ export const generarDatosEjemplo = async (): Promise<DatosEjemplo> => {
         status: 'activo',
       },
       {
-        nombre: "Julio Iglesias",
+        nombre: "Julio Julio",
         email: "julio@gym.com",
         imagenPublicId: "trainer_3_ypilrf",
         imagenUrl: "https://res.cloudinary.com/dhf0il3ul/image/upload/v1762266352/trainer_3_ypilrf.jpg",

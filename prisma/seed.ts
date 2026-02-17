@@ -58,11 +58,22 @@ export const generarDatosEjemplo = async () => {
     const passwordHash = await generarHash('@dmIn1299');
 
     // 1. Usuarios (Usando transacción para asegurar la creación)
+    const imagenUrls = [
+      "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761674355/entrenador_no_2_s4kbtu.jpg",
+      "https://res.cloudinary.com/dhf0il3ul/image/upload/v1762266352/trainer_3_ypilrf.jpg",
+      "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761674355/trainerw_so8xhb.jpg",
+    ];
+    const imagenPublicIds = ["entrenador_no_2_s4kbtu", "trainer_3_ypilrf", "trainerw_so8xhb"];
+    const imagenSecureUrls = [
+      "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761674355/entrenador_no_2_s4kbtu.jpg",
+      "https://res.cloudinary.com/dhf0il3ul/image/upload/v1762266352/trainer_3_ypilrf.jpg",
+      "https://res.cloudinary.com/dhf0il3ul/image/upload/v1761674355/trainerw_so8xhb.jpg",
+    ];
     const usuariosData = [
       { email: "admin@gym.com", nombre: "Administrador", password: passwordHash, rol: ROLES.ADMIN, status: 'activo' },
-      { email: "carlos@gym.com", nombre: "Carlos García", password: passwordHash, rol: ROLES.ENTRENADOR, status: 'activo' },
-      { email: "julio@gym.com", nombre: "Julio Iglesias", password: passwordHash, rol: ROLES.ENTRENADOR, status: 'activo' },
-      { email: "maria@gym.com", nombre: "María López", password: passwordHash, rol: ROLES.ENTRENADOR, status: 'activo' },
+      { email: "carlos@gym.com", nombre: "Carlos García", password: passwordHash, rol: ROLES.ENTRENADOR, status: 'activo', imagenPublicId: imagenPublicIds[0], imagenUrl: imagenUrls[0], imagenSecureUrl: imagenSecureUrls[0] },
+      { email: "julio@gym.com", nombre: "Julio Iglesias", password: passwordHash, rol: ROLES.ENTRENADOR, status: 'activo', imagenPublicId: imagenPublicIds[1], imagenUrl: imagenUrls[1], imagenSecureUrl: imagenSecureUrls[1] },
+      { email: "maria@gym.com", nombre: "María López", password: passwordHash, rol: ROLES.ENTRENADOR, status: 'activo', imagenPublicId: imagenPublicIds[2], imagenUrl: imagenUrls[2], imagenSecureUrl: imagenSecureUrls[2] },
       { email: "juan@gym.com", nombre: "Juan Pérez", password: passwordHash, rol: ROLES.CLIENTE, status: 'activo' },
       { email: "ana@gym.com", nombre: "Ana Martínez", password: passwordHash, rol: ROLES.CLIENTE, status: 'activo' },
       { email: "luis@gym.com", nombre: "Luis Rodríguez", password: passwordHash, rol: ROLES.CLIENTE, status: 'activo' },

@@ -1,3 +1,8 @@
+# Comandos utiles
+ `npx prisma migrate reset`
+ Borra la base de datos y vuelve a crearla con los datos de seed.ts
+
+
 # Pasos para configurar postgresql en mac os:
 
 
