@@ -25,16 +25,16 @@ export const crearSuscripcion = async (usuarioId: string, datos: CrearSuscripcio
   }
 
   // Verificar que no tenga una suscripción activa
-  const suscripcionActiva = await prisma.suscripcion.findFirst({
-    where: {
-      usuarioId,
-      estado: EstadoSuscripcion.ACTIVA
-    }
-  });
+  // const suscripcionActiva = await prisma.suscripcion.findFirst({
+  //   where: {
+  //     usuarioId,
+  //     estado: EstadoSuscripcion.ACTIVA
+  //   }
+  // });
 
-  if (suscripcionActiva) {
-    throw new Error('Ya tienes una suscripción activa');
-  }
+  // if (suscripcionActiva) {
+  //   throw new Error('Ya tienes una suscripción activa');
+  // }
 
   // Calcular fecha de vencimiento
   const fechaInicio = new Date();

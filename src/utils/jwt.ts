@@ -17,6 +17,6 @@ export const verificarToken = (token: string): any => {
     return jwt.verify(token, SECRET);
   } catch (error) {
     logger.error('Error al verificar token', error);
-    throw new Error('Token inválido o expirado');
+    throw new Error('verificarToken: Token inválido o expirado');
   }
 };

@@ -1,96 +1,97 @@
-// import express from           'express';
-// import cors from              'cors';
-// import dotenv from            'dotenv';
-// import logger from            './config/logger'
-// import asistenciaRutas from   './rutas/asistencia.rutas';
-// import authRutas from         './rutas/auth.rutas'
-// import backupRutas from       './rutas/backup.rutas';
-// import carritoRutas from      './rutas/carrito.rutas';
-// import claseRutas from        './rutas/clase.rutas';
-// import configuracionRutas from './rutas/configuracion.rutas';
-// import entrenadorRutas from   './rutas/entrenador.rutas'
-// import devRutas from          './rutas/dev.rutas'
-// import ordenRutas from        './rutas/orden.rutas';
-// import planRutas from         './rutas/plan.rutas';
-// import productoRutas from     './rutas/producto.rutas'
-// import reporteRutas from      './rutas/reporte.rutas';
-// import reservaRutas from      './rutas/reserva.rutas';
-// import sesionRutas from       './rutas/sesion.rutas';
-// import suscripcionRutas from  './rutas/suscripcion.rutas';
-// import usuarioRutas from      './rutas/usuario.rutas'
+import express from           'express';
+import cors from              'cors';
+import dotenv from            'dotenv';
+import path from 'path';
+import logger from            './config/logger'
+import { programarBackupAutomatico } from './servicios/backup.servicio';
+import inicializarConfiguracion from './inicializarConfiguracion';
 
-// import { programarBackupAutomatico } from './servicios/backup.servicio';
-// import { manejarErrores, rutaNoEncontrada } from './middlewares/error.middleware';
-// import inicializarConfiguracion from './inicializarConfiguracion';
+import asistenciaRutas from   './rutas/asistencia.rutas';
+import authRutas from         './rutas/auth.rutas'
+import backupRutas from       './rutas/backup.rutas';
+import carritoRutas from      './rutas/carrito.rutas';
+import claseRutas from        './rutas/clase.rutas';
+import configuracionRutas from './rutas/configuracion.rutas';
+import entrenadorRutas from   './rutas/entrenador.rutas'
+import devRutas from          './rutas/dev.rutas'
+import ordenRutas from        './rutas/orden.rutas';
+import planRutas from         './rutas/plan.rutas';
+import productoRutas from     './rutas/producto.rutas'
+import reporteRutas from      './rutas/reporte.rutas';
+import reservaRutas from      './rutas/reserva.rutas';
+import sesionRutas from       './rutas/sesion.rutas';
+import suscripcionRutas from  './rutas/suscripcion.rutas';
+import usuarioRutas from      './rutas/usuario.rutas'
 
-// dotenv.config();
+import { manejarErrores, rutaNoEncontrada } from './middlewares/error.middleware';
 
-// const app = express();
+const envFile = process.env.NODE_ENV === 'production' 
+  ? '.env.production' 
+  : '.env.development';
 
-// // middlewares
-// app.use(cors({
-//   origin: "http://localhost:3000",
-//   credentials: true,
-//   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-//   allowedHeaders: ["Content-Type", "Authorization"]
-// }));
+dotenv.config({ path: path.resolve(process.cwd(), envFile) });
 
-// app.use(express.json());
+console.log(`Running in ${process.env.NODE_ENV} mode`);
+console.log(`DB Host: ${process.env.DB_HOST}`);
+const app = express();
+const port = process.env.PORT || 5001;
 
-// app.use('/api/asistencias',    asistenciaRutas);
-// app.use('/api/auth',           authRutas)
-// app.use('/api/backups',        backupRutas);
-// app.use('/api/carrito',        carritoRutas);
-// app.use('/api/clases',         claseRutas);
-// app.use('/api/configuracion',  configuracionRutas);
-// app.use('/api/entrenadores',   entrenadorRutas);
-// app.use('/api/dev',            devRutas);
-// app.use('/api/ordenes',        ordenRutas);
-// app.use('/api/planes',         planRutas);
-// app.use('/api/productos',      productoRutas)
-// app.use('/api/reportes',       reporteRutas);
-// app.use('/api/reservas',       reservaRutas);
-// app.use('/api/sesiones',       sesionRutas);
-// app.use('/api/suscripciones',  suscripcionRutas);
-// app.use('/api/usuarios',       usuarioRutas)
+// middlewares
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://gym-frontend-nine-red.vercel.app"
+];
 
-// // Manejo de errores
-// app.use(rutaNoEncontrada);
-// app.use(manejarErrores);
+app.use(cors({
+  origin: (origin, callback) => {
+    // Permitir peticiones sin origen (como Postman o apps móviles)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error('CORS no permitido'), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
-// // status
-// app.get('/status', (req, res) => {
-//   logger.info('Status OK');
-//   res.send('Status OK');
-// });
+app.use(express.json());
 
-// const startServer = async () => {
-  
-//   try {
-//     await inicializarConfiguracion();
-//     console.log('Base de datos conectada y configurada.');
+app.use((req, _, next) => {
+  console.log(`Request: ${req.method} ${req.path}`);
+  next();
+});
 
-//     const port = Number(process.env.PORT) || 5001;
-//     app.listen(port, '0.0.0.0', () => {  
-//       programarBackupAutomatico();
-//       logger.info(`*** READY ***: Servidor corriendo en el puerto ${port}`);
-//     });
-//   } catch (error) {
-//     console.error('Error al iniciar el servidor:', error);
-//     process.exit(1); // Forzamos el cierre si no hay conexión a la DB
-//   }
-// };
+app.use('/api/asistencias',    asistenciaRutas);
+app.use('/api/auth',           authRutas)
+app.use('/api/backups',        backupRutas);
+app.use('/api/carrito',        carritoRutas);
+app.use('/api/clases',         claseRutas);
+app.use('/api/configuracion',  configuracionRutas);
+app.use('/api/entrenadores',   entrenadorRutas);
+app.use('/api/dev',            devRutas);
+app.use('/api/ordenes',        ordenRutas);
+app.use('/api/planes',         planRutas);
+app.use('/api/productos',      productoRutas)
+app.use('/api/reportes',       reporteRutas);
+app.use('/api/reservas',       reservaRutas);
+app.use('/api/sesiones',       sesionRutas);
+app.use('/api/suscripciones',  suscripcionRutas);
+app.use('/api/usuarios',       usuarioRutas)
 
-// startServer();
 
-const express = require('express')
-const app = express()
-const port = process.env.PORT || 4000
+app.get('/status', (req, res) => {
+  logger.info('Status OK');
+  res.send('Status OK');
+});
 
-app.get('/', (req:any, res:any) => {
-  res.send('Hello World!')
-})
+app.use(rutaNoEncontrada);
+app.use(manejarErrores);
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+inicializarConfiguracion();
+
+app.listen(Number(port), '0.0.0.0', () => {    
+  programarBackupAutomatico();
+  logger.info(`Servidor listo. Puerto ::: ${port}`);
+});
