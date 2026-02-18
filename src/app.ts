@@ -63,22 +63,22 @@ app.use((req, _, next) => {
   next();
 });
 
-// app.use('/api/asistencias',    asistenciaRutas);
-// app.use('/api/auth',           authRutas)
-// app.use('/api/backups',        backupRutas);
-// app.use('/api/carrito',        carritoRutas);
-// app.use('/api/clases',         claseRutas);
-// app.use('/api/configuracion',  configuracionRutas);
-// app.use('/api/entrenadores',   entrenadorRutas);
-// app.use('/api/dev',            devRutas);
-// app.use('/api/ordenes',        ordenRutas);
-// app.use('/api/planes',         planRutas);
-// app.use('/api/productos',      productoRutas)
-// app.use('/api/reportes',       reporteRutas);
-// app.use('/api/reservas',       reservaRutas);
-// app.use('/api/sesiones',       sesionRutas);
-// app.use('/api/suscripciones',  suscripcionRutas);
-// app.use('/api/usuarios',       usuarioRutas)
+app.use('/api/asistencias',    asistenciaRutas);
+app.use('/api/auth',           authRutas)
+app.use('/api/backups',        backupRutas);
+app.use('/api/carrito',        carritoRutas);
+app.use('/api/clases',         claseRutas);
+app.use('/api/configuracion',  configuracionRutas);
+app.use('/api/entrenadores',   entrenadorRutas);
+app.use('/api/dev',            devRutas);
+app.use('/api/ordenes',        ordenRutas);
+app.use('/api/planes',         planRutas);
+app.use('/api/productos',      productoRutas)
+app.use('/api/reportes',       reporteRutas);
+app.use('/api/reservas',       reservaRutas);
+app.use('/api/sesiones',       sesionRutas);
+app.use('/api/suscripciones',  suscripcionRutas);
+app.use('/api/usuarios',       usuarioRutas)
 
 
 app.get('/status', (req, res) => {
