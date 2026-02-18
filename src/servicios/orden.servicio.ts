@@ -137,7 +137,7 @@ export const completarOrden = async (ordenId: string, usuarioId: string) => {
     throw new Error('No tienes permiso para completar esta orden');
   }
 
-  if (orden.estado !== 'pendiente') {
+  if (orden.estado !== 'PENDIENTE') {
     throw new Error('Esta orden ya ha sido completada o cancelada');
   }
 
@@ -156,7 +156,7 @@ export const completarOrden = async (ordenId: string, usuarioId: string) => {
   // Actualizar estado de la orden
   const ordenActualizada = await prisma.orden.update({
     where: { id: ordenId },
-    data: { estado: 'completada' },
+    data: { estado: 'COMPLETADA' },
     include: {
       items: {
         include: {
@@ -223,13 +223,13 @@ export const cancelarOrden = async (ordenId: string, usuarioId: string) => {
     throw new Error('No tienes permiso para cancelar esta orden');
   }
 
-  if (orden.estado === 'completada') {
+  if (orden.estado === 'COMPLETADA') {
     throw new Error('No se puede cancelar una orden completada');
   }
 
   const ordenActualizada = await prisma.orden.update({
     where: { id: ordenId },
-    data: { estado: 'cancelada' }
+    data: { estado: 'CANCELADA' }
   });
 
   logger.info(`Orden cancelada: ${ordenId}`);

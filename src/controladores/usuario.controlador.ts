@@ -111,6 +111,32 @@ export const actualizarMiPerfil = async (req: Request, res: Response) => {
     }
 }
 
+export const actualizarUsuario = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const datosValidados = actualizarPerfilSchema.parse(req.body);
+
+    const usuario = await actuarlizarPerfil(id, datosValidados);
+
+    res.status(200).json(usuario);
+  } catch (error: any) {
+    logger.error(`Error al actualizar usuario: ${error}`);
+
+    if (error.name === 'ZodError') {
+      return res.status(400).json({
+        message: 'Datos inválidos',
+        errors: error.issues,
+      });
+    }
+
+    res.status(500).json({
+      message: 'Error al actualizar usuario',
+      data: error.message,
+    });
+  }
+};
+
+
 export const cambiarMiPassword = async (req: Request, res: Response) => {
     try {
         const id = req.usuario?.id;

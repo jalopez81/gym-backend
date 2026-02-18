@@ -1,9 +1,12 @@
 node_modules
 # Keep environment variables out of version control
-.env
+.env*
 
 /src/generated/prisma
 /node_modules
 dist
 logs
 backups
+uploads
+.DS_Store
+.desktop.ini

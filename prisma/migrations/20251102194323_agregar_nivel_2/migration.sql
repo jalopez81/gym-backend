@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Plan" ALTER COLUMN "nivel" DROP NOT NULL;

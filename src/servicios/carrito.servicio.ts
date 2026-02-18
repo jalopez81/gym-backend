@@ -5,7 +5,7 @@ import { ActualizarCarritoDTO, AgregarAlCarritoDTO } from '../validadores/carrit
 export const agregarAlCarrito = async (usuarioId: string, datos: AgregarAlCarritoDTO) => {
   // Verificar que el producto existe
   const producto = await prisma.producto.findUnique({
-    where: { id: datos.productoId }
+    where: { id: datos.producto.id }
   });
 
   if (!producto) {
@@ -21,7 +21,7 @@ export const agregarAlCarrito = async (usuarioId: string, datos: AgregarAlCarrit
   const itemExistente = await prisma.carritoItem.findFirst({
     where: {
       usuarioId,
-      productoId: datos.productoId
+      productoId: datos.producto.id
     }
   });
 
@@ -32,7 +32,7 @@ export const agregarAlCarrito = async (usuarioId: string, datos: AgregarAlCarrit
     carritoItem = await prisma.carritoItem.update({
       where: { id: itemExistente.id },
       data: {
-        cantidad: itemExistente.cantidad + datos.cantidad
+        cantidad: datos.cantidad
       },
       include: {
         producto: true
@@ -43,7 +43,7 @@ export const agregarAlCarrito = async (usuarioId: string, datos: AgregarAlCarrit
     carritoItem = await prisma.carritoItem.create({
       data: {
         usuarioId,
-        productoId: datos.productoId,
+        productoId: datos.producto.id,
         cantidad: datos.cantidad
       },
       include: {
@@ -52,7 +52,7 @@ export const agregarAlCarrito = async (usuarioId: string, datos: AgregarAlCarrit
     });
   }
 
-  logger.info(`Producto agregado al carrito: ${usuarioId}`);
+  logger.info(`Producto agregado al carrito: ${datos.producto.id}`);
   return carritoItem;
 };
 
@@ -74,48 +74,6 @@ export const obtenerCarrito = async (usuarioId: string) => {
   };
 };
 
-export const actualizarItemCarrito = async (
-  usuarioId: string,
-  productoId: string,
-  datos: ActualizarCarritoDTO
-) => {
-  const carritoItem = await prisma.carritoItem.findFirst({
-    where: {
-      usuarioId,
-      productoId
-    }
-  });
-
-  if (!carritoItem) {
-    throw new Error('Producto no encontrado en el carrito');
-  }
-
-  const producto = await prisma.producto.findUnique({
-    where: { id: productoId }
-  });
-
-  if (!producto) {
-    throw new Error('Producto no encontrado');
-  }
-
-  // Verificar stock
-  if (producto.stock < datos.cantidad) {
-    throw new Error(`Stock insuficiente. Disponibles: ${producto.stock}`);
-  }
-
-  const itemActualizado = await prisma.carritoItem.update({
-    where: { id: carritoItem.id },
-    data: {
-      cantidad: datos.cantidad
-    },
-    include: {
-      producto: true
-    }
-  });
-
-  logger.info(`Carrito actualizado: ${usuarioId}`);
-  return itemActualizado;
-};
 
 export const eliminarDelCarrito = async (usuarioId: string, productoId: string) => {
   const carritoItem = await prisma.carritoItem.findFirst({
@@ -133,7 +91,7 @@ export const eliminarDelCarrito = async (usuarioId: string, productoId: string) 
     where: { id: carritoItem.id }
   });
 
-  logger.info(`Producto eliminado del carrito: ${usuarioId}`);
+  logger.info(`Producto eliminado del carrito: ${productoId}`);
 };
 
 export const vaciarCarrito = async (usuarioId: string) => {
@@ -141,5 +99,5 @@ export const vaciarCarrito = async (usuarioId: string) => {
     where: { usuarioId }
   });
 
-  logger.info(`Carrito vaciado: ${usuarioId}`);
+  logger.info(`Carrito vaciado`);
 };

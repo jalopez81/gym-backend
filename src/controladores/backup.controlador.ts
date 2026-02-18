@@ -2,7 +2,8 @@ import { Request, Response } from 'express';
 import {
   crearBackup,
   obtenerBackups,
-  restaurarBackup
+  restaurarBackup,
+  eliminarBackup
 } from '../servicios/backup.servicio';
 import logger from '../config/logger';
 
@@ -54,5 +55,15 @@ export const restaurarBackupPorId = async (req: Request, res: Response) => {
     res.status(500).json({
       mensaje: error.message || 'Error al restaurar backup'
     });
+  }
+};
+
+export const eliminarBackupPorId = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const resultado = await eliminarBackup(id);
+    res.json(resultado);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al eliminar backup' });
   }
 };

@@ -10,6 +10,7 @@ export const getUsuarios = async () => {
             email: true,
             nombre: true,
             rol: true,
+            status: true,
             creado: true,
         },
         orderBy: { nombre: 'asc' }

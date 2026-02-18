@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const crearEntrenadorSchema = z.object({
-  usuarioId: z.uuid('ID de usuario inválido'),
+  usuarioId: z.string('ID de usuario inválido'),
   especialidad: z.string().min(3, 'La especialidad es requerida'),
   experiencia: z.number().int().min(0, 'Los años de experiencia no pueden ser negativos').default(0),
   certificaciones: z.string().optional()

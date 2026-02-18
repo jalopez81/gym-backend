@@ -1,9 +1,10 @@
+import { PrismaClient } from '@prisma/client';
 import { exec } from 'child_process';
-import { promisify } from 'util';
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import archiver from 'archiver';
+import { promisify } from 'util';
 import logger from '../config/logger';
+const prisma = new PrismaClient();
 
 const execAsync = promisify(exec);
 
@@ -18,6 +19,16 @@ const asegurarDirectorioBackups = async () => {
     logger.error('Error al crear directorio de backups:', error);
   }
 };
+
+async function dockerDisponible(): Promise<boolean> {
+  try {
+    await execAsync('docker info');
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 
 export const crearBackup = async () => {
   try {
@@ -42,15 +53,29 @@ export const crearBackup = async () => {
 
     // Ejecutar pg_dump con soporte Windows y Linux/Mac
     let comando: string;
-    if (process.platform === 'win32') {
-      // Windows
-      comando = `set PGPASSWORD=${password}& pg_dump -U ${usuario} -h ${host} -p ${puerto} ${baseDatos} > "${rutaCompleta}"`;
+    const usarDocker = await dockerDisponible();
+
+    if (usarDocker) {
+      comando = `
+      docker exec -t ${process.env.DB_CONTAINER}
+      pg_dump -U ${usuario} ${baseDatos}
+      > "${rutaCompleta}"
+      `;
     } else {
-      // Linux/Mac
-      comando = `PGPASSWORD="${password}" pg_dump -U ${usuario} -h ${host} -p ${puerto} ${baseDatos} > "${rutaCompleta}"`;
+      if (process.platform === 'win32') {
+        comando = `set PGPASSWORD=${password}& pg_dump -U ${usuario} -h ${host} -p ${puerto} ${baseDatos} > "${rutaCompleta}"`;
+      } else {
+        comando = `PGPASSWORD="${password}" pg_dump -U ${usuario} -h ${host} -p ${puerto} ${baseDatos} > "${rutaCompleta}"`;
+      }
     }
 
-    await execAsync(comando, { shell: 'cmd.exe' });
+
+    const shell =
+      process.platform === 'win32'
+        ? 'cmd.exe'
+        : '/bin/bash';
+
+    await execAsync(comando, { shell });
 
     logger.info(`Backup creado: ${nombreArchivo}`);
 
@@ -154,7 +179,8 @@ export const programarBackupAutomatico = () => {
     logger.info('Iniciando backup automático semanal...');
     try {
       await crearBackup();
-      logger.info('Backup automático completado exitosamente');
+      await limpiarBackupsAntiguos(180);
+      logger.info('Backup automático completado y limpieza realizada');
     } catch (error) {
       logger.error('Error en backup automático:', error);
     }
@@ -162,3 +188,50 @@ export const programarBackupAutomatico = () => {
 
   logger.info('Backup automático programado para domingos a las 2:00 AM');
 };
+
+
+export const eliminarBackup = async (nombreArchivo: string) => {
+  try {
+    const rutaCompleta = path.join(BACKUP_DIR, nombreArchivo);
+    await fs.unlink(rutaCompleta);
+    logger.info(`Backup eliminado: ${nombreArchivo}`);
+    return { mensaje: 'Backup eliminado', archivo: nombreArchivo };
+  } catch (error) {
+    logger.error('Error al eliminar backup:', error);
+    throw new Error('Error al eliminar backup');
+  }
+};
+
+
+export const limpiarBackupsAntiguos = async (dias = 30) => {
+  const archivos = await obtenerBackups();
+  const limite = Date.now() - dias * 24 * 60 * 60 * 1000;
+
+  for (const b of archivos) {
+    if (new Date(b.fecha).getTime() < limite) {
+      await fs.unlink(path.join(BACKUP_DIR, b.nombre));
+      logger.info(`Backup antiguo eliminado: ${b.nombre}`);
+    }
+  }
+};
+
+export const borrarTodosLosDatos = () => {
+  async function clearAll() {
+    const models = Object.keys(prisma).filter(
+      (key) => typeof (prisma as any)[key]?.deleteMany === 'function'
+    );
+
+    for (const model of models) {
+      await (prisma as any)[model].deleteMany();
+      console.log(`Cleared table: ${model}`);
+    }
+    clearAll()
+      .then(() => console.log('✅ All tables cleared'))
+      .catch(console.error)
+      .finally(() => prisma.$disconnect());
+  }
+}
+
+
+
+

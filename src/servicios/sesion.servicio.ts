@@ -15,7 +15,7 @@ export const crearSesion = async (datos: CrearSesionDTO) => {
   // Verificar que la fecha no sea en el pasado
   const fechaHora = new Date(datos.fechaHora);
   if (fechaHora < new Date()) {
-    throw new Error('No se pueden crear sesiones en el pasado');
+    throw new Error('La fecha no puede ser anterior a la fecha de hoy.');
   }
 
   const sesion = await prisma.sesion.create({
@@ -47,8 +47,8 @@ export const crearSesion = async (datos: CrearSesionDTO) => {
 
 export const obtenerSesiones = async () => {
   return await prisma.sesion.findMany({
-    include: {
-      clase: {
+    include: {      
+      clase: {         
         include: {
           entrenador: {
             include: {

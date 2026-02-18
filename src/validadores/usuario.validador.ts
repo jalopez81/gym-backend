@@ -1,10 +1,11 @@
 import { z } from 'zod';
+import { ROLES } from '../middlewares/auth.middleware';
 
 export const registroSchema = z.object({
     email: z.string().email('Email inválido'),
     nombre: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
     password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
-    rol: z.enum(['admin', 'cliente', 'entrenador', 'recepcionista']).optional()
+    rol: z.enum([ROLES.ADMIN, 'cliente', ROLES.ENTRENADOR, 'recepcionista']).optional()
 });
 
 export const loginSchema = z.object({

@@ -62,7 +62,8 @@ export const obtenerEntrenadores = async () => {
         select: {
           id: true,
           email: true,
-          nombre: true
+          nombre: true,
+          imagenSecureUrl: true
         }
       },
       clientes: {
@@ -76,7 +77,8 @@ export const obtenerEntrenadores = async () => {
             }
           }
         }
-      }
+      },
+      clases: true
     },
     orderBy: { creado: 'desc' }
   });

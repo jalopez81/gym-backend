@@ -2,15 +2,18 @@ import { Router } from 'express';
 import {
   crearBackupManual,
   listarBackups,
-  restaurarBackupPorId
+  restaurarBackupPorId,
+  eliminarBackupPorId,
+  
 } from '../controladores/backup.controlador';
-import { autenticar, autorizar } from '../middlewares/auth.middleware';
+import { autenticar, autorizar, ROLES } from '../middlewares/auth.middleware';
 
 const router = Router();
 
 // Rutas solo para admin
-router.post('/manual', autenticar, autorizar('admin'), crearBackupManual);
-router.get('/', autenticar, autorizar('admin'), listarBackups);
-router.post('/:id/restaurar', autenticar, autorizar('admin'), restaurarBackupPorId);
+router.post('/manual', autenticar, autorizar(ROLES.ADMIN), crearBackupManual);
+router.get('/', autenticar, autorizar(ROLES.ADMIN), listarBackups);
+router.post('/:id/restaurar', autenticar, autorizar(ROLES.ADMIN), restaurarBackupPorId);
+router.delete('/:id/eliminar', autenticar, autorizar(ROLES.ADMIN), eliminarBackupPorId);
 
 export default router;

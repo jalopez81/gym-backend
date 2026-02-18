@@ -12,6 +12,7 @@ import logger from '../config/logger';
 export const crear = async (req: Request, res: Response) => {
   try {
     const clienteId = req.usuario?.id;
+    const sesionId = req.params.sesionId;
 
     if (!clienteId) {
       return res.status(401).json({
@@ -19,7 +20,7 @@ export const crear = async (req: Request, res: Response) => {
       });
     }
 
-    const datosValidados = crearReservaSchema.parse(req.body);
+    const datosValidados = crearReservaSchema.parse({sesionId});
     const reserva = await crearReserva(clienteId, datosValidados);
 
     res.status(201).json(reserva);

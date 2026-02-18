@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import {
   agregarAlCarrito,
   obtenerCarrito,
-  actualizarItemCarrito,
   eliminarDelCarrito,
   vaciarCarrito
 } from '../servicios/carrito.servicio';
@@ -63,41 +62,10 @@ export const obtener = async (req: Request, res: Response) => {
   }
 };
 
-export const actualizar = async (req: Request, res: Response) => {
-  try {
-    const usuarioId = req.usuario?.id;
-    const { productoId } = req.params;
-
-    if (!usuarioId) {
-      return res.status(401).json({
-        mensaje: 'No autenticado'
-      });
-    }
-
-    const datosValidados = actualizarCarritoSchema.parse(req.body);
-    const carritoItem = await actualizarItemCarrito(usuarioId, productoId as string, datosValidados);
-
-    res.status(200).json(carritoItem);
-  } catch (error: any) {
-    logger.error('Error al actualizar carrito:', error);
-
-    if (error.name === 'ZodError') {
-      return res.status(400).json({
-        mensaje: 'Datos inválidos',
-        errores: error.errors
-      });
-    }
-
-    res.status(400).json({
-      mensaje: error.message || 'Error al actualizar carrito'
-    });
-  }
-};
-
 export const eliminar = async (req: Request, res: Response) => {
   try {
     const usuarioId = req.usuario?.id;
-    const { productoId } = req.params;
+    const { id } = req.params;
 
     if (!usuarioId) {
       return res.status(401).json({
@@ -105,7 +73,7 @@ export const eliminar = async (req: Request, res: Response) => {
       });
     }
 
-    await eliminarDelCarrito(usuarioId, productoId as string);
+    await eliminarDelCarrito(usuarioId, id);
 
     res.status(200).json({
       mensaje: 'Producto eliminado del carrito exitosamente'

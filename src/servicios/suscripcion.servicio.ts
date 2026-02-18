@@ -3,6 +3,7 @@ import { CrearSuscripcionDTO } from '../validadores/suscripcion.validador';
 import logger from '../config/logger';
 import { enviarEmail } from '../config/mailer';
 import { templateSuscripcion } from '../utils/emailTemplates';
+import { EstadoSuscripcion } from '@prisma/client';
 
 export const crearSuscripcion = async (usuarioId: string, datos: CrearSuscripcionDTO) => {
   // Verificar que el usuario existe
@@ -24,28 +25,30 @@ export const crearSuscripcion = async (usuarioId: string, datos: CrearSuscripcio
   }
 
   // Verificar que no tenga una suscripción activa
-  const suscripcionActiva = await prisma.suscripcion.findFirst({
-    where: {
-      usuarioId,
-      estado: 'activa'
-    }
-  });
+  // const suscripcionActiva = await prisma.suscripcion.findFirst({
+  //   where: {
+  //     usuarioId,
+  //     estado: EstadoSuscripcion.ACTIVA
+  //   }
+  // });
 
-  if (suscripcionActiva) {
-    throw new Error('Ya tienes una suscripción activa');
-  }
+  // if (suscripcionActiva) {
+  //   throw new Error('Ya tienes una suscripción activa');
+  // }
 
   // Calcular fecha de vencimiento
   const fechaInicio = new Date();
   const fechaVencimiento = new Date();
   fechaVencimiento.setDate(fechaVencimiento.getDate() + plan.duracionDias);
 
+  
   const suscripcion = await prisma.suscripcion.create({
     data: {
       usuarioId,
       planId: datos.planId,
       fechaInicio,
-      fechaVencimiento
+      fechaVencimiento,
+      monto: plan.precio
     },
     include: {
       usuario: {
@@ -89,10 +92,11 @@ export const obtenerMiSuscripcion = async (usuarioId: string) => {
   }
 
   // Verificar si está vencida
-  if (suscripcion.estado === 'activa' && new Date() > suscripcion.fechaVencimiento) {
+  if (suscripcion.estado === EstadoSuscripcion.ACTIVA && new Date() > suscripcion.fechaVencimiento) {
     await prisma.suscripcion.update({
       where: { id: suscripcion.id },
-      data: { estado: 'vencida' }
+      data: { estado: EstadoSuscripcion.VENCIDA }
+      
     });
 
     throw new Error('Tu suscripción ha vencido');
@@ -118,10 +122,10 @@ export const obtenerTodasLasSuscripciones = async () => {
 
   // Actualizar suscripciones vencidas
   for (const suscripcion of suscripciones) {
-    if (suscripcion.estado === 'activa' && new Date() > suscripcion.fechaVencimiento) {
+    if (suscripcion.estado === EstadoSuscripcion.ACTIVA && new Date() > suscripcion.fechaVencimiento) {
       await prisma.suscripcion.update({
         where: { id: suscripcion.id },
-        data: { estado: 'vencida' }
+        data: { estado: EstadoSuscripcion.VENCIDA },
       });
     }
   }
@@ -145,7 +149,7 @@ export const cancelarSuscripcion = async (suscripcionId: string, usuarioId: stri
 
   const suscripcionActualizada = await prisma.suscripcion.update({
     where: { id: suscripcionId },
-    data: { estado: 'cancelada' }
+    data: { estado: EstadoSuscripcion.CANCELADA },
   });
 
   logger.info(`Suscripción cancelada: ${suscripcionId}`);
@@ -162,7 +166,7 @@ export const renovarSuscripcion = async (usuarioId: string, datos: CrearSuscripc
     // Marcar como cancelada
     await prisma.suscripcion.update({
       where: { id: suscripcionAnterior.id },
-      data: { estado: 'cancelada' }
+      data: { estado: EstadoSuscripcion.CANCELADA },
     });
   }
 
@@ -174,7 +178,7 @@ export const verificarSuscripcionActiva = async (usuarioId: string): Promise<boo
   const suscripcion = await prisma.suscripcion.findFirst({
     where: {
       usuarioId,
-      estado: 'activa'
+      estado: EstadoSuscripcion.ACTIVA
     }
   });
 
@@ -186,10 +190,19 @@ export const verificarSuscripcionActiva = async (usuarioId: string): Promise<boo
   if (new Date() > suscripcion.fechaVencimiento) {
     await prisma.suscripcion.update({
       where: { id: suscripcion.id },
-      data: { estado: 'vencida' }
+      data: { estado: EstadoSuscripcion.VENCIDA} 
     });
     return false;
   }
 
   return true;
 };
+
+export const actualizarPlan = async (id: string, planId: string) => {
+  return prisma.suscripcion.update({
+    where: { id },
+    data: { planId },
+    include: { plan: true }
+  })
+}
+

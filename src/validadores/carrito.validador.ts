@@ -1,12 +1,15 @@
 import { z } from 'zod';
 
 export const agregarAlCarritoSchema = z.object({
-  productoId: z.uuid('ID de producto inválido'),
-  cantidad: z.number().int().min(1, 'La cantidad mínima es 1')
+  cantidad: z.number().int().min(1, 'La cantidad mínima es 1'),
+  producto: z.object({
+    id: z.string()
+  })
 });
 
 export const actualizarCarritoSchema = z.object({
-  cantidad: z.number().int().min(1, 'La cantidad mínima es 1')
+  cantidad: z.number().int().min(1, 'La cantidad mínima es 1'),
+  id: z.string()  
 });
 
 export type AgregarAlCarritoDTO = z.infer<typeof agregarAlCarritoSchema>;
