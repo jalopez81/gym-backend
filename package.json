@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development ts-node-dev --respawn --transpile-only src/app.ts",
     "dev:prod": "cross-env NODE_ENV=production ts-node-dev --respawn --transpile-only src/app.ts",
-    "build": "rm -rf dist && tsc",
     "start": "node dist/app.js",
+    "build": "rm -rf dist && tsc",
     "deploy:prod": "npx prisma migrate deploy && npm start",
     "migrate": "npx prisma db push",
     "seed": "npx prisma db seed"
