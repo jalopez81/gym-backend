@@ -58,6 +58,11 @@ app.use(cors({
 
 app.use(express.json());
 
+app.use((req, _, next) => {
+  console.log(`Request: ${req.method} ${req.path}`);
+  next();
+});
+
 app.use('/api/asistencias',    asistenciaRutas);
 app.use('/api/auth',           authRutas)
 app.use('/api/backups',        backupRutas);

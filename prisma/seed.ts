@@ -101,7 +101,7 @@ export const generarDatosEjemplo = async () => {
       resultado.entrenadoresCreados++;
     }
 
-    // 3. Productos y Planes
+    // 3. Productos 
     const productosData = [
             {
                 nombre: 'Banco inclinado',
@@ -168,6 +168,7 @@ export const generarDatosEjemplo = async () => {
     await prisma.producto.createMany({ data: productosData });
     resultado.productosCreados = productosData.length;
 
+    // 4. planes 
     const planesData = [
       {
         nombre: 'Plan Básico',
@@ -197,7 +198,7 @@ export const generarDatosEjemplo = async () => {
     await prisma.plan.createMany({ data: planesData });
     resultado.planesCreados = planesData.length;
 
-    // 4. Clases y Sesiones (Optimizado)
+    // 5. Clases y Sesiones (Optimizado)
     const entrenadores = await prisma.entrenador.findMany();
     if (entrenadores.length > 0) {
       const claseCreada = await prisma.clase.create({
