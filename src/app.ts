@@ -89,7 +89,7 @@ app.get('/status', (req, res) => {
 app.use(rutaNoEncontrada);
 app.use(manejarErrores);
 
-inicializarConfiguracion();
+// inicializarConfiguracion();
 
 app.listen(Number(port), '0.0.0.0', () => {    
   programarBackupAutomatico();
