@@ -91,7 +91,7 @@ export const obtenerPorSesion = async (req: Request, res: Response) => {
 export const cancelar = async (req: Request, res: Response) => {
   try {
     const clienteId = req.usuario?.id;
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     if (!clienteId) {
       return res.status(401).json({

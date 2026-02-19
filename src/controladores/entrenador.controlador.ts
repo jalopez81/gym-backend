@@ -51,7 +51,7 @@ export const listar = async (req: Request, res: Response) => {
 
 export const obtenerPorId = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const entrenador = await obtenerEntrenadorPorId(id as string);
 
     res.status(200).json(entrenador);
@@ -65,7 +65,7 @@ export const obtenerPorId = async (req: Request, res: Response) => {
 
 export const actualizar = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const datosValidados = actualizarEntrenadorSchema.parse(req.body);
     const entrenador = await actualizarEntrenador(id as string, datosValidados);
 
@@ -88,7 +88,7 @@ export const actualizar = async (req: Request, res: Response) => {
 
 export const eliminar = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     await eliminarEntrenador(id as string);
 
     res.status(200).json({

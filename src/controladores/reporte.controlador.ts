@@ -3,7 +3,8 @@ import { obtenerReportes } from "../servicios/reporte.servicio";
 
 export async function getReportes(req: Request, res: Response) {
   try {
-    const { reporte_name, download } = req.params;
+    const reporte_name = req.params.reporte_name as string;
+    const download = req.params.download as string;
     const data = await obtenerReportes(reporte_name, Boolean(download));
 
     if(Boolean(download)){

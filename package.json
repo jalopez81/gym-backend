@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "dist/app.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development ts-node-dev --respawn --transpile-only src/app.ts",
-    "dev:prod": "cross-env NODE_ENV=production ts-node-dev --respawn --transpile-only src/app.ts",
+    "dev": "cross-env NODE_ENV=development ts-node-dev --respawn  src/app.ts",
+    "dev:prod": "cross-env NODE_ENV=production ts-node-dev --respawn  src/app.ts",
     "start": "node dist/app.js",
     "build": "rm -rf dist && tsc",
     "deploy:prod": "npx prisma migrate deploy && npm start",

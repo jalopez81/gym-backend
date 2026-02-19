@@ -55,7 +55,7 @@ export const listar = async (req: Request, res: Response) => {
 export const cancelar = async (req: Request, res: Response) => {
   try {
     const usuarioId = req.usuario?.id;
-    const { id } = req.params;
+    const id = req.params.id as string;
     if (!usuarioId) return res.status(401).json({ mensaje: 'No autenticado' });
 
     const suscripcion = await cancelarSuscripcion(id, usuarioId);
@@ -85,7 +85,7 @@ export const renovar = async (req: Request, res: Response) => {
 };
 
 export const actualizar = async (req: Request, res: Response) => {
-  const { id } = req.params
+  const id = req.params.id as string;
   const { planId } = req.body
   const retVal = await actualizarPlan(id, planId)
   res.json(retVal)

@@ -70,7 +70,7 @@ export const listar = async (req: Request, res: Response) => {
 
 export const getPorId = async (req: Request, res: Response) => {
     try {
-        const id = req.params.id;
+        const id = req.params.id as string;
         const producto = await getProductoPorId(id as string);
 
         return res.status(200).json(producto)
@@ -89,7 +89,7 @@ export const actualizar = async (req: Request, res: Response) => {
         // imagen 
         const imagenFile: Express.Multer.File | undefined = req.file;
         
-        const id = req.params.id;
+        const id = req.params.id as string;
         const datosValidados = actualizarProductoSchema.parse(req.body)
         const productoActualizado = await actualizarProducto(id, datosValidados, imagenFile)
 
@@ -112,7 +112,7 @@ export const actualizar = async (req: Request, res: Response) => {
 
 export const eliminar = async (req: Request, res: Response) => {
     try {
-        const id = req.params.id;
+        const id = req.params.id as string;
         await eliminarProducto(id as string);
 
         res.status(200).json({

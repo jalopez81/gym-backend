@@ -38,7 +38,7 @@ export const listarBackups = async (req: Request, res: Response) => {
 
 export const restaurarBackupPorId = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     // Validar que el ID sea un nombre válido de backup
     if (!(id as string).startsWith('backup-') || !(id as string).endsWith('.sql')) {
@@ -60,7 +60,7 @@ export const restaurarBackupPorId = async (req: Request, res: Response) => {
 
 export const eliminarBackupPorId = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const resultado = await eliminarBackup(id);
     res.json(resultado);
   } catch (error) {

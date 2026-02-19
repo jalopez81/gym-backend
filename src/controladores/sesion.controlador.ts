@@ -83,7 +83,7 @@ export const listar = async (req: Request, res: Response) => {
 
 export const obtenerPorId = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const sesion = await obtenerSesionPorId(id as string);
 
     res.status(200).json(sesion);
@@ -97,7 +97,7 @@ export const obtenerPorId = async (req: Request, res: Response) => {
 
 export const actualizar = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const datosValidados = actualizarSesionSchema.parse(req.body);
     const sesion = await actualizarSesion(id as string, datosValidados);
 
@@ -120,7 +120,7 @@ export const actualizar = async (req: Request, res: Response) => {
 
 export const eliminar = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     await eliminarSesion(id as string);
 
     res.status(200).json({

@@ -113,7 +113,7 @@ export const actualizarMiPerfil = async (req: Request, res: Response) => {
 
 export const actualizarUsuario = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const datosValidados = actualizarPerfilSchema.parse(req.body);
 
     const usuario = await actuarlizarPerfil(id, datosValidados);

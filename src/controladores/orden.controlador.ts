@@ -54,7 +54,7 @@ export const obtenerMias = async (req: Request, res: Response) => {
 export const obtenerPorId = async (req: Request, res: Response) => {
   try {
     const usuarioId = req.usuario?.id;
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     if (!usuarioId) {
       return res.status(401).json({
@@ -89,7 +89,7 @@ export const listar = async (req: Request, res: Response) => {
 export const completar = async (req: Request, res: Response) => {
   try {
     const usuarioId = req.usuario?.id;
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     if (!usuarioId) {
       return res.status(401).json({
@@ -111,7 +111,7 @@ export const completar = async (req: Request, res: Response) => {
 export const cancelar = async (req: Request, res: Response) => {
   try {
     const usuarioId = req.usuario?.id;
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     if (!usuarioId) {
       return res.status(401).json({

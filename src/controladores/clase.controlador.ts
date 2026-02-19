@@ -49,7 +49,7 @@ export const listar = async (req: Request, res: Response) => {
 
 export const obtenerPorId = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const clase = await obtenerClasePorId(id as string);
 
     res.status(200).json(clase);
@@ -63,7 +63,7 @@ export const obtenerPorId = async (req: Request, res: Response) => {
 
 export const actualizar = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const datosValidados = actualizarClaseSchema.parse(req.body);
     const clase = await actualizarClase(id as string, datosValidados);
 
@@ -86,7 +86,7 @@ export const actualizar = async (req: Request, res: Response) => {
 
 export const eliminar = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     await eliminarClase(id as string);
 
     res.status(200).json({

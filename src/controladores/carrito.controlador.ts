@@ -65,7 +65,7 @@ export const obtener = async (req: Request, res: Response) => {
 export const eliminar = async (req: Request, res: Response) => {
   try {
     const usuarioId = req.usuario?.id;
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     if (!usuarioId) {
       return res.status(401).json({

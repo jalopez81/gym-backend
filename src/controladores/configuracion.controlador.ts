@@ -22,7 +22,7 @@ export const crear = async (req: Request, res: Response) => {
 
 export const actualizar = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const actualizada = await actualizarConfiguracion(id, req.body);
     res.json(actualizada);
   } catch (error: any) {
