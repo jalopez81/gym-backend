@@ -11,6 +11,6 @@ jobs:
     steps:
       - name: Ping Supabase Database
         env:
-          DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
-          psql "$DATABASE_URL" -c "SELECT 1;"
+          psql "$SUPABASE_DB_URL" -c "SELECT 1;"
