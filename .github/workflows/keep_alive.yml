@@ -1,10 +1,8 @@
 name: Supabase Keep Alive
-
 on:
   schedule:
-    - cron: '0 0 */3 * *'
-  workflow_dispatch:
-
+    - cron: 0 0 */3 * *
+  workflow_dispatch: null
 jobs:
   ping_db:
     runs-on: ubuntu-latest
@@ -13,9 +11,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client
-
       - name: Ping Supabase Database
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: '${{ vars.DATABASE_URL }}'
         run: |
           psql "$DATABASE_URL" -c "SELECT 1;"
