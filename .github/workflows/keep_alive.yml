@@ -11,6 +11,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client
+      - name: Debug
+        env:
+          DATABASE_URL: ${{ vars.DATABASE_URL }}
+        run: |
+          echo "URL is: $DATABASE_URL"
+          echo "Length: ${#DATABASE_URL}"
       - name: Ping Supabase Database
         env:
           DATABASE_URL: '${{ vars.DATABASE_URL }}'
