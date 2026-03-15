@@ -201,7 +201,7 @@ export const generarDatosEjemplo = async () => {
     // 5. Clases y Sesiones (Optimizado)
     const entrenadores = await prisma.entrenador.findMany();
     if (entrenadores.length > 0) {
-      const claseCreada = await prisma.clase.create({
+      await prisma.clase.create({
         data: {
           nombre: 'Yoga Flow',
           descripcion: 'Clase dinámica',
@@ -216,8 +216,64 @@ export const generarDatosEjemplo = async () => {
           }
         }
       });
-      resultado.clasesCreadas = 1;
-      resultado.sesionesCreadas = 2;
+      resultado.clasesCreadas += 1;
+      resultado.sesionesCreadas += 2;
+      
+      await prisma.clase.create({
+        data: {
+          nombre: 'CrossFit',
+          descripcion: 'Clase de CrossFit',
+          duracion: 60,
+          capacidad: 20,
+          entrenadorId: entrenadores[0].id,
+          sesiones: {
+            create: [
+              { fechaHora: new Date(Date.now() + 86400000) }, 
+              { fechaHora: new Date(Date.now() + 172800000) },
+              { fechaHora: new Date(Date.now() + 259200000) },
+              { fechaHora: new Date(Date.now() + 345600000) },
+              { fechaHora: new Date(Date.now() + 432000000) }, 
+            ]
+          }
+        }
+      });
+      resultado.clasesCreadas += 1;
+      resultado.sesionesCreadas += 5;
+
+      await prisma.clase.create({
+        data: {
+          nombre: 'Pilates',
+          descripcion: 'Clase de Pilates',
+          duracion: 60,
+          capacidad: 20,
+          entrenadorId: entrenadores[0].id,
+          sesiones: {
+            create: [
+              { fechaHora: new Date(Date.now() + 86400000) }, 
+            ]
+          }
+        }
+      });
+      resultado.clasesCreadas += 1;
+      resultado.sesionesCreadas += 1;
+
+      await prisma.clase.create({
+        data: {
+          nombre: 'Spinning',
+          descripcion: 'Clase de Spinning',
+          duracion: 60,
+          capacidad: 20,
+          entrenadorId: entrenadores[1].id,
+          sesiones: {
+            create: [
+              { fechaHora: new Date(Date.now() + 86400000) }, 
+            ]
+          }
+        }
+      });
+      resultado.clasesCreadas += 1;
+      resultado.sesionesCreadas += 1;
+      
     }
 
     // 5. Órdenes con Nested Writes (Eficiencia máxima)

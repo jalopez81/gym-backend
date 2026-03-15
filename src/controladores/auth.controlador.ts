@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import logger from "../config/logger";
 import { loginSchema, registroSchema } from "../validadores/usuario.validador"
-import { actualizarUsuario, loginUsuario, registrarUsuario } from "../servicios/auth.servicio";
+import { enviarCodigo, loginUsuario, registrarUsuario } from "../servicios/auth.servicio";
 
 export const registro = async (req: Request, res: Response) => {
     try {
@@ -23,6 +23,23 @@ export const registro = async (req: Request, res: Response) => {
         }
         return res.status(400).json({
             mensaje: error.message || 'Error al registrar usuario'
+        });
+    }
+}
+
+export const enviarCodigoRegistro = async (req: Request, res: Response) => {
+    try {
+        const { email } = req.body;
+        const codigoGeneradoHash = await enviarCodigo(email);                
+
+        return res.status(200).json({
+            mensaje: 'Código enviado exitosamente',
+            codigoGeneradoHash
+        })
+    } catch (error: any) {
+        logger.error(`Error al enviar código de registro: ${error}`)
+        return res.status(500).json({
+            mensaje: error.message || 'Error al enviar código de registro'
         });
     }
 }

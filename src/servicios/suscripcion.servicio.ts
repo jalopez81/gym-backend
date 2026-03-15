@@ -87,12 +87,9 @@ export const obtenerMiSuscripcion = async (usuarioId: string) => {
     orderBy: { creado: 'desc' }
   });
 
-  if (!suscripcion) {
-    throw new Error('No tienes una suscripción activa');
-  }
 
   // Verificar si está vencida
-  if (suscripcion.estado === EstadoSuscripcion.ACTIVA && new Date() > suscripcion.fechaVencimiento) {
+  if (suscripcion?.estado === EstadoSuscripcion.ACTIVA && new Date() > suscripcion.fechaVencimiento) {
     await prisma.suscripcion.update({
       where: { id: suscripcion.id },
       data: { estado: EstadoSuscripcion.VENCIDA }

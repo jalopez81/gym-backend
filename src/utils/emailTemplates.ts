@@ -39,6 +39,37 @@ export const templateBienvenida = (nombre: string) => {
   `;
 };
 
+export const templateCodigoRegistro = (codigo: string) => {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; background-color: #f4f4f4; }
+          .container { max-width: 600px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 8px; }
+          .header { background-color: #366092; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+          .content { padding: 20px; }
+          .footer { background-color: #f4f4f4; padding: 10px; text-align: center; font-size: 12px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>¡Código de registro!</h1>
+          </div>
+          <div class="content"> 
+            <p>Este es su código de registro:</p>
+            <h2>${codigo}</h2>            
+          </div>
+          <div class="footer">
+            <p>© 2025 Gimnasio. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+};
+
 export const templateSuscripcion = (
   nombre: string,
   plan: string,

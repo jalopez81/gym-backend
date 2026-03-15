@@ -4,12 +4,20 @@ import { compararHash, generarHash } from "../utils/hash";
 import { generarToken } from "../utils/jwt";
 import { LoginDTO, RegistroDTO } from "../validadores/usuario.validador";
 import { enviarEmail } from '../config/mailer';
-import {
-  templateBienvenida
-} from '../utils/emailTemplates';
+import { templateBienvenida, templateCodigoRegistro} from '../utils/emailTemplates';
+import bcrypt from 'bcrypt';
 
 
 export const registrarUsuario = async (datos: RegistroDTO) => {
+  logger.warn('Iniciando proceso de registro...');
+  // Generar codigo de registro
+
+  const isValidCodigoRegistro = await bcrypt.compare(datos.codigoRecibido, datos.codigoGeneradoHash)
+
+  if (!isValidCodigoRegistro) {
+    throw new Error('El código de registro es inválido');
+  }
+
   // Verificar si el email ya existe
   const usuarioExistente = await prisma.usuario.findUnique({
     where: { email: datos.email }
@@ -57,6 +65,20 @@ export const registrarUsuario = async (datos: RegistroDTO) => {
 
   return { usuario, token }
 };
+
+export const enviarCodigo = async (email: string) => {
+  const codigo = (Math.random() * 1000000).toString(16).split('.')[1].substring(0, 6)
+
+  const hash  = await generarHash(codigo);
+
+  enviarEmail(
+    email,
+    'Código de registro',
+    templateCodigoRegistro(codigo)
+  );
+
+  return hash;
+} 
 
 export const loginUsuario = async (datos: LoginDTO) => {
     logger.warn('Iniciando proceso de autenticación...');
