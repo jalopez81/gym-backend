@@ -39,7 +39,7 @@ const port = process.env.PORT || 5001;
 // middlewares
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://gym-frontend-nine-red.vercel.app"
+  "https://gymprofit.vercel.app"
 ];
 
 app.use(cors({
