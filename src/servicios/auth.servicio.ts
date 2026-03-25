@@ -4,19 +4,25 @@ import { compararHash, generarHash } from "../utils/hash";
 import { generarToken } from "../utils/jwt";
 import { LoginDTO, RegistroDTO } from "../validadores/usuario.validador";
 import { enviarEmail } from '../config/mailer';
-import { templateBienvenida, templateCodigoRegistro} from '../utils/emailTemplates';
+import { templateBienvenida, templateCodigoRegistro } from '../utils/emailTemplates';
 import bcrypt from 'bcrypt';
+import { ROLES } from "../middlewares/auth.middleware";
 
 
-export const registrarUsuario = async (datos: RegistroDTO) => {
+
+export const registrarUsuario = async (datos: RegistroDTO, usuarioRol: string) => {
   logger.warn('Iniciando proceso de registro...');
   // Generar codigo de registro
 
-  const isValidCodigoRegistro = await bcrypt.compare(datos.codigoRecibido, datos.codigoGeneradoHash)
-
-  if (!isValidCodigoRegistro) {
-    throw new Error('El código de registro es inválido');
+  let isValidCodigoRegistro;
+  if (usuarioRol !== ROLES.ADMIN) {
+    isValidCodigoRegistro = await bcrypt.compare(datos.codigoRecibido, datos.codigoGeneradoHash)
+    
+    if (!isValidCodigoRegistro) {
+      throw new Error('El código de registro es inválido');
+    }
   }
+
 
   // Verificar si el email ya existe
   const usuarioExistente = await prisma.usuario.findUnique({
@@ -69,7 +75,7 @@ export const registrarUsuario = async (datos: RegistroDTO) => {
 export const enviarCodigo = async (email: string) => {
   const codigo = (Math.random() * 1000000).toString(16).split('.')[1].substring(0, 6)
 
-  const hash  = await generarHash(codigo);
+  const hash = await generarHash(codigo);
 
   enviarEmail(
     email,
@@ -78,39 +84,39 @@ export const enviarCodigo = async (email: string) => {
   );
 
   return hash;
-} 
+}
 
 export const loginUsuario = async (datos: LoginDTO) => {
-    logger.warn('Iniciando proceso de autenticación...');
+  logger.warn('Iniciando proceso de autenticación...');
 
-    // Buscar usuario
-    const usuario = await prisma.usuario.findUnique({ where: { email: datos.email } });
-    if (!usuario) { throw new Error('El usuario no existe'); }
+  // Buscar usuario
+  const usuario = await prisma.usuario.findUnique({ where: { email: datos.email } });
+  if (!usuario) { throw new Error('El usuario no existe'); }
 
-    // Verificar contrasena
-    const passwordValido = await compararHash(datos.password, usuario.password);
-    if (!passwordValido) { throw new Error('La contraseña es inválida.') }
+  // Verificar contrasena
+  const passwordValido = await compararHash(datos.password, usuario.password);
+  if (!passwordValido) { throw new Error('La contraseña es inválida.') }
 
-    logger.info(`Usuario verificado exitosamente: ${usuario.email}`)
+  logger.info(`Usuario verificado exitosamente: ${usuario.email}`)
 
-    // Generar token
-    const token = generarToken({
-        id: usuario.id,
-        email: usuario.email,
-        nombre: usuario.nombre,
-        rol: usuario.rol
-    });
+  // Generar token
+  const token = generarToken({
+    id: usuario.id,
+    email: usuario.email,
+    nombre: usuario.nombre,
+    rol: usuario.rol
+  });
 
-    return {
-        usuario: {
-            id: usuario.id,
-            nombre: usuario.nombre,
-            email: usuario.email,
-            rol: usuario.rol,
-            creado: usuario.creado
-        },
-        token
-    }
+  return {
+    usuario: {
+      id: usuario.id,
+      nombre: usuario.nombre,
+      email: usuario.email,
+      rol: usuario.rol,
+      creado: usuario.creado
+    },
+    token
+  }
 };
 
 export const actualizarUsuario = async (

@@ -2,13 +2,15 @@ import { Request, Response } from "express";
 import logger from "../config/logger";
 import { loginSchema, registroSchema } from "../validadores/usuario.validador"
 import { enviarCodigo, loginUsuario, registrarUsuario } from "../servicios/auth.servicio";
+import { ROLES } from "../middlewares/auth.middleware";
 
 export const registro = async (req: Request, res: Response) => {
     try {
         const credenciales = req.body;
+        const usuarioRol = req.usuario?.rol || ROLES.CLIENTE;
         const credencialesValidadas = registroSchema.parse(credenciales)
 
-        const resultado = await registrarUsuario(credencialesValidadas);
+        const resultado = await registrarUsuario(credencialesValidadas, usuarioRol);
 
         return res.status(201).json(resultado)
 

@@ -11,7 +11,6 @@ const execAsync = promisify(exec);
 const BACKUP_DIR = process.env.BACKUP_DIR || './backups';
 const DATABASE_URL = process.env.DATABASE_URL || '';
 
-// Crear directorio de backups si no existe
 const asegurarDirectorioBackups = async () => {
   try {
     await fs.mkdir(BACKUP_DIR, { recursive: true });
@@ -43,7 +42,6 @@ export const crearBackup = async () => {
     const nombreArchivo = `backup-${timestamp}.sql`;
     const rutaCompleta = path.join(BACKUP_DIR, nombreArchivo);
 
-    // Extraer credenciales de DATABASE_URL
     const url = new URL(DATABASE_URL);
     const usuario = url.username;
     const password = url.password;
@@ -51,7 +49,6 @@ export const crearBackup = async () => {
     const puerto = url.port || '5432';
     const baseDatos = url.pathname.substring(1);
 
-    // Ejecutar pg_dump con soporte Windows y Linux/Mac
     let comando: string;
     const usarDocker = await dockerDisponible();
 
@@ -125,12 +122,9 @@ export const obtenerBackups = async () => {
 
 export const restaurarBackup = async (nombreArchivo: string) => {
   try {
-    const rutaCompleta = path.join(BACKUP_DIR, nombreArchivo);
-
-    // Verificar que el archivo existe
+    const rutaCompleta = path.resolve(BACKUP_DIR, nombreArchivo);
     await fs.stat(rutaCompleta);
 
-    // Extraer credenciales de DATABASE_URL
     const url = new URL(DATABASE_URL);
     const usuario = url.username;
     const password = url.password;
@@ -138,17 +132,18 @@ export const restaurarBackup = async (nombreArchivo: string) => {
     const puerto = url.port || '5432';
     const baseDatos = url.pathname.substring(1);
 
-    // Ejecutar psql para restaurar con soporte Windows y Linux/Mac
     let comando: string;
+    let opcionesExec = {};
+
     if (process.platform === 'win32') {
-      // Windows
       comando = `set PGPASSWORD=${password}& psql -U ${usuario} -h ${host} -p ${puerto} ${baseDatos} < "${rutaCompleta}"`;
+      opcionesExec = { shell: 'cmd.exe' };
     } else {
-      // Linux/Mac
-      comando = `PGPASSWORD="${password}" psql -U ${usuario} -h ${host} -p ${puerto} ${baseDatos} < "${rutaCompleta}"`;
+      comando = `PGPASSWORD="${password}" psql -U ${usuario} -h ${host} -p ${puerto} "${baseDatos}" < "${rutaCompleta}"`;
+      opcionesExec = { shell: '/bin/sh' };
     }
 
-    await execAsync(comando, { shell: 'cmd.exe' });
+    await execAsync(comando, opcionesExec);
 
     logger.info(`Backup restaurado: ${nombreArchivo}`);
 
@@ -156,9 +151,9 @@ export const restaurarBackup = async (nombreArchivo: string) => {
       mensaje: 'Backup restaurado exitosamente',
       archivo: nombreArchivo
     };
-  } catch (error) {
-    logger.error('Error al restaurar backup:', error);
-    throw new Error('Error al restaurar backup');
+  } catch (error: any) {
+    logger.error('Error al restaurar backup:', error.message || error);
+    throw new Error(`Error al restaurar backup: ${error.message}`);
   }
 };
 
@@ -174,7 +169,6 @@ const obtenerTamañoArchivo = async (ruta: string): Promise<string> => {
 export const programarBackupAutomatico = () => {
   const cron = require('node-cron');
 
-  // Ejecutar cada domingo a las 2 AM
   cron.schedule('0 2 * * 0', async () => {
     logger.info('Iniciando backup automático semanal...');
     try {
