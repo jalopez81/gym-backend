@@ -3,7 +3,6 @@ import ExcelJS from "exceljs";
 import type { EstadoOrden } from "@prisma/client";
 
 /** Órdenes que cuentan como venta para reportes (excluye pendientes y canceladas). */
-const ESTADOS_VENTA: EstadoOrden[] = ["COMPLETADA", "PAGADA", "ENVIADA"];
 
 export async function obtenerReportes(reporte: string, download: boolean = false) {
   switch (reporte) {
@@ -146,18 +145,16 @@ export async function obtenerReportes(reporte: string, download: boolean = false
         _count: { id: true },
       });
 
-      
       const sorted = [...grouped].sort(
         (a, b) => (b._sum.cantidad ?? 0) - (a._sum.cantidad ?? 0)
       );
-      
+
       const productos = await prisma.producto.findMany({
         where: { id: { in: sorted.map((g) => g.productoId) } },
         select: { id: true, nombre: true, categoria: true, precio: true },
       });
       const porId = new Map(productos.map((p) => [p.id, p]));
-      
-      console.log(productos)
+
       const result = sorted.map((g, i) => {
         const p = porId.get(g.productoId);
         return {
@@ -232,6 +229,199 @@ export async function obtenerReportes(reporte: string, download: boolean = false
         { header: "Categoría", key: "categoria", width: 22 },
         { header: "Unidades vendidas", key: "unidadesVendidas", width: 18 },
         { header: "Ingresos totales", key: "ingresosTotales", width: 16 },
+      ];
+
+      sheet.addRows(result);
+      sheet.getRow(1).font = { bold: true };
+
+      const buf = await workbook.xlsx.writeBuffer();
+      return Buffer.from(buf);
+    }
+
+    case "clases-mas-populares": {
+      const [asistencias, reservas] = await Promise.all([
+        prisma.asistencia.findMany({
+          include: {
+            sesion: {
+              select: {
+                clase: {
+                  select: { id: true, nombre: true, capacidad: true },
+                },
+              },
+            },
+          },
+        }),
+        prisma.reserva.findMany({
+          include: {
+            sesion: {
+              select: {
+                clase: {
+                  select: { id: true, nombre: true, capacidad: true },
+                },
+              },
+            },
+          },
+        }),
+      ]);
+
+      type FilaClase = {
+        claseId: string;
+        nombre: string;
+        capacidad: number;
+        totalAsistencias: number;
+        totalReservas: number;
+      };
+
+      const porClase = new Map<string, FilaClase>();
+
+      for (const a of asistencias) {
+        const cl = a.sesion.clase;
+        const cur = porClase.get(cl.id) ?? {
+          claseId: cl.id,
+          nombre: cl.nombre,
+          capacidad: cl.capacidad,
+          totalAsistencias: 0,
+          totalReservas: 0,
+        };
+        cur.totalAsistencias += 1;
+        porClase.set(cl.id, cur);
+      }
+
+      for (const r of reservas) {
+        const cl = r.sesion.clase;
+        const cur = porClase.get(cl.id) ?? {
+          claseId: cl.id,
+          nombre: cl.nombre,
+          capacidad: cl.capacidad,
+          totalAsistencias: 0,
+          totalReservas: 0,
+        };
+        cur.totalReservas += 1;
+        porClase.set(cl.id, cur);
+      }
+
+      const result = [...porClase.values()]
+        .sort(
+          (a, b) =>
+            b.totalAsistencias - a.totalAsistencias ||
+            b.totalReservas - a.totalReservas
+        )
+        .map((row, i) => ({ ranking: i + 1, ...row }));
+
+      if (!download) return result;
+
+      const workbook = new ExcelJS.Workbook();
+      const sheet = workbook.addWorksheet("Clases más populares");
+
+      sheet.columns = [
+        { header: "Ranking", key: "ranking", width: 10 },
+        { header: "Clase", key: "nombre", width: 28 },
+        { header: "Capacidad", key: "capacidad", width: 12 },
+        { header: "Asistencias", key: "totalAsistencias", width: 14 },
+        { header: "Reservas", key: "totalReservas", width: 12 },
+      ];
+
+      sheet.addRows(result);
+      sheet.getRow(1).font = { bold: true };
+
+      const buf = await workbook.xlsx.writeBuffer();
+      return Buffer.from(buf);
+    }
+
+    case "entrenadores-mas-populares": {
+      const [entrenadores, asistencias, reservas, clientesPorEntrenador] =
+        await Promise.all([
+          prisma.entrenador.findMany({
+            include: { usuario: { select: { nombre: true } } },
+          }),
+          prisma.asistencia.findMany({
+            include: {
+              sesion: {
+                select: {
+                  clase: { select: { entrenadorId: true } },
+                },
+              },
+            },
+          }),
+          prisma.reserva.findMany({
+            include: {
+              sesion: {
+                select: {
+                  clase: { select: { entrenadorId: true } },
+                },
+              },
+            },
+          }),
+          prisma.asignacionEntrenador.groupBy({
+            by: ["entrenadorId"],
+            where: { activo: true },
+            _count: { id: true },
+          }),
+        ]);
+
+      type FilaEntrenador = {
+        entrenadorId: string;
+        nombre: string;
+        especialidad: string;
+        totalAsistencias: number;
+        totalReservas: number;
+        clientesActivos: number;
+      };
+
+      const stats = new Map<string, FilaEntrenador>();
+      for (const e of entrenadores) {
+        stats.set(e.id, {
+          entrenadorId: e.id,
+          nombre: e.usuario.nombre,
+          especialidad: e.especialidad,
+          totalAsistencias: 0,
+          totalReservas: 0,
+          clientesActivos: 0,
+        });
+      }
+
+      for (const g of clientesPorEntrenador) {
+        const row = stats.get(g.entrenadorId);
+        if (row) row.clientesActivos = g._count.id;
+      }
+
+      for (const a of asistencias) {
+        const row = stats.get(a.sesion.clase.entrenadorId);
+        if (row) row.totalAsistencias += 1;
+      }
+
+      for (const r of reservas) {
+        const row = stats.get(r.sesion.clase.entrenadorId);
+        if (row) row.totalReservas += 1;
+      }
+
+      const result = [...stats.values()]
+        .filter(
+          (row) =>
+            row.totalAsistencias > 0 ||
+            row.totalReservas > 0 ||
+            row.clientesActivos > 0
+        )
+        .sort(
+          (a, b) =>
+            b.totalAsistencias - a.totalAsistencias ||
+            b.totalReservas - a.totalReservas ||
+            b.clientesActivos - a.clientesActivos
+        )
+        .map((row, i) => ({ ranking: i + 1, ...row }));
+
+      if (!download) return result;
+
+      const workbook = new ExcelJS.Workbook();
+      const sheet = workbook.addWorksheet("Entrenadores más populares");
+
+      sheet.columns = [
+        { header: "Ranking", key: "ranking", width: 10 },
+        { header: "Entrenador", key: "nombre", width: 24 },
+        { header: "Especialidad", key: "especialidad", width: 22 },
+        { header: "Asistencias (clases)", key: "totalAsistencias", width: 20 },
+        { header: "Reservas (clases)", key: "totalReservas", width: 18 },
+        { header: "Clientes PT activos", key: "clientesActivos", width: 20 },
       ];
 
       sheet.addRows(result);
