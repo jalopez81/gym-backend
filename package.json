@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "main": "dist/app.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development ts-node-dev --respawn  src/app.ts",
-    "dev:prod": "cross-env NODE_ENV=production ts-node-dev --respawn  src/app.ts",
-    "start": "node dist/app.js",
-    "build": "rm -rf dist && tsc",
-    "deploy:prod": "npx prisma migrate deploy && npm start",
-    "migrate": "npx prisma db push",
-    "seed": "npx prisma db seed"
+    "dev": "cross-env NODE_ENV=development ts-node-dev --respawn src/app.ts",
+    "db:migrate": "npx prisma migrate dev",
+    "db:reset": "npx prisma migrate reset --force",
+    "db:studio": "npx prisma studio",
+    "prod:migrate": "dotenv -e .env.prod -- npx prisma migrate deploy",
+    "prod:push": "dotenv -e .env.prod -- npx prisma db push",
+    "prod:seed": "dotenv -e .env.prod -- npx prisma db seed",
+    "prod:studio": "dotenv -e .env.prod -- npx prisma studio"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
@@ -25,6 +26,7 @@
     "@types/nodemailer": "^7.0.2",
     "@types/winston": "^2.4.4",
     "cross-env": "^10.1.0",
+    "dotenv-cli": "^11.0.0",
     "prisma": "^5.15.0",
     "ts-node-dev": "^2.0.0",
     "tsx": "^4.21.0",
