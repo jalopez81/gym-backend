@@ -82,6 +82,8 @@ app.use('/api/suscripciones',  suscripcionRutas);
 app.use('/api/usuarios',       usuarioRutas)
 
 app.get('/api/health', async (_, res) => {
+  // https://console.cron-job.org/statistics
+  // every 10 minutes
   try {
     const usuarios = await prisma.usuario.findMany();
     console.log('Health check: Usuarios encontrados:', usuarios.length);
