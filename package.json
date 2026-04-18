@@ -4,6 +4,7 @@
   "main": "dist/app.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development ts-node-dev --respawn src/app.ts",
+    "build": "rm -rf dist && tsc",
     "db:migrate": "npx prisma migrate dev",
     "db:reset": "npx prisma migrate reset --force",
     "db:studio": "npx prisma studio",
