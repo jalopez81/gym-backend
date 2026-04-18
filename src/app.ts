@@ -4,6 +4,7 @@ import dotenv from            'dotenv';
 import path from 'path';
 import logger from            './config/logger'
 import { programarBackupAutomatico } from './servicios/backup.servicio';
+import prisma from './modelos/prisma';
 import inicializarConfiguracion from './inicializarConfiguracion';
 
 import asistenciaRutas from   './rutas/asistencia.rutas';
@@ -80,10 +81,14 @@ app.use('/api/sesiones',       sesionRutas);
 app.use('/api/suscripciones',  suscripcionRutas);
 app.use('/api/usuarios',       usuarioRutas)
 
-
-app.get('/status', (req, res) => {
-  logger.info('Status OK');
-  res.send('Status OK');
+app.get('/api/health', async (_, res) => {
+  try {
+    const usuarios = await prisma.usuario.findMany();
+    console.log('Health check: Usuarios encontrados:', usuarios.length);
+    res.status(200).json({ usuarios, status: 'OK' });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.use(rutaNoEncontrada);
